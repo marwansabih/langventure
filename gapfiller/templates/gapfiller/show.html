@@ -1,0 +1,127 @@
+{% extends "gapfiller/layout.html" %}
+{% load static %}
+{% block body %}
+    <script>
+        function set_translation(id){
+            fetch(`/translation/${id}`)
+            .then( response => response.json())
+            .then( data => {
+                    document.querySelector("#translation").innerHTML = data.translation;
+                }
+            );
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            var recent_rule = null
+            document.querySelectorAll('.choice').forEach(
+                choice => {
+                    choice.addEventListener('click', function(event) {
+                        const target = event.target
+                        if ( event.target.value === event.target.dataset.correct ) {
+                            event.target.value = event.target.options[1].value;
+                        }
+                        if (recent_rule){
+                            document.querySelector(`#${recent_rule}`).style.display = false;
+                        }
+                        recent_rule = event.target.dataset.rule_name
+                        //console.log(recent_rule)
+                        //console.log(`#${recent_rule}`)
+                        //document.querySelector(`#${recent_rule}`).style.display = "block";
+                        set_translation(target.dataset.token_id)
+                    });
+
+                    choice.addEventListener('change', function(event) {
+                        const target = event.target;
+                        if ( target.value === target.dataset.correct ) {
+                            target.style.color = "green";
+                            target.disabled = "true";
+                        }else {
+                            target.style.color = "red";
+                        }
+                    })
+            });
+            document.querySelectorAll('#normal_token').forEach( token => {
+                token.onclick = (event) => {
+                    set_translation(event.target.dataset.token_id);
+                }
+            });
+        });
+
+    </script>
+    <div style="background-color:white; margin:20px; border-radius:5px;padding:20px;width:43%;float:left;">
+    <h1>
+        {% for token in title %}
+            {{ token.word }}
+        {% endfor %}
+    </h1>
+    {% for paragraph in paragraphs %}
+        <p>
+            {% for token in paragraph.text.tokens.all %}
+                {% if token.choice_selection in enabled_choices %}
+                    <select name="token"
+                            class="choice"
+                            data-correct="{{ token.word }}"
+                            data-rule_name="{{ token.rule.name }}"
+                            data-token_id="{{ token.id }}"
+                    >
+                        {% for choice in token.choice_selection.choices.all %}
+                            {% if token.is_upper %}
+                                console.log("in upper")
+                                <option value="{{ choice|capfirst }}"> {{ choice|capfirst }} </option>
+                            {% else %}
+                                <option value="{{ choice }}"> {{ choice }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <a id="normal_token" data-token_id="{{ token.id }}" style="font-size:16px;">{{ token.word }}</a>
+                {% endif %}
+            {% endfor %}
+        </p>
+    {% endfor %}
+    </div>
+    <div class="rules" style="margin:0px; border-radius:5px;padding:20px;margin-left:47%;width:50%;float:right;position:fixed;">
+        <a href="{% url 'choice_selection' id %}">Restart exercise</a>
+        <audio controls autoplay>
+            <source src="{{podcast.audio_file.url}}" type="audio/mpeg">
+            <source src="{{podcast.audio_file.url}}" type="audio/ogg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <div class="rules"
+         style="background-color:white;
+         margin:20px;
+         margin-top:5%;
+         border-radius:5px;
+         padding:20px;
+         margin-left:47%;
+         width:50%;
+         float:right;
+         position: fixed;
+         height:20%;"
+    >
+        <h2>Translation</h2>
+        <div id="translation"></div>
+    </div>
+    <div class="rules"
+         style="background-color:white;
+         margin:20px;
+         margin-top:15%;
+         border-radius:5px;
+         padding:20px;
+         margin-left:47%;
+         width:50%;
+         float:right;
+         position:fixed;overflow-y: scroll;
+         height:85%;"
+    >
+        <h2>Rules</h2>
+        {% for rule in rules %}
+            <p id="{{rule.name}}" style="display:none">
+                {%  for para in rule.paragraphs %}
+                    {{ para }} <br>
+                {% endfor %}
+            </p>
+        {% endfor %}
+    </div>
+{% endblock %}

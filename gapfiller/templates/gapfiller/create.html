@@ -1,0 +1,20 @@
+{% extends "gapfiller/layout.html" %}
+{% load static %}
+{% block body %}
+    <div style="margin:20px;">
+        {% if message %}
+        <div style="color:red; font-weight:bold;"> <p>{{ message }}</p> </div>
+        {% endif %}
+
+        <form action="{% url 'create' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="title" placeholder="Title">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" type="text" rows="22" name="text" placeholder="Enter your text here"></textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Create Text">
+        </form>
+    </div>
+{% endblock %}
