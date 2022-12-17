@@ -1,9 +1,9 @@
 {% extends "gapfiller/layout.html" %}
 {% load static %}
 {% block body %}
-    <div style="margin:20px;">
+    <div class="create_section">
         {% if message %}
-        <div style="color:red; font-weight:bold;"> <p>{{ message }}</p> </div>
+            <div class="create_warning"> <p>{{ message }}</p> </div>
         {% endif %}
 
         <form action="{% url 'create' %}" method="post">
@@ -14,7 +14,7 @@
             <div class="form-group">
                 <textarea class="form-control" type="text" rows="22" name="text" placeholder="Enter your text here"></textarea>
             </div>
-            <input class="btn btn-primary" type="submit" value="Create Text">
+            <input class="btn btn-secondary" type="submit" value="Create Text">
         </form>
     </div>
 {% endblock %}

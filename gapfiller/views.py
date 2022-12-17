@@ -33,6 +33,7 @@ def create_entry(title, text):
         text.save()
         doc = nlp(content)
         sentences = list(doc.sents)
+        nouns = []
         for toks in sentences:
             translation = hel_translate(str(toks))
             for tok in toks:

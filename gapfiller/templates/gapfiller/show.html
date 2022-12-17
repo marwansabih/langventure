@@ -48,74 +48,44 @@
         });
 
     </script>
-    <div style="background-color:white; margin:20px; border-radius:5px;padding:20px;width:43%;float:left;">
-    <h1>
-        {% for token in title %}
-            {{ token.word }}
-        {% endfor %}
-    </h1>
-    {% for paragraph in paragraphs %}
-        <p>
-            {% for token in paragraph.text.tokens.all %}
-                {% if token.choice_selection in enabled_choices %}
-                    <select name="token"
+    <div class="show_entry">
+        <h2>
+            {% for token in title %}
+                {{ token.word }}
+            {% endfor %}
+        </h2>
+        {% for paragraph in paragraphs %}
+            <p>
+                {% for token in paragraph.text.tokens.all %}
+                    {% if token.choice_selection in enabled_choices %}
+                        <select name="token"
                             class="choice"
                             data-correct="{{ token.word }}"
                             data-rule_name="{{ token.rule.name }}"
                             data-token_id="{{ token.id }}"
-                    >
-                        {% for choice in token.choice_selection.choices.all %}
-                            {% if token.is_upper %}
-                                console.log("in upper")
-                                <option value="{{ choice|capfirst }}"> {{ choice|capfirst }} </option>
-                            {% else %}
-                                <option value="{{ choice }}"> {{ choice }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                {% else %}
-                    <a id="normal_token" data-token_id="{{ token.id }}" style="font-size:16px;">{{ token.word }}</a>
-                {% endif %}
-            {% endfor %}
-        </p>
+                        >
+                            {% for choice in token.choice_selection.choices.all %}
+                                {% if token.is_upper %}
+                                    console.log("in upper")
+                                    <option value="{{ choice|capfirst }}"> {{ choice|capfirst }} </option>
+                                {% else %}
+                                    <option value="{{ choice }}"> {{ choice }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <a id="normal_token" data-token_id="{{ token.id }}" style="font-size:16px;">{{ token.word }}</a>
+                    {% endif %}
+                {% endfor %}
+            </p>
     {% endfor %}
     </div>
-    <div class="rules" style="margin:0px; border-radius:5px;padding:20px;margin-left:47%;width:50%;float:right;position:fixed;">
-        <a href="{% url 'choice_selection' id %}">Restart exercise</a>
-        <audio controls autoplay>
-            <source src="{{podcast.audio_file.url}}" type="audio/mpeg">
-            <source src="{{podcast.audio_file.url}}" type="audio/ogg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-    <div class="rules"
-         style="background-color:white;
-         margin:20px;
-         margin-top:5%;
-         border-radius:5px;
-         padding:20px;
-         margin-left:47%;
-         width:50%;
-         float:right;
-         position: fixed;
-         height:20%;"
-    >
+    <div class="translation">
         <h2>Translation</h2>
         <div id="translation"></div>
     </div>
-    <div class="rules"
-         style="background-color:white;
-         margin:20px;
-         margin-top:15%;
-         border-radius:5px;
-         padding:20px;
-         margin-left:47%;
-         width:50%;
-         float:right;
-         position:fixed;overflow-y: scroll;
-         height:85%;"
-    >
-        <h2>Rules</h2>
+    <div class="rules">
+        <h2>Grammar rules</h2>
         {% for rule in rules %}
             <p id="{{rule.name}}" style="display:none">
                 {%  for para in rule.paragraphs %}
@@ -123,5 +93,15 @@
                 {% endfor %}
             </p>
         {% endfor %}
+    </div>
+    <div class="show_footer">
+        <a class="header_link btn btn-secondary show_footer_link" href="{% url 'choice_selection' id %}">
+            Restart exercise
+        </a>
+        <audio class="show_footer_audio" controls>
+            <source src="{{podcast.audio_file.url}}" type="audio/mpeg">
+            <source src="{{podcast.audio_file.url}}" type="audio/ogg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 {% endblock %}

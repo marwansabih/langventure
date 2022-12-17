@@ -1,5 +1,4 @@
 {% extends "gapfiller/layout.html" %}
-{% load static %}
 {% block body %}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -24,13 +23,25 @@
         });
 
     </script>
-    {% for entry in entries %}
-        <div style="background-color:white; margin:20px; border-radius:5px;padding:3px">
-            <a href="{% url 'show' entry.id %}">
-                {% for token in entry.title.tokens.all %}
-                    {{ token.word }}
-                {% endfor %}
-            </a>
-        </div>
-    {% endfor %}
+    <div style="margin:0; padding:3px;">
+        {% for entry in entries %}
+        <a href="{% url 'show' entry.id %}">
+            <div class="index_entry">
+                <div class="index_title">
+                    <p style="font-weight:bold; ">
+                        {% for token in entry.title.tokens.all %}
+                            {{ token.word }}
+                        {% endfor %}
+                    </p>
+                </div>
+                <p style="font-size:15px;padding-left:5px;">
+                    {% for token in entry.paragraphs.first.text.tokens.all|slice:":20" %}
+                        {{ token.word }}
+                    {% endfor %}
+                    ...
+                </p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
 {% endblock %}

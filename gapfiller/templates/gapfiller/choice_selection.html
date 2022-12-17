@@ -1,7 +1,7 @@
 {% extends "gapfiller/layout.html" %}
 {% load static %}
 {% block body %}
-    <div style="margin:20px;">
+    <div class="selection_section">
         <h2>Select which type of gaps you want to practice</h2>
         <form action="{% url 'choice_selection' id %}" method="post">
             {% csrf_token %}
@@ -9,7 +9,7 @@
                 <input type="checkbox" id="vehicle1" name="{{ selection.name }}" value="{{ selection.name }}">
                 <label for="{{ selection.name }}">{{ selection.name }}</label><br>
             {% endfor %}
-            <input class="btn btn-primary" type="submit" value="Create exercise">
+            <input class="btn btn-secondary" type="submit" value="Create exercise">
         </form>
     </div>
 {% endblock %}

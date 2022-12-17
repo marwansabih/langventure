@@ -12,74 +12,23 @@
         rel="stylesheet"
         href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
     />
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sriracha">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'gapfiller/main_style.css' %}">
     <title>Langventure</title>
-    <style>
-        body {
-            margin:0px;
-            padding:0px;
-            background-color: lightgrey; //orange; //#a9c25d;  //#73a24e;//lightgrey; //#a9c25d; //#f5eec2;
-        }
-        .header {
-            color: #f5eec2;
-            background-color:#39395f;
-            padding-bottom: 3px;
-            padding-left: 10px;
-            padding-right: 10px;
-            //#416a59; //<!--#39395f; --> //#a9c25d; //#39395f; //#a9c25d;
-        }
-        .helement {
-            font-family: Pacifico;
-            font-weight: normal;
-            font-size: 25px;
-            margin: 0;
-            padding: 0;
-        }
-        .hlist {
-            display: inline-block;
-            margin: 0px;
-            padding: 0px;
-        }
-        ul {
-            padding: 0px;
-            margin: 0px;
-        }
-        a {
-            text-decoration: None;
-            font-size: 25px;
-            //color: #416a59;
-            font-weight: bold;
-            margin: 0px;
-            padding: 0px;
-            //background-color: #416a59;
-        }
-        .header_title{
-            background-color: #39395f;
-            color: #f5eec2;
-            font-family: Sriracha;
-            font-size: 18px;
-        }
-        .header_link{
-            background-color:#416a59;
-            font-family: Sriracha;
-            color: #f5eec2;
-            font-size: 32px;
-        }
-    </style>
 </head>
 <body>
-    <div class="container-fluid" style="position: fixed; top:0;overflow:hidden;">
-        <div class="row flex-fill">
-            <div  class="col-sm-2 header_title" > <h1>Langventure</h1></div>
-            <div  class="col-sm-1 header_link"> <a class="header_link" href="{% url 'index' %}"> Home </a></div>
-            <div  class="col-sm-9 header_link"> <a class="header_link" href="{% url 'create' %}"> Create new Text </a></div>
-        </div>
+    <div class="header">
+            <div  class="header_title" >
+                Langventure
+            </div>
+            <a class="header_link btn" href="{% url 'create' %}"> Create new Text </a>
+            <a class="header_link btn" href="{% url 'index' %}"> Home </a>
     </div>
-    <div style="margin-top: 75px">
+    <div class="body_container">
         {% block body %}
         {% endblock %}
     </div>

@@ -1,8 +1,11 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
 tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-gem-en")
-
 model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-gem-en")
+
+# bad model
+#tokenizer = AutoTokenizer.from_pretrained("google/bert2bert_L-24_wmt_de_en", pad_token="<pad>", eos_token="</s>", bos_token="<s>")
+#model = AutoModelForSeq2SeqLM.from_pretrained("google/bert2bert_L-24_wmt_de_en")
 
 
 def hel_translate(sentence):
