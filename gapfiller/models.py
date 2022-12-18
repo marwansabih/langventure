@@ -41,6 +41,11 @@ class Choice(models.Model):
         return self.choice
 
 
+class LocalChoiceSelection(models.Model):
+    choice_selection = models.ForeignKey(ChoiceSelection, on_delete=models.CASCADE)
+    choices = models.ManyToManyField(Choice)
+
+
 class Rule(models.Model):
     name = models.CharField(max_length=25, default="no_name")
     rule = models.TextField()
@@ -51,7 +56,8 @@ class Token(models.Model):
     translation = models.TextField(default="")
     word = models.TextField()
     is_upper = models.BooleanField(default=False)
-    choice_selection = models.ForeignKey(ChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="tokens")
+    #choice_selection = models.ForeignKey(ChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="tokens")
+    local_choice_selection = models.ForeignKey(LocalChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="token")
     rule = models.ForeignKey(Rule, blank=True, null=True, default=None, on_delete=models.CASCADE, related_name="tokens")
 
 

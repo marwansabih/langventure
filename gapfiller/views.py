@@ -1,20 +1,45 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus
+from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection
 from gtts import gTTS
 from django.core.files import File
 from pathlib import Path
 import spacy
 from .helsinki_translator import hel_translate
+import random
 
 nlp = spacy.load('de_core_news_sm')
 
 
 # Create your views here.
 
-# todo add conversation mode with two heads speaking
+# todo add conversation mode with two heads speaking ( a true langventure )
 # todo picture for words
+# todo enhance choice selection to include only a limited amount of choices
+# todo add verb choices
+# todo add noun choices
+# todo filter choices by word type
+# todo add specific and unspecific rules
+# todo add support for a second language
+# todo add login logout and register
+# todo write tests
+# todo clean up javascript
+# todo clean up code
+# todo add save status
+# todo make model more efficient
+
+def gen_local_selection(choice_selection, correct_choice, nr_choices):
+    local_selection = LocalChoiceSelection(choice_selection=choice_selection)
+    local_selection.save()
+    choices = random.sample(list(choice_selection.choices.all()), nr_choices)
+    if correct_choice not in choices:
+        choices[random.randint(1, nr_choices-1)] = correct_choice
+    for choice in choices:
+        choice = Choice.objects.filter(choice=choice).first()
+        local_selection.choices.add(choice)
+
+    return local_selection
 
 
 def create_entry(title, text):
@@ -42,20 +67,20 @@ def create_entry(title, text):
                 rule = None
                 articles = [a.choice for a in definite_articles.choices.all()]
                 if tok.lower() in articles:
-                    choice_selection = definite_articles
+                    choice_selection = gen_local_selection(definite_articles, tok.lower(), 5)
                     rule = article_rule
                 articles = [a.choice for a in undefinite_articles.choices.all()]
                 if tok.lower() in articles:
-                    choice_selection = undefinite_articles
+                    choice_selection = gen_local_selection(undefinite_articles, tok.lower(), 5)
                     rule = article_rule
                 cons = [c.choice for c in conjunctions.choices.all()]
                 if tok.lower() in cons:
-                    choice_selection = conjunctions
+                    choice_selection = gen_local_selection(conjunctions, tok.lower(), 5)
                     rule = conjunction_rule
                 token = Token(
                     text=text,
                     word=tok,
-                    choice_selection=choice_selection,
+                    local_choice_selection=choice_selection,
                     is_upper=tok[0].isupper(),
                     rule=rule,
                     translation=translation

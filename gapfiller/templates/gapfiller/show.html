@@ -57,14 +57,14 @@
         {% for paragraph in paragraphs %}
             <p>
                 {% for token in paragraph.text.tokens.all %}
-                    {% if token.choice_selection in enabled_choices %}
+                    {% if token.local_choice_selection.choice_selection in enabled_choices %}
                         <select name="token"
                             class="choice"
                             data-correct="{{ token.word }}"
                             data-rule_name="{{ token.rule.name }}"
                             data-token_id="{{ token.id }}"
                         >
-                            {% for choice in token.choice_selection.choices.all %}
+                            {% for choice in token.local_choice_selection.choices.all %}
                                 {% if token.is_upper %}
                                     console.log("in upper")
                                     <option value="{{ choice|capfirst }}"> {{ choice|capfirst }} </option>
