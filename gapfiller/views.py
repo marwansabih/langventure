@@ -1,11 +1,14 @@
+from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection
+from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection, User
 from gtts import gTTS
 from django.core.files import File
 from pathlib import Path
 import spacy
+from django.contrib.auth.decorators import login_required
 from .helsinki_translator import hel_translate
 import random
 
@@ -16,18 +19,35 @@ nlp = spacy.load('de_core_news_sm')
 
 # todo add conversation mode with two heads speaking ( a true langventure )
 # todo picture for words
-# todo enhance choice selection to include only a limited amount of choices
 # todo add verb choices
 # todo add noun choices
 # todo filter choices by word type
 # todo add specific and unspecific rules
 # todo add support for a second language
-# todo add login logout and register
 # todo write tests
 # todo clean up javascript
 # todo clean up code
 # todo add save status
 # todo make model more efficient
+# todo add state save so that you don't need to redo an exercise
+# todo own audio
+# todo add number of gaps
+# todo conjunctions consisting out of more than one word
+# todo add rules
+# todo enhance translation
+# todo enhance graphics
+# todo add word marking sentence marking (for token clicked)
+# todo add word translation
+# todo smarter model structure (sentence translation)
+# todo add information for gapfiller (author title and timestamp)
+# todo correct punctuation behaviour of gapfiller
+# todo enable corrections for translation
+# todo cleanup rest of css
+# todo add delete to posts
+# todo add edit to posts
+# todo add better userspecific behaviour (delete, add, edit gapfiller)
+# todo enhance admin panel
+# todo empty gaps in gapfiller (e.g. ein for plural)
 
 def gen_local_selection(choice_selection, correct_choice, nr_choices):
     local_selection = LocalChoiceSelection(choice_selection=choice_selection)
@@ -47,8 +67,8 @@ def create_entry(title, text):
     definite_articles = ChoiceSelection.objects.filter(name="definite_articles")[0]
     undefinite_articles = ChoiceSelection.objects.filter(name="undefinite_articles")[0]
     conjunctions = ChoiceSelection.objects.filter(name="conjunctions")[0]
-    article_rule = Rule.objects.filter(name="articles").first()
-    conjunction_rule = Rule.objects.filter(name="conjunctions").first()
+    #article_rule = Rule.objects.filter(name="articles").first()
+    #conjunction_rule = Rule.objects.filter(name="conjunctions").first()
     audio = gTTS(text=text, lang="de", slow=False)
     audio_path = Path("media/podcasts/" + title + ".mp3")
     audio.save("media/podcasts/" + title + ".mp3")
@@ -60,32 +80,36 @@ def create_entry(title, text):
         sentences = list(doc.sents)
         nouns = []
         for toks in sentences:
+            if not str(toks).strip():
+                continue
             translation = hel_translate(str(toks))
-            for tok in toks:
-                tok = str(tok)
+            for token in toks:
+                tok = str(token)
                 choice_selection = None
                 rule = None
                 articles = [a.choice for a in definite_articles.choices.all()]
                 if tok.lower() in articles:
                     choice_selection = gen_local_selection(definite_articles, tok.lower(), 5)
-                    rule = article_rule
+                    #rule = article_rule
                 articles = [a.choice for a in undefinite_articles.choices.all()]
                 if tok.lower() in articles:
                     choice_selection = gen_local_selection(undefinite_articles, tok.lower(), 5)
-                    rule = article_rule
+                    #rule = article_rule
                 cons = [c.choice for c in conjunctions.choices.all()]
-                if tok.lower() in cons:
+                if tok.lower() in cons and (token.pos_ == "SCONJ" or token.pos_ == "CCONJ"):
                     choice_selection = gen_local_selection(conjunctions, tok.lower(), 5)
-                    rule = conjunction_rule
-                token = Token(
-                    text=text,
-                    word=tok,
-                    local_choice_selection=choice_selection,
-                    is_upper=tok[0].isupper(),
-                    rule=rule,
-                    translation=translation
-                )
-                token.save()
+                    #rule = conjunction_rule
+                if tok.strip():
+                    token = Token(
+                        text=text,
+                        word=tok,
+                        word_translation=hel_translate(tok),
+                        local_choice_selection=choice_selection,
+                        is_upper=tok[0].isupper(),
+                        #rule=rule,
+                        translation=translation
+                    )
+                    token.save()
         return text
 
     title = generate_text(title)
@@ -105,6 +129,8 @@ def create_entry(title, text):
 
 
 def index(request):
+    if not request.user:
+        HttpResponseRedirect(reverse("login"))
     entries = Entry.objects.all()
     return render(request, "gapfiller/index.html", {
         'entries': entries,
@@ -130,10 +156,10 @@ def show(request, id):
     entry = Entry.objects.filter(pk=id).first()
     title = entry.title.tokens.all()
     paragraphs = entry.paragraphs.all()
-    rules = Rule.objects.all()
-    paras = [rule.rule.split("\n") for rule in rules]
-    names = [rule.name for rule in rules]
-    rules = [{"name": name, "paragraphs": para} for name, para in zip(names, paras)]
+    #rules = Rule.objects.all()
+    #paras = [rule.rule.split("\n") for rule in rules]
+    #names = [rule.name for rule in rules]
+    #rules = [{"name": name, "paragraphs": para} for name, para in zip(names, paras)]
     user = request.user
 
     status = UserEntryGapFillerStatus.objects.filter(user=user, entry=entry).count()
@@ -151,7 +177,7 @@ def show(request, id):
     return render(request, "gapfiller/show.html", {
         "title": title,
         "paragraphs": paragraphs,
-        "rules": rules,
+        #"rules": rules,
         "podcast": podcast,
         "enabled_choices": enabled_choices,
         "id": entry.id
@@ -191,6 +217,73 @@ def choice_selection(request, id):
     })
 
 
-def get_token_translation(request, id):
+def get_token_display_updates(request, id):
     token = Token.objects.get(pk=id)
-    return JsonResponse({"translation": token.translation})
+    rules = []
+    if token.local_choice_selection:
+        choices = token.local_choice_selection.choices.all()
+        rules = list(set([choice.rule.description for choice in choices]))
+    return JsonResponse({
+        "translation": token.translation,
+        "word_translation": token.word_translation,
+        "rules": rules
+    })
+
+
+
+def delete_gapfiller(request, id):
+    entry = Entry.objects.get(pk=id)
+    entry.delete()
+    return HttpResponseRedirect(reverse("index"))
+
+
+def login_view(request):
+    if request.method == "POST":
+
+        # Attempt to sign user in
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "gapfiller/login.html", {
+                "message": "Invalid username and/or password."
+            })
+    else:
+        return render(request, "gapfiller/login.html")
+
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        email = request.POST["email"]
+
+        # Ensure password matches confirmation
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "auctions/register.html", {
+                "message": "Passwords must match."
+            })
+
+        # Attempt to create new user
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+        except IntegrityError:
+            return render(request, "auctions/register.html", {
+                "message": "Username already taken."
+            })
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "gapfiller/register.html")
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))

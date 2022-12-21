@@ -33,9 +33,21 @@ class ChoiceSelection(models.Model):
             return "local_generated"
 
 
+class Rule(models.Model):
+    rule_type = models.CharField(max_length=25, default="no_name")
+    description = models.TextField()
+
+
 class Choice(models.Model):
     choices = models.ForeignKey(ChoiceSelection, on_delete=models.CASCADE, related_name="choices")
     choice = models.TextField()
+    rule = models.ForeignKey(Rule,
+                             blank=True,
+                             null=True,
+                             default=None,
+                             on_delete=models.CASCADE,
+                             related_name="choices"
+    )
 
     def __str__(self):
         return self.choice
@@ -46,19 +58,13 @@ class LocalChoiceSelection(models.Model):
     choices = models.ManyToManyField(Choice)
 
 
-class Rule(models.Model):
-    name = models.CharField(max_length=25, default="no_name")
-    rule = models.TextField()
-
-
 class Token(models.Model):
     text = models.ForeignKey(Text, on_delete=models.CASCADE, related_name="tokens")
     translation = models.TextField(default="")
+    word_translation = models.TextField(default="")
     word = models.TextField()
     is_upper = models.BooleanField(default=False)
-    #choice_selection = models.ForeignKey(ChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="tokens")
     local_choice_selection = models.ForeignKey(LocalChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="token")
-    rule = models.ForeignKey(Rule, blank=True, null=True, default=None, on_delete=models.CASCADE, related_name="tokens")
 
 
 class User(AbstractUser):

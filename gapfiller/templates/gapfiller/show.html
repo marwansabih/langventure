@@ -3,10 +3,16 @@
 {% block body %}
     <script>
         function set_translation(id){
-            fetch(`/translation/${id}`)
+            fetch(`/display_update/${id}`)
             .then( response => response.json())
             .then( data => {
                     document.querySelector("#translation").innerHTML = data.translation;
+                    document.querySelector("#word_translation").innerHTML = data.word_translation;
+                    var rules = ""
+                    data.rules.forEach(rule => {
+                        rules += "<p> " + rule + "</p> "
+                    });
+                    document.querySelector('#rules').innerHTML = rules;
                 }
             );
         }
@@ -40,8 +46,14 @@
                         }
                     })
             });
+            var last_token = null
             document.querySelectorAll('#normal_token').forEach( token => {
                 token.onclick = (event) => {
+                    if(last_token){
+                        last_token.style = "black";
+                    }
+                    last_token = event.target;
+                    event.target.style.color = "blue";
                     set_translation(event.target.dataset.token_id);
                 }
             });
@@ -82,21 +94,22 @@
     </div>
     <div class="translation">
         <h2>Translation</h2>
+        <div id="word_translation"></div>
         <div id="translation"></div>
     </div>
     <div class="rules">
         <h2>Grammar rules</h2>
-        {% for rule in rules %}
-            <p id="{{rule.name}}" style="display:none">
-                {%  for para in rule.paragraphs %}
-                    {{ para }} <br>
-                {% endfor %}
-            </p>
-        {% endfor %}
+        <div id="rules"></div>
     </div>
     <div class="show_footer">
         <a class="header_link btn btn-secondary show_footer_link" href="{% url 'choice_selection' id %}">
             Restart exercise
+        </a>
+        <a class="header_link btn btn-secondary show_footer_link" href="{% url 'choice_selection' id %}">
+            Edit exercise
+        </a>
+        <a class="header_link btn btn-secondary show_footer_link" href="{% url 'delete_gapfiller' id %}">
+            Delete exercise
         </a>
         <audio class="show_footer_audio" controls>
             <source src="{{podcast.audio_file.url}}" type="audio/mpeg">
