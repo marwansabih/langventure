@@ -158,26 +158,86 @@ conjunction_rules = {
                "<br> Tomorow it will rain, but i don't have an umbrella."
                "<br> Morgen wird es regnen, aber ich habe keinen Regenschirm."
                "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
-    "aber": "aber - but",
-    "weil": "weil - because",
-    "dennoch": "dennocn - nonetheless",
-    "deswegen": "deswegen - because of this",
-    "trotz": "trotz - despite",
-    "ob": "ob - if",
-    "während": "während - while",
-    "wogegen": "wogegen - against what",
-    "seit": "seit - since",
-    "seitdem": "since",
-    "wenn": "wenn - when, wether, if ...",
-    "dadurch": "dadurch - thereby",
-    "indem": "indem - by",
-    "wodurch": "wodurch - whereby",
-    "womit": "womit - whereby, with what",
-    "damit": "damit - thereby",
+    "aber": "<b>aber - but</b>: connects two main clauses, and shows a general discrepancy."
+            "<br> Examples:"
+            "<br> Tomorow it will rain, but i don't have an umbrella."
+            "<br> Morgen wird es regnen, aber ich habe keinen Regenschirm."
+            "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "weil": "<b>weil - because</b>: Connects a main clause with a subordinate clause and provides a reason:"
+            "<br> Example:"
+            "<br> The bag was heavy, because there were stones inside."
+            "<br> Die Tasche war schwar, weil sie mit Steinen gefüllt war."
+            "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "dennoch": "dennoch - nonetheless"
+               "<br> We had many fears, nonetheless everything went well."
+               "<br> Wir hatten viele Befürchtungen, dennoch ging alles gut.",
+    "deswegen": "deswegen - because of this"
+                "<br> I stood up late today, because of this I missed the meeting."
+                "<br> Ich stand heute spät auf, deswegen habe ich das Meeting verpasst.",
+    "ob": "ob - if: connects a main clause and a subordinate Clause. "
+          "mostly used to indirectly ask if something is true or not"
+          "<br> Example:"
+          "<br> I don't know, if i will come."
+          "<br> Ich weiß nicht, ob ich kommen werden.",
+    "während": "<b>während - while</b>: Connects a subordinate clause with a main clause. "
+               "Used to indicate that two actions are happening at the same time."
+               "<br> Example:"
+               "<br> While I was waiting for the bus, I was listening to some music."
+               "<br> Während ich auf den Bus wartete, hörte ich etwas Musik."
+               "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "wogegen": "<b> wogegen - against what<b>: connects a subordinate clause with a main clause. "
+               "Used to shows a contradiction or a contrast."
+               "<br> Example:"
+               "<br> The blue T-Shirt looked good on her, whereas the green T-shirt did not look good at all."
+               "<br> Das blaue T-Shirt stand ihr gut, wogegen das grüne T-Shirt überhaupt nicht."
+               "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "seit": "seit - since: "
+            "<br> Example:"
+            "<br> Since she started riding her bike, she feels good."
+            "<br> Seit sie Fahrrad fährt, fühlt sie sich gut.",
+    "seitdem": "since"
+            "<br> Example:"
+            "<br> Since she started riding her bike, she feels good."
+            "<br> Seitdem sie Fahrrad fährt, fühlt sie sich gut.",
+    "wenn": "wenn - when, wether, if ..."
+            "<br> Example: "
+            "<br> If you have time, we can meet."
+            "<br> Wenn du Zeit hast, können wir uns treffen."
+            "<br> If I would have the money, I would travel around the world."
+            "<br> Wenn ich das Geld hätte, würde ich um die Welt reisen."
+            "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "dadurch": "<b>dadurch - thereby, so</b>: connects to main clauses, the main clause with dadurch"
+               "became possible through the other main clause."
+               "<br> Example: "
+               "<br> Since recently I get up early, so I have learned to appreciate the extensive breakfast."
+               "<br> Seit neustem stehe ich früh auf, dadurch habe ich das ausgiebige Frühstücken"
+               "schätzen gelernt."
+               "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "indem": "<b>indem - by</b>: connects a main clause with a subordinate clause. The subordinate clause describes the"
+             "means in order to reach a goal."
+             "<br> Example: "
+             "<br> By giving his very best, he could beat the previous world record."
+             "<br> Indem er sein Allerbestes gab, konnte er den vorherigen Weltrekord schlagen."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "wodurch": "<b>wodurch - whereby</b> connects a main clause with a subordinate clause. The subordinate clause"
+               "describes the goal that could be reached through the main clause."
+               "<br> Example:"
+               "<br> She gave her very best, whereby she could beat the previous world recode."
+               "<br> Sie gab ihr Allerbestes, wodurch sie den vorherigen Weltrekord schlagen konnte."
+               "<b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "womit": "<b>womit - whereby, with what<b>: connects a subordinate clause with a main clause. Can be either used"
+             "to start a direct or indirect question or relate (for example give an opinion) about the main clause."
+             "<br> Exercise: "
+             "<br> With what we are at (which brings us to) the crux of the matter, "
+             "which of you eat the chocolate cake?"
+             "<br> Womit wir beim springenden Punkt wären, wer von euch hat den Schokoladen gekuchen gegessen?"
+             "<br> He did something, with which I didn't agree."
+             "<br> Er hat etwas getan, womit ich nicht einverstanden war."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "damit": "<b>damit - so that, in order that, so</b>:",
     "um": "um ... zu - in oder to ",
     "zu": "um ... zu - in oder to",
     "da": "da - because",
-    "weil": "weil - because",
     "zumal": "zumal - the more so as",
     "obgleich": "obgleich - though, even though",
     "obschon": "obschon - wether, albeit, though, if",
@@ -194,7 +254,11 @@ conjunction_rules = {
     "desto": "je ... desto - the ... the",
     "bevor": "bevor - before",
     "bis": "bis - till",
-    "ehe": "ehe - before",
+    "ehe": "ehe - before. Connects two main clauses. The main clause with ehe is happening before the other."
+           "<br> Example:"
+           "<br> Before she left, she asked the way."
+           "<br> Ehe sie losging, fragte sie nach dem Weg."
+           "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
     "nachdem": "nachdem - after",
     "seit": "seit - since",
     "seitdem": "seitdem - ever since, since",
