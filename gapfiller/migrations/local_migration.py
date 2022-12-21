@@ -60,43 +60,104 @@ def create_undefinite_article_choices(apps, shema_editor):
 
 
 conjunction_rules = {
-    "und": "und - and: connects to main clauses or part of sentences <br> e.g: My brother went shopping and I relaxed at home."
-           " Mein Bruder ging einkaufen und ich entspannte mich zu Hause."
-           " <br>Attention in german main clauses the verb has to be in the second position",
-    "sowie": "sowie - as soon as: connects a subordinate clause to a main sentence <br> "
-             " <br> As soon as she arrived at home, she took a shower. "
-             " Sowie sie zu Hause ankam, duschte sie sich (nahm sie eine Dusche). <br> "
-             "<br> Attention in german subordinate clauses the verb stands at the end.",
-    "sowohl": "sowohl ... als auch - both ... and: normally used to connect to parts of a sentence <br>"
-              "She spoke both english and german. Sie sprach sowohl Englisch als auch Deutsch",
-    "entweder": "entweder ... oder - either ... or",
-    "jedoch": "jedoch - but: connects to main clauses and expresses a limitation or an constraint. <br>"
-              "Same meaning as the german word aber, but with different order of words. <br>"
-              "I lay down in bed, but I could not sleep. Ich legte mich ins Bett, jedoch konnte ich nicht schlafen. "
-              "(Same meaning but different word order using aber.) Ich legte mich ins Bett, aber ich konnte nicht schlafen."
-              " <br> Attention in german main clauses the verb has to be in second position",
-    "sofern": "sofern - provided (that): Usually connects a main clause with a subordinate clause. Gives a condition for the main clause. <br>"
-              "I will fly to London, if my boss approves. Ich fliege nach London, sofern mein Chef es genehmigt."
-              "<br> Attention in german subordinate clauses the verb stands at the end.",
-    "soweit": "soweit - as far as: Usually connects a main with a subordinate clause. <br>"
-              "Adds a contraint to the main clause, only if the constraint of the subordinate clause applies, the content of the main clause"
-              "is to be applied.<br>"
-              "The weather will be nice tomorrow. as far es I know. Das Wetter wird morgen schön, soweit ich weiß."
-              "<br> Attention in german subordinate clauses the verb stands at the end.",
-    "als": "als - when: Usually connects a main clause with a subordinate clause. <br>"
-           "The subordinate clause gives information about the time, when the main clause happens. <br>"
-           "When I opened my eyes, I realized it was only a dream. <br> Als ich die Augen öffnete, stellte ich fest es war nur ein Traum."
-           "<br> Attention in german subordinate clauses the verb stands at the end.",
-    "wie": "wie as: Usually used to compare parts of sentences. Not to be confused with als. <br>"
-           "als is used to compare using the german Komperativ of adjectives, wie is used to compare everything else (nouns, adjectives not in comperative etc.)"
-           "<br> He is strong as a bear. Er ist stark wie ein Bär. He is stronger than a bear. Er ist stärker als ein Bär.",
-    "oder": "oder - or: usually connects parts of sentence to mark alternatives. Do we take the bus or the train. Nehmen wir den Zug oder den Bus",
-    "als auch": "als auch - as well as",
-    "dass": "dass - that",
-    "denn": "denn - because",
-    "obwohl": "obwohl - although",
-    "trotzdem": "trotzdem - despite",
-    "sondern": "sondern - but",
+    "und": "<b>und - and</b>: connects two main clauses or part of sentences "
+           "<br> Example:"
+           "<br> My brother went shopping and I relaxed at home."
+           "<br> Mein Bruder ging einkaufen und ich entspannte mich zu Hause."
+           "<br> <b>Attention in german main clauses the verb has to be in the second position</b>",
+    "sowie": "<b>sowie - as soon as</b>: connects a subordinate clause to a main sentence"
+             "<br> Example:"
+             "<br> As soon as she arrived at home, she took a shower. "
+             "<br> Sowie sie zu Hause ankam, duschte sie sich (nahm sie eine Dusche). "
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "sowohl": "<b>sowohl ... als - auch - both ... and</b>: normally used to connect to equal parts of a sentence "
+              "<br> Example:"
+              "<br> She spoke both english and german. "
+              "<br> Sie sprach sowohl Englisch als auch Deutsch",
+    "entweder": "<b>entweder ... oder - either ... or<b>: Connects to main clauses or part of sentences, "
+                "which represent another excluding possibilities."
+                "<br> Example:"
+                "<br> Either you come, or I drive without you."
+                "<br> Entweder kommst du jetzt oder ich fahre ohne dich los."
+                "<br> Du kommst jetzt entweder oder ich fahre ohne dich los."
+                "<br> <b>Attention in german main clauses the verb has to be in the second position</b>",
+    "jedoch": "<b>jedoch - but</b>: connects to main clauses and expresses a limitation or an constraint. "
+              "<br> Same meaning as the german word aber, but with different order of words."
+              "<br> Example:"
+              "<br> I lay down in bed, but I could not sleep. "
+              "<br> Ich legte mich ins Bett, jedoch konnte ich nicht schlafen. "
+              "<br> (Same meaning but different word order using aber.) "
+              "<br> Ich legte mich ins Bett, aber ich konnte nicht schlafen."
+              "<br> Attention in german main clauses the verb has to be in second position",
+    "sofern": "<b>sofern - provided (that)<b>: Usually connects a main clause with a subordinate clause. "
+              "Gives a condition for the main clause. "
+              "<br> Example:"
+              "<br> I will fly to London, if my boss approves. "
+              "<br> Ich fliege nach London, sofern mein Chef es genehmigt."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "soweit": "soweit - as far as: Usually connects a main with a subordinate clause. "
+              "<br> Adds a constraint to the main clause: only if the constraint of the subordinate clause applies, "
+              "the meaning of the main clause is affirmed."
+              "<br> Example:"
+              "<br>The weather will be nice tomorrow. as far es I know. "
+              "<br> Das Wetter wird morgen schön, soweit ich weiß."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "als": "als - when: Usually connects a main clause with a subordinate clause. "
+           "<br> The subordinate clause gives information about the time, when the main clause happens. <br>"
+           "<br> When I opened my eyes, I realized it was only a dream. "
+           "<br> Als ich die Augen öffnete, stellte ich fest es war nur ein Traum."
+           "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "wie": "wie as: Usually used to compare parts of sentences. Not to be confused with als. "
+           "<br> als is used to compare using the german Komperativ of adjectives, "
+           "wie is used to compare everything else (nouns, adjectives not in comperative etc.)"
+           "example:"
+           "<br> He is strong as a bear. "
+           "<br> Er ist stark wie ein Bär. "
+           "<br> He is stronger than a bear. "
+           "<br> Er ist stärker als ein Bär.",
+    "oder": "<b>oder - or</b>: usually connects parts of sentence to mark alternatives. "
+            "<br>Examples:"
+            "<br>Do we take the bus or the train."
+            "<br>Nehmen wir den Zug oder den Bus",
+    "als auch": "als auch - as well as: Connects parts of sentences similar to and."
+                "<br> Examples:"
+                "<br> We need butter as well breads. "
+                "<br> Wir brauchen Butter and Brot.",
+    "dass": "<b>dass - that<b>: connects a main clause and a subordinate clause. "
+            "The subordinate clause describes the consequences of the action of the main clause."
+            "<br> Example:"
+            "<br> I was so sad, that i had to cry."
+            "<br> Ich war so traurig, dass ich weinen musste."
+            "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "denn": "<b>denn - because</b>: connects two main phrases. "
+            "<br>The subordinate clause gives a reason for the main clause. Not be confused with weil."
+            "<br>weil has the same meaning like denn, but connects a main clause with a subordinate clause."
+            "<br> I took an umbrella, because it rained."
+            "<br> Ich nahm einen Regenschirm, denn es regnete."
+            "<br> Ich nahm einen Regenschirm, weil es regnete."
+            "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "obwohl": "<b>obwohl - although</b>: connects a main sentence with a subordinate clause."
+              "Mostly used to describe doing something, although something speaks against it."
+              "<br> Example: "
+              "<br> He said yes, although he meant no."
+              "<br> Er sagt ja, obwohl er nein meint."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "trotzdem": "<b>trotzdem - nevertheless</b>: connects two main clauses and is mostly used"
+                "that something is done, despite something speaking against it."
+                "<br> Examples:"
+                "<br> It's raining, nevertheless we go for a walk."
+                "<br> Es regnet, trotzdem gehn wir spazieren."
+                "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "sondern": "<b>sondern - but:</b>: connects two main clauses or parts of sentences"
+               "and is similary used to aber. But where "
+               "aber is used to give a general discrepancy, sondern is used to correct a wrong assumption. "
+               "See the examples."
+               "<br> Examples:"
+               "<br> I don't take the bus, but the train."
+               "<br> Ich nehme nicht den Bus, sondern den Zug."
+               "<br> Tomorow it will rain, but i don't have an umbrella."
+               "<br> Morgen wird es regnen, aber ich habe keinen Regenschirm."
+               "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
     "aber": "aber - but",
     "weil": "weil - because",
     "dennoch": "dennocn - nonetheless",
