@@ -234,11 +234,30 @@ conjunction_rules = {
              "<br> He did something, with which I didn't agree."
              "<br> Er hat etwas getan, womit ich nicht einverstanden war."
              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
-    "damit": "<b>damit - so that, in order that, so</b>:",
-    "um": "um ... zu - in oder to ",
-    "zu": "um ... zu - in oder to",
-    "da": "da - because",
-    "zumal": "zumal - the more so as",
+    "damit": "<b>damit - so that, in order that, so</b>: connects a subordinate clause with a main clause. "
+             "<br> The subordinate clause describes the goal and the main clause the way to reach the goal."
+             "<br> Damit wir genug Essen für das Fest haben, müssen wir jede Menge einkaufen."
+             "<br> In order that we have enough food for the party, we have to buy a lot."
+             "<b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "um": "<b>um ... zu - in oder to</b>: Connects a main clause with a subordinate clause."
+          "The subordinate clause describes a goal and the main clause the mean to reach it."
+          "<br> Example:"
+          "<br> In order to reach the goal, we have to make an effort."
+          "<br> Um das Ziel zu erreichen, müssen wir uns anstrengen."
+          "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "zu": "<b>um ... zu - in oder to</b>: Connects a main clause with a subordinate clause."
+          "The subordinate clause describes a goal and the main clause the mean to reach it."
+          "<br> Example:"
+          "<br> In order to reach the goal, we have to make an effort."
+          "<br> Um das Ziel zu erreichen, müssen wir uns anstrengen."
+          "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "da": "<b>da - because</b>: connects a main clause to a subordinate clause. "
+          "The subordinate clause gives a reason."
+          "<br> Example:"
+          "<br> Because he wasn't there, I assumed he finished work early today."
+          "<br> Weil er nicht da war, vermutete ich, dass er heute früher Feierabend gemacht hat."
+          "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "zumal": "<b>zumal - the more so as<b>",
     "obgleich": "obgleich - though, even though",
     "obschon": "obschon - wether, albeit, though, if",
     "wenngleich": "wenngleich - even though",
