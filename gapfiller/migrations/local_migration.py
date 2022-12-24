@@ -107,7 +107,7 @@ conjunction_rules = {
            "<br> When I opened my eyes, I realized it was only a dream. "
            "<br> Als ich die Augen öffnete, stellte ich fest es war nur ein Traum."
            "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
-    "wie": "wie as: Usually used to compare parts of sentences. Not to be confused with als. "
+    "wie": "<b>wie as</b>: Usually used to compare parts of sentences. Not to be confused with als. "
            "<br> als is used to compare using the german Komperativ of adjectives, "
            "wie is used to compare everything else (nouns, adjectives not in comperative etc.)"
            "example:"
@@ -191,14 +191,6 @@ conjunction_rules = {
                "<br> The blue T-Shirt looked good on her, whereas the green T-shirt did not look good at all."
                "<br> Das blaue T-Shirt stand ihr gut, wogegen das grüne T-Shirt überhaupt nicht."
                "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
-    "seit": "seit - since: "
-            "<br> Example:"
-            "<br> Since she started riding her bike, she feels good."
-            "<br> Seit sie Fahrrad fährt, fühlt sie sich gut.",
-    "seitdem": "since"
-            "<br> Example:"
-            "<br> Since she started riding her bike, she feels good."
-            "<br> Seitdem sie Fahrrad fährt, fühlt sie sich gut.",
     "wenn": "wenn - when, wether, if ..."
             "<br> Example: "
             "<br> If you have time, we can meet."
@@ -257,36 +249,169 @@ conjunction_rules = {
           "<br> Because he wasn't there, I assumed he finished work early today."
           "<br> Weil er nicht da war, vermutete ich, dass er heute früher Feierabend gemacht hat."
           "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
-    "zumal": "<b>zumal - the more so as<b>",
-    "obgleich": "obgleich - though, even though",
-    "obschon": "obschon - wether, albeit, though, if",
-    "wenngleich": "wenngleich - even though",
-    "auch": "sowohl ... als auch",
-    "wenn": "wenn - if, when, by the time",
-    "falls": "falls - if",
-    "sodass": "sodass - so that",
-    "soviel": "soviel - as far as",
-    "soweit": "soweit - as far as",
-    "außer": "außer dass - except that",
-    "als ob": "als ob - as if",
-    "je": "je ... desto - the ... the",
-    "desto": "je ... desto - the ... the",
-    "bevor": "bevor - before",
-    "bis": "bis - till",
+    "zumal": "<b>zumal - the more so as</b>. Connects a main clause with a subordinate clause. "
+             "Example:"
+             "Gives an additional reason, after a first reason was either implicit or explicit provided."
+             "<br> When I searched for my phone, since it was an unlikely location i didn't peeked behind my bed first,"
+             "the more so as it was hard to reach behind it."
+             "<br> Als ich mein Handy suchte, schaute ich zuerst nicht hinter mein Bett, weil der Ort nicht "
+             "wahrscheinlich war, zumal man auch nicht einfach hinter es greifen konnte."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "obgleich": "<b>obgleich - though, even though</b>: connects a main clause with a subordinate clause. The subordinate clause"
+                "gives a (negelected) contradictionn to the main clause. "
+                "and gives a (neglected) reason against the main statement of the main clause."
+                "<br> He drove with his car, even though he had drunk alcohol."
+                "<br> Er fuhr mit dem Wagen, obwohl er Alkohol getrunken hatte."
+                "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "obschon": "<b>obschon - although, wether, albeit, though, if, even though</b>: connects a main clause with a "
+               "subordinate clause and gives a (neglected) reason against the main statement of the main clause."
+               "(Barely used)"
+               "<br> Example:"
+               "<br> He read the book, altough he din't really felt like it."
+               "<br> Er las im Buch, obschon er eigentlich keine Lust hatte."
+               "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "wenngleich": "<b>wenngleich - even though, although, albeit<b>: connects a main clause with a subordinate clause "
+                  "and gives a (neglected) reason against the main statement of the main clause. (barely used)"
+                  "<br> Example:"
+                  "<br> She took a painkiller, although it didn't help the much."
+                  "<br> Sie nahme eine Schemerztablette, obwohl es nicht viel half."
+                  "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b> ",
+    "auch": "<b>sowohl ... als - auch - both ... and</b>: normally used to connect equal parts of a sentence."
+              "<br> Example:"
+              "<br> She spoke both english and german. "
+              "<br> Sie sprach sowohl Englisch als auch Deutsch",
+    "wenn": "<b>wenn - if, when, by the time:</b>: connects a main clause with a subordinate clause. Used in a "
+            "temporal way when describes that something always happend, when something else happened in"
+            "the past or the presence."
+            "Used in a conditional sense: if x happens, y will follow."
+            "<br> Example:"
+            "<br> If it doesn't rain tomorrow, i will drive by bike."
+            "<br> Wenn es morgen nicht regnet, nehme ich das Fahrrad."
+            "<br> When he went to the market, he always took his raincoat with him."
+            "<br> Wenn er zum Markt ging, nahm er immer seinen Regenmantel mit."
+            "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b> ",
+    "falls": "<b>falls - if</b> connects a suborinate clause with a main clause. The subordinate cause"
+             "gives a condition which must be true in order for the main clause to be true."
+             "<br> Example:"
+             "<br> If she can't take the bus, we will fetch her."
+             "<br> Wenn sie den Bus nicht nehmen kann, holen wir sie ab."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b> ",
+    "sodass": "<b>sodass - so that</b>: connects a subordinate clause with a main clause. The subordinate clause "
+              "introduces a consequence of the main clause."
+              "<br> Examples: "
+              "<br> She did the shopping early, so that she had enough time to prepare everyting."
+              "<br> Sie kaufte früh ein, so dass ihr noch genug Zeit zum Vorbereiten blieb."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "soviel": "<b> Soviel - as far as</b>: Connects a subordinate clause with a main clause."
+              "The subordinate clause gives the extent to which the main clause can be applied."
+              "<br> Example:"
+              "<br> As far as I know, the festival is not until next week."
+              "<br> Soviel ich weiß, findet das Fest erst nächste Woche statt."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "soweit": "<b>soweit - as far as</b>: connects a subordinate clause to a main clause."
+              "The subordinate clause gives the extent to which the main clause can be applied."
+              "<br> Example:"
+              "<br> As far as I know, the festival is not until next week."
+              "<br> Soviel ich weiß, findet das Fest erst nächste Woche statt."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "außer": "<b>außer dass - except that</b>: connects a main clause with a subordinate clause. Gives a restriction"
+             "regarding the main clause."
+             "<br> Example:"
+             "<br> The weather was fine throughout the week, except for light rain from time to time."
+             "<br> Das Wetter war die Woche über schön, außer dass es von Zeit zu Zeit leicht regnete."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "als ob": "<b>als ob - as if</b>: connects a main clause with a subordinate clause. Always used with"
+              "the german Konjunktiv (see verbs) and is used to indroduce an unreal statement."
+              "<br> Example:"
+              "<br> Er tat so, als ob die Schuhe zu klein wären."
+              "<br> He did, as if the shoes were to small."
+              "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "je": "<b>je ... desto - the ... the</b>: Connects two main clauses. Describes that if one thing grows another"
+          "thing will grow too."
+          "<br> Example:"
+          "<br> The more she knew she shouldn't have, the more she she wanted it."
+          "<br> Je mehr sie wusste, dass sie es nicht tun sollte, desto mehr wollte sie es."
+          "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "desto": "<b>je ... desto - the ... the</b>: Connects two main clauses. Describes that if one thing grows another"
+             "thing will grow too."
+             "<br> Example:"
+             "The more she knew she shouldn't have, the more she she wanted it."
+             "Je mehr sie wusste, dass sie es nicht tun sollte, desto mehr wollte sie es."
+             "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "bevor": "<b>bevor - before</b> Connects a subordinate clause with a main clause. "
+             "The subordinate clause describes something that happened before the main clause."
+             "<br> Example:"
+             "<br> Before she could say something, her friend already gave the answer."
+             "<br> Bevor sie antworten konnte, gab ihre Freundin schon die Antwort."
+             "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
+    "bis": "bis - till, until: Connects a main clause with a subordinate clause. Expresses simultaneousness or "
+           "post-timeliness of the subordinate clause."
+           "Example:"
+           "I will stay here, until the rain stops."
+           "Ich bleibe hier, bis der Regen aufhört."
+           "I will stay here, until i finish my work."
+           "Ich bleibe hier, bis ich mit der Arbeit fertig bin."
+           "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b>",
     "ehe": "ehe - before. Connects two main clauses. The main clause with ehe is happening before the other."
            "<br> Example:"
            "<br> Before she left, she asked the way."
            "<br> Ehe sie losging, fragte sie nach dem Weg."
            "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
-    "nachdem": "nachdem - after",
-    "seit": "seit - since",
-    "seitdem": "seitdem - ever since, since",
-    "solange": "solange - as long as",
-    "sooft": "sooft - whenever",
-    "während": "während - during, while",
-    "wohingegen": "wohingegen - whereas",
-    "anstatt dass": "anstatt - instead of",
-    "statt dass": "statt - instead of"
+    "nachdem": "<b>nachdem - after</b>: connects a main clause with a subordinate clause. The main clause will happen."
+               "after the subordinate clause."
+               "<br> Example:"
+               "<br> After i went to visit my aunt, i went home."
+               "<br> Nachdem ich meine Tante getroffen hatte, fuhr ich nach Hause"
+               "<br> <b>Attention in german subordinate clauses the verb stands at the end.</b> ",
+    "seit": "<b>seit - since<b>: connects a main sentence with a subordinate clause."
+            "The subordinate cause gives point of time from which some aspect of the main cause "
+            "is expected to be true."
+            "Example:"
+            "<br> Since i know you, it was never boring."
+            "<br> Seit ich dich kenne, war es nie langweilig."
+            "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "seitdem": "<b>seitdem - ever since, since</b>: connects a main sentence with a subordinate clause."
+               "The subordinate clause gives point of time from which some aspect of the main clause "
+               "is expected to be true."
+               "Example:"
+               "<br> Since i know you, it was never boring."
+               "<br> Seit ich dich kenne, war es nie langweilig."
+               "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "solange": "<b>solange - as long as</b>: connects a main sentence with a subordinate clause. The subordinate"
+               "clause gives the timespane someting is expected to be true for the main clause."
+               "<br> Example: "
+               "<br> Solange wir Ferien haben, genießen wir die Tage."
+               "<br> As long as we have holidays, we enjoy our time."
+               "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "sooft": "<b>sooft - whenever<b>: connects a subordinate clause with a main clause. Describes that the events from"
+             "main and subordinate clause always happen at the same time."
+             "<br> Example: "
+             "<br> The line was busy, whenever he tried."
+             "<br> Die Leitung war besetzt, sooft er anrief."
+             "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "während": "<b>während - during, while</b>: connects a subordinate clause with a main clause."
+               "The subordinate clause descibes something happening at the same time the main clause"
+               "is happening."
+               "<br> Example:"
+               "<br> While i was driving my bike, i was listening to some music."
+               "<br> Während ich mein Fahrad fuhr, hörte ich zu etwas Musik."
+               "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "wohingegen": "<b>wohingegen - whereas</b>: connects a subordinate clause and a main clause and "
+                  "describes a contrast between main and subordinate clause."
+                  "<br> The one brother was rich, whereas the other brother was poor."
+                  "<br> Der eine Bruder war reich, wohingegen der andere arm war.",
+    "anstatt dass": "<b>anstatt - instead of. Connects a main phrase with a subordinate phrase. Describes that the action"
+                    "of the subordinate clause was replaced by the action of the main clause.</b>"
+                    "<br> Example:"
+                    "<br> She visited the museum, instead of going to the cinema."
+                    "<br> Sie besuchte das Museum, anstatt ins Kino zu gehen."
+                    "<br> <b>Attention in german main clauses the verb has to be in second position</b>",
+    "statt dass": "statt - instead of. Connects a main phrase with a subordinate phrase. Describes that the action"
+                    "of the subordinate clause was replaced by the action of the main clause."
+                  "<br> Example:"
+                  "<br> Instead of paying attention to the class, she preferred to doodle little figures." 
+                  "<br> Statt dass sie im Unterricht aufpasste, kritzelte sie lieber kleine Figuren."
+                  "<br> <b>Attention in german main clauses the verb has to be in second position</b>"
 }
 
 def create_conjunction_choices(apps, shema_editor):
@@ -294,75 +419,7 @@ def create_conjunction_choices(apps, shema_editor):
     Choice = apps.get_model("gapfiller", "Choice")
     choices = ChoiceSelection(name="conjunctions")
     choices.save()
-    articles = [
-        "und",
-        "sowie",
-        "sowohl",
-        "als auch",
-        "entweder",
-        "jedoch",
-        "sofern",
-        "soweit",
-        "als",
-        "wie",
-        "oder",
-        "dass",
-        "denn",
-        "obwohl",
-        "trotzdem",
-        "sondern",
-        "aber",
-        "weil",
-        "jedoch",
-        "dennoch",
-        "deswegen",
-        "trotz",
-        "ob",
-        "während",
-        "wogegen",
-        "seit",
-        "seitdem",
-        "wenn",
-        "als",
-        "dadurch",
-        "indem",
-        "wodurch",
-        "womit",
-        "damit",
-        "um",
-        "zu",
-        "da",
-        "weil",
-        "zumal",
-        "obgleich",
-        "obschon",
-        "wenngleich",
-        "auch",
-        "wenn",
-        "falls",
-        "sofern",
-        "soweit",
-        "sodass",
-        "soviel",
-        "soweit",
-        "als",
-        "als ob",
-        "je",
-        "desto",
-        "bevor",
-        "bis",
-        "ehe",
-        "nachdem",
-        "seit",
-        "seitdem",
-        "solange",
-        "sooft",
-        "wenn",
-        "während",
-        "wohingegen",
-        "anstatt dass",
-        "statt dass"
-    ]
+
     rule = gen_rule(
         apps,
         undefinite_article_rules
@@ -374,7 +431,8 @@ def create_conjunction_choices(apps, shema_editor):
             "description": conjunction_rules[article]
         }
         return props
-    [Choice(choices=choices, choice=article, rule=gen_rule(apps, gen_props(article))).save() for article in articles]
+    [Choice(choices=choices, choice=article, rule=gen_rule(apps, gen_props(article))).save()
+     for article in conjunction_rules]
 
 
 class Migration(migrations.Migration):
