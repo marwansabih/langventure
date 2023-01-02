@@ -1,0 +1,61 @@
+/* actor */
+
+.actor_title {
+    background: #39395f;
+    text-align: center;
+    margin: 0px;
+    color:#f5eec2;
+    padding:0px;
+    margin-top:-6px;
+}
+
+.left_actor_box {
+    width: 80%;
+    display: inline-block;
+    margin: 0px;
+    border-radius:5px;
+}
+
+.right_actor_box {
+    width: 20%;
+    display: inline-block;
+    float: right;
+}
+
+.inner_box {
+    margin-right: 3px;
+    background: #39395f;
+    border-radius: 5px;
+    padding: 3px;
+    color: #f5eec2;
+}
+
+.name_box {
+    margin-bottom: 3px;
+    padding: 3px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.dialog_box {
+    border-radius: 5px;
+}
+
+.dialog_selection {
+    margin: 3px;
+    background: white;
+    border-radius: 5px;
+}
+
+.dialog_link {
+    color: black;
+}
+
+.add_dialog {
+    display: flex;
+    padding: 3px;
+    margin: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+

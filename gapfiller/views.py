@@ -48,6 +48,7 @@ nlp = spacy.load('de_core_news_sm')
 # todo add better userspecific behaviour (delete, add, edit gapfiller)
 # todo enhance admin panel
 # todo empty gaps in gapfiller (e.g. ein for plural)
+# todo corret mistakes in conjunctions
 
 def gen_local_selection(choice_selection, correct_choice, nr_choices):
     local_selection = LocalChoiceSelection(choice_selection=choice_selection)

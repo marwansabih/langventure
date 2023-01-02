@@ -111,7 +111,8 @@ body {
     margin-left: 50%;
     width:49%;
     float:right;
-    position:fixed;overflow-y: scroll;
+    position:fixed;
+    overflow-y: scroll;
     height:68%;
     border:solid;
     border-color:darkgrey;
