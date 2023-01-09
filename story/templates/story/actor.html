@@ -1,26 +1,141 @@
 {% extends "gapfiller/layout.html" %}
 {% block body %}
     <script>
+        start_dialog = {
+            bubble : "Hi!",
+            options : [],
+        }
+        id_to_dialog = {
+            "start": start_dialog,
+        };
+
+        localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+
+        var current_dialog = "start";
+
+        function setCurrentDialog() {
+            bubble_content = id_to_dialog[current_dialog].bubble;
+            document.getElementById('bubble').innerHTML = bubble_content;
+        }
+
+        function setSelection() {
+            selection = document.getElementById('selection');
+            selection.innerHTML="";
+            sel = document.createElement("option");
+            sel.innerHTML = "choose target";
+            selection.append(sel)
+            for( var key in id_to_dialog){
+                if (key === current_dialog) {
+                    continue;
+                }
+                sel = document.createElement("option");
+                sel.innerHTML = key;
+                selection.append(sel);
+            }
+        }
+
+        function setOptions() {
+            console.log(current_dialog);
+            current_options = id_to_dialog[current_dialog].options;
+            options = document.getElementById('options');
+            options.innerHTML = "<tr> <th> option </th> <th> target </th> </tr>";
+            for(var id in current_options) {
+                option = current_options[id];
+                var row = options.insertRow(-1);
+                var cell = row.insertCell(0);
+                cell.innerHTML = option.content;
+                var cell = row.insertCell(1);
+                cell.innerHTML = option.selection;
+            }
+        }
+
+        function createDialogIds() {
+            dialogs = document.getElementById('dialogs');
+            dialogs.innerHTML = "";
+            for(var key in id_to_dialog) {
+                let dialog = document.createElement("div");
+                dialog.style.color = "black";
+                dialog.style.borderRadius = "5px";
+                dialog.style.paddingLeft = "5px";
+                dialog.innerHTML = key;
+                dialog.dataset.id = key;
+                if(key === current_dialog){
+                    dialog.style.background = "#f5eec2";
+                }
+
+                dialog.onclick = (event) => {
+                    current_dialog = event.target.dataset.id;
+                    createDialogIds();
+                    setSelection();
+                    setOptions();
+                    setCurrentDialog();
+                };
+
+                dialogs.append(dialog);
+            }
+        }
+
+        function send_dialog() {
+            fetch('dialog', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id_to_dialog
+                })
+
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Print result
+                console.log(result);
+            });
+        }
+
         document.addEventListener( "DOMContentLoaded", () => {
+
+            createDialogIds();
+            setCurrentDialog();
+            setSelection();
+            setOptions();
+
             bubble_button = document.getElementById('update_bubble')
             bubble_button.onclick = () => {
                 bubble_content = document.getElementById('bubble_content').value;
-                console.log(bubble_content);
                 document.getElementById('bubble').innerHTML = bubble_content;
+                id_to_dialog[current_dialog].bubble = bubble_content;
+                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
             };
             create_option = document.getElementById('create_option')
             create_option.onclick = () => {
-                selection = document.getElementById('selection').value;
+                sel = document.getElementById('selection').value;
                 option_content = document.getElementById('option_content').value;
-                options = document.getElementById('options');
-                var row = options.insertRow(-1);
-                var cell = row.insertCell(0);
-                cell.innerHTML = option_content;
-                var cell = row.insertCell(1);
-                cell.innerHTML = selection;
-
-
+                var option = {
+                    content: option_content,
+                    selection: sel,
+                }
+                id_to_dialog[current_dialog].options.push(option);
+                setOptions();
+                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
             };
+
+            new_dialog = document.getElementById('new_dialog');
+            new_dialog.onclick = () => {
+                content = document.getElementById('dialog_content').value;
+                empty_dialog = {
+                    bubble: "",
+                    options: [],
+                }
+                id_to_dialog[content] = empty_dialog;
+                createDialogIds();
+                setSelection();
+                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+            }
+
+            create_char = document.getElementById('create_char');
+            create_char.onclick = () => {
+                send_dialog();
+            }
+
+
         });
     </script>
     <div class="actor_title">
@@ -32,7 +147,7 @@
             <div class="create_warning"> <p>{{ message }}</p> </div>
         {% endif %}
 
-        <form action="{% url 'actor' %}" method="post">
+        <div>
             {% csrf_token %}
             <div class="left_actor_box">
                 <div class="inner_box">
@@ -46,7 +161,7 @@
                                 color:black;
                                 margin:5px;
                                 margin-top:2px;
-                                min-height:50px;";
+                                min-height:50px;"
                     >
                         <p id="bubble">
                             Hello how can i help you?
@@ -59,7 +174,10 @@
                                    id="bubble_content"
                                    placeholder="Choose content of speech bubble"
                             >
-                            <div class="btn btn-secondary" id="update_bubble" style="font-size:13px;width:10%;margin-top:0px;">
+                            <div class="btn btn-secondary"
+                                        id="update_bubble"
+                                        style="font-size:13px;width:10%;margin-top:0px;"
+                            >
                                 update bubble
                             </div>
                     </div>
@@ -70,21 +188,6 @@
                                 padding:5px;"
                     >
                         <table style="width:100%;" id="options">
-                            <tr>
-                                <th>
-                                    option
-                                </th>
-                                <th>
-                                    target
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Wir könnten eine Bank ausrauben.
-                                <td>
-                                    end
-                                </td>
-                            </tr>
                         </table>
                     </div>
                     <div class="form-group" style="margin:0px;padding:5px;color:black;display:flex">
@@ -95,22 +198,20 @@
                                    placeholder="Choose content of option"
                             >
                             <select style="width:10%;border-radius:5px;" id="selection">
-                                <option>
-                                    choose target
-                                </option>
-                                <option>
-                                    Test
-                                </option>
-                                <option>
-                                    Test2
-                                </option>
                             </select>
                             <div class="btn btn-secondary" id="create_option" style="font-size:13px;width:10%;margin-top:0px;">
                                 create option
                             </div>
                     </div>
                     <div style="margin:5px;">
-                        <input class="btn btn-secondary" style="width:100%;" type="submit" value="Create character">
+                        <a class="btn btn-secondary"
+                           style="width:100%;"
+                           type="submit"
+                           id="create_char"
+                           href="{% url 'dialog'  %}"
+                           value="Create character">
+                            Create character
+                        </a>
                     </div>
                 </div>
             </div>
@@ -133,29 +234,25 @@
                                 margin-top:5px;">
                             <h4 style="margin:0px;">Dialogs</h4>
                         </div>
-                        <div class="dialog_selection">
-                            <div style="background:#f5eec2;margin:0px;padding:0px;border-radius: 5px;">
-                                <a href="#">Start</a>
-                            </div>
-                            <a href="#">About Luigi</a><br>
-                            <a href="#">About Mario</a>
+                        <div class="dialog_selection" id="dialogs">
                         </div>
                         <div class="form-group add_dialog">
                             <input autofocus class="form-control"
-                                type="text"
-                                name="name"
-                                placeholder="Choose new dialog title"
+                                   id="dialog_content"
+                                   type="text"
+                                   name="name"
+                                   placeholder="Choose new dialog title"
                             >
-                            <button
+                            <div    id="new_dialog"
                                     class="btn btn-secondary"
                                     style="font-size:13px;width:37%"
                             >
                                 add dialog
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

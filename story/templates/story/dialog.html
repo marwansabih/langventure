@@ -1,0 +1,44 @@
+{% extends "gapfiller/layout.html" %}
+{% block body %}
+    <script>
+        json_string = localStorage.getItem("id_to_dialog");
+        id_to_dialog = JSON.parse(json_string);
+        current_dialog = "start"
+        function set_bubble() {
+            bubble = document.getElementById("bubble");
+            console.log(current_dialog);
+            bubble.innerHTML = id_to_dialog[current_dialog].bubble;
+        }
+        function add_options() {
+            options = document.getElementById("options");
+            options.innerHTML = "";
+            id_to_dialog[current_dialog].options.forEach(option => {
+                console.log(option)
+                div = document.createElement("div");
+                div.innerHTML = option.content;
+                div.dataset.target = option.selection;
+                div.onclick = (event) => {
+                    option = event.target;
+                    current_dialog = option.dataset.target;
+                    set_bubble();
+                    add_options();
+                };
+                options.append(div);
+            });
+        }
+        document.addEventListener( "DOMContentLoaded", () => {
+            console.log(id_to_dialog);
+            set_bubble();
+            add_options();
+        });
+    </script>
+    <div class="actor_title">
+            <h1> Test Dialog</h1>
+    </div>
+    <div style="background:white;margin:10px;padding:10px;" id="bubble">
+
+    </div>
+    <div style="background:white;margin:10px;padding:10px;" id="options">
+
+    </div>
+{% endblock %}
