@@ -15,6 +15,10 @@
             id_to_dialog[current_dialog].options.forEach(option => {
                 console.log(option)
                 div = document.createElement("div");
+                div.classList.add("btn");
+                div.classList.add("btn-secondary");
+                div.style.width="100%";
+                div.style.marginBottom = "5px";
                 div.innerHTML = option.content;
                 div.dataset.target = option.selection;
                 div.onclick = (event) => {
@@ -26,19 +30,53 @@
                 options.append(div);
             });
         }
+
+        function setName(){
+            r_name = document.getElementById("name");
+            l_name = document.getElementById("says");
+
+            char_name = localStorage.getItem("name");
+            r_name.innerHTML = char_name;
+            l_name.innerHTML = char_name + " says:";
+        }
+
+        function setImage() {
+            var dataImage = localStorage.getItem('image');
+            if(!dataImage) {
+                return;
+            }
+            img = document.getElementById("portrait");
+            img.src = "data:image/png;base64," + dataImage;
+            img.style.width = "100%";
+        }
         document.addEventListener( "DOMContentLoaded", () => {
-            console.log(id_to_dialog);
+            setName();
             set_bubble();
             add_options();
+            setImage();
         });
     </script>
     <div class="actor_title">
             <h1> Test Dialog</h1>
     </div>
-    <div style="background:white;margin:10px;padding:10px;" id="bubble">
-
-    </div>
-    <div style="background:white;margin:10px;padding:10px;" id="options">
-
+    <div class="create_section">
+        <div class="left_actor_box">
+            <div class="inner_box" style="background:#555555">
+                <h4 style="color:#f5eec2;text-align:center" id="says">no name says:</h4>
+                <div style="background:white;margin:10px;padding:10px;color:black;border-radius:5px;" id="bubble">
+                </div>
+                <div id="options" style="padding-left:10px;padding-right:10px;padding-bottom:5px;">
+                </div>
+            </div>
+        </div>
+        <div class="right_actor_box">
+            <div class="inner_box" style="background:#555555">
+                <h4
+                        style="color:#f5eec2;text-align:center"
+                        id="name"
+                >no name</h4>
+                <img id="portrait">
+            </div>
+        </div>
     </div>
 {% endblock %}
