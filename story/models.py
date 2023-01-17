@@ -3,16 +3,19 @@ from gapfiller.models import User
 
 
 class Story(models.Model):
-    pass
+    name = models.TextField()
+    finished = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storys", default="")
 
 
 class Scene(models.Model):
+    story = models.ForeignKey(Story, blank=True, default=None, on_delete=models.CASCADE, related_name="scenes")
     name = models.TextField()
-    description = models.TextField()
+    background = models.ImageField(blank=True, default=None)
 
 
 class Actor(models.Model):
-    #scence = models.ForeignKey(Scene, on_delete=models.CASCADE, related_name="actors")
+    scence = models.ForeignKey(Scene, blank=True, default=None, on_delete=models.CASCADE, related_name="actors")
     name = models.TextField()
 
 
