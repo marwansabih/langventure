@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection, User
+from story.models import Story
 from gtts import gTTS
 from django.core.files import File
 from pathlib import Path
@@ -17,7 +18,7 @@ nlp = spacy.load('de_core_news_sm')
 
 # Create your views here.
 
-# todo add conversation mode with two heads speaking ( a true langventure )
+# todo enhance langventure - knowleged items etc.
 # todo picture for words
 # todo add verb choices
 # todo add noun choices
@@ -48,7 +49,7 @@ nlp = spacy.load('de_core_news_sm')
 # todo add better userspecific behaviour (delete, add, edit gapfiller)
 # todo enhance admin panel
 # todo empty gaps in gapfiller (e.g. ein for plural)
-# todo corret mistakes in conjunctions
+# todo correct mistakes in conjunctions
 
 def gen_local_selection(choice_selection, correct_choice, nr_choices):
     local_selection = LocalChoiceSelection(choice_selection=choice_selection)
@@ -133,8 +134,11 @@ def index(request):
     if not request.user:
         HttpResponseRedirect(reverse("login"))
     entries = Entry.objects.all()
+    stories = Story.objects.filter(finished=True)
+    print(stories)
     return render(request, "gapfiller/index.html", {
         'entries': entries,
+        'stories': stories,
     })
 
 
@@ -154,7 +158,7 @@ def create(request):
 
 
 def show(request, id):
-    entry = Entry.objects.filter(pk=id).first()
+    entry = Entry.objects.get(pk=id)
     title = entry.title.tokens.all()
     paragraphs = entry.paragraphs.all()
     #rules = Rule.objects.all()

@@ -1,4 +1,177 @@
 {% extends "gapfiller/layout.html" %}
 {% block body %}
-    <h1>Test</h1>
+    <script>
+        background = null;
+
+        current_id_to_dialog = null;
+
+        current_id = null;
+
+
+        function setBackground() {
+
+                 if( !background ){
+                    return;
+                 }
+
+                var img = document.createElement("img");
+                img.src = URL.createObjectURL(background);
+                img.style.width = "800px";
+                img.style.height = "600px";
+                img.position = "relative";
+                img.style.borderRadius = "5px";
+                bg = document.getElementById('bg');
+                bg.innerHTML="";
+                bg.append(img);
+                img.onload = function(){
+                    /*imgData = getBase64Image(this);
+                    localStorage.setItem("bg",imgData);*/
+                }
+        }
+
+        function place_actor(actor) {
+            console.log(actor.dataset)
+            console.log(actor.dataset.top)
+            actor.style.transform = actor.dataset.scale;
+            actor.style.top = actor.dataset.top;
+            actor.style.left = actor.dataset.left;
+        }
+
+        function scale_dialog(){
+            field = document.getElementById("dialog_field")
+            field.style.width = `${window.innerWidth-880}px`
+            console.log(`{$window.innerWidth-850}px`)
+        }
+
+        function set_dialog(){
+                    start = current_id_to_dialog[current_id];
+                    bubble = document.getElementById("bubble");
+                    bubble.innerHTML = start["bubble"];
+                    options = start["options"];
+                    opts = document.getElementById("options");
+                    opts.innerHTML = ""
+                    options.forEach( option => {
+                        div = document.createElement("div");
+                        description = document.createElement("label");
+                        description.innerHTML = `&nbsp;${option["content"]}`
+                        label = document.createElement("label")
+                        label.style.borderRadius = "5px";
+                        label.style.padding = "3px";
+                        label.className = "btn btn-secondary"
+                        label.innerHTML = "->"
+                        div.append(label)
+                        div.append(description)
+                        //div.innerHTML = `<label class="btn btn-secondary" style="border-radius:5px;padding:3px" ><b>-></b></label>&nbsp;${option["content"]}`;
+                        label.dataset.next = option["selection"];
+                        label.onclick =  e => {
+                            current_id = e.target.dataset.next;
+                            console.log(current_id);
+                            set_dialog();
+                        };
+                        opts.append(div);
+                    });
+        }
+
+
+        function add_dialog(actor){
+            actor.onclick = (e) => {
+                target = e.target;
+                id = target.dataset.charid;
+                fetch(`/get_dialog/${id}`, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(id_to_dialog => {
+                    current_id_to_dialog = id_to_dialog;
+                    console.log(id_to_dialog);
+                    current_id = "start";
+                    set_dialog();
+                });
+
+            }
+        }
+
+
+
+        document.addEventListener( "DOMContentLoaded", () => {
+            scale_dialog();
+            window.onresize = () => {
+                scale_dialog();
+            };
+            document.querySelectorAll(".actor").forEach( actor => {
+                place_actor(actor);
+                add_dialog(actor);
+
+            })
+            background_input = document.getElementById("bgi");
+        });
+    </script>
+    <div class="actor_title">
+            <h1>The jungle adventure</h1>
+    </div>
+
+
+    <div class="create_section" style="min-height:100%;">
+
+        {% if message %}
+            <div class="create_warning"> <p>{{ message }}</p> </div>
+        {% endif %}
+
+        {% for actor in current_scene.actors.all %}
+                <img class="actor"
+                     src="{{ actor.image.url }}"
+                     data-scale="{{ actor.scale }}"
+                     data-top="{{ actor.top }}"
+                     data-left="{{ actor.left }}"
+                     data-charid = "{{ actor.id }}"
+                     style="position:absolute; margin-top:0px;">
+        {% endfor %}
+
+        <div>
+            {% csrf_token %}
+            <div class="left_actor_box"
+                 id="bg"
+                 data-sceneid="{{ current_scene_id }}"
+                 style="background:black; width:800px">
+                <img src="{{ current_scene.background.url }}" style="width:800px;height:600px;border-radius:5px;">
+            </div>
+            <div class="right_actor_box" id="dialog_field">
+                <div class="inner_box" style="padding:5px;height:600px">
+
+                    <div id="description_box"
+                         style="background:white;margin:5px;border-radius:5px;color:black;padding:5px"
+                    >
+                        You're inside the new witter central from Eton the Husk, click on the Husk to start a dialog.
+                    </div>
+                    <div style="padding-left:5px;">
+                        <h4 id="name">The ranger says:</h4>
+                    </div>
+                    <div id="bubble"
+                         style="background:white;margin:5px;border-radius:5px;color:black;padding:5px"
+                    >
+                    </div>
+                    <div style="padding-left:5px;">
+                        <h4 id="answere">Choose your answere:</h4>
+                    </div>
+                    <div>
+                        <div id="options" style="background:white;margin:5px;border-radius:5px;color:black;padding:5px">
+                        </div>
+                    </div>
+                    <div style="padding-left:5px;">
+                        <h4 id="translation_title">Click on a word to get for a translation</h4>
+                    </div>
+                    <div id="translation" style="background:white;margin:5px;border-radius:5px;color:black;padding:5px">
+                        endless<br>
+                        Endless expanses, these are the adventures of Ranger Kirk, the audacious one.
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4>Select Scene</h4>
+                {% for scene in story.scenes.all %}
+                    <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

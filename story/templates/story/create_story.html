@@ -3,6 +3,82 @@
     <script>
         background = null;
 
+        function update_pos_scale(actor){
+            z = actor.style.top;
+            left = actor.style.left;
+            scale = actor.style.transform;
+            id = actor.dataset.charid;
+            let formData = new FormData();
+            formData.append('top', z);
+            formData.append('left', left);
+            formData.append('scale', scale);
+            fetch('/set_character_pos_scale/' + id, {
+               method: 'POST',
+               body: formData
+            })
+        }
+
+        function zoom(event) {
+            target = event.target
+            let scale = target.getBoundingClientRect().width / target.offsetWidth;
+            event.preventDefault();
+
+
+            scale += event.deltaY * -0.0001;
+
+            // Restrict scale
+            scale = Math.min(Math.max(.05, scale), 4);
+
+            // Apply scale transform
+            event.target.style.transform = `scale(${scale})`;
+            update_pos_scale(event.target);
+        }
+
+
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV:
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement(e) {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+                console.log("HERE");
+                console.log(e.target.style.top);
+                update_pos_scale(e.target);
+            }
+        }
+
         function setBackground() {
 
                  if( !background ){
@@ -11,8 +87,8 @@
 
                 var img = document.createElement("img");
                 img.src = URL.createObjectURL(background);
-                img.style.width = "100%";
-                img.style.height = "85%";
+                img.style.width = "800px";
+                img.style.height = "600px";
                 img.position = "relative";
                 img.style.borderRadius = "5px";
                 bg = document.getElementById('bg');
@@ -24,48 +100,88 @@
                 }
         }
 
+        function place_actor(actor) {
+            console.log(actor.dataset)
+            console.log(actor.dataset.top)
+            actor.style.transform = actor.dataset.scale;
+            actor.style.top = actor.dataset.top;
+            actor.style.left = actor.dataset.left;
+        }
+
+
         document.addEventListener( "DOMContentLoaded", () => {
+            document.querySelectorAll(".actor").forEach( actor => {
+                place_actor(actor);
+                actor.onwheel = zoom;
+                dragElement(actor);
+            })
             background_input = document.getElementById("bgi");
             background_input.oninput = function (event) {
+                id = document.getElementById("bg").dataset.sceneid;
                 background = event.target.files[0];
                 setBackground();
-                fetch('/background/', {
+                let formData = new FormData()
+                formData.append('image', background)
+                fetch('/background/' + id, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        body: background,
-                    })
+                    body: formData
                 })
-
             }
         });
     </script>
     <div class="actor_title">
             <h1> Create new Langventure</h1>
     </div>
+
+
     <div class="create_section" style="min-height:100%;">
 
         {% if message %}
             <div class="create_warning"> <p>{{ message }}</p> </div>
         {% endif %}
 
-        <div style="min-height:100%">
+        {% for actor in current_scene.actors.all %}
+                <img class="actor"
+                     src="{{ actor.image.url }}"
+                     data-scale="{{ actor.scale }}"
+                     data-top="{{ actor.top }}"
+                     data-left="{{ actor.left }}"
+                     data-charid = "{{ actor.id }}"
+                     style="position:absolute; margin-top:0px;">
+        {% endfor %}
+
+        <div>
             {% csrf_token %}
             <div class="left_actor_box"
                  id="bg"
-                 style="background:black;min-height:85%;">
+                 data-sceneid="{{ current_scene_id }}"
+                 style="background:black; width:600px">
+                {% if current_scene.background %}
+                    <img src="{{ current_scene.background.url }}" style="width:800px;height:600px;border-radius:5px;">
+                {% endif %}
             </div>
             <div class="right_actor_box">
-                <div class="inner_box">
+                <div class="inner_box" style="padding:5px;">
+                     <h4>Sence name</h4>
                      <input type="file"
                             id="bgi" name="bgi"
                             accept="image/png, image/jpeg"
                      >
-                    <div style="padding:5px;">
+                    <divs>
                         <h4>Select Scene</h4>
                         {% for scene in story.scenes.all %}
                             <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
                         {% endfor %}
+                    </divs>
+                    <div>
+                        <h4>Select Character</h4>
+                        {% for scene in story.character.all %}
+                            <div class="btn btn-secondary" style="width:100%">{{scene.characters}}</div>
+                        {% endfor %}
                     </div>
+                    <a class="btn btn-secondary" style="width:100%" href="{% url 'actor' current_scene.id %}">
+                        add new character
+                    </a>
                 </div>
             </div>
         </div>

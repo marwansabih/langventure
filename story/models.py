@@ -11,16 +11,20 @@ class Story(models.Model):
 class Scene(models.Model):
     story = models.ForeignKey(Story, blank=True, default=None, on_delete=models.CASCADE, related_name="scenes")
     name = models.TextField()
-    background = models.ImageField(blank=True, default=None)
+    background = models.ImageField(blank=True, default=None, upload_to="images")
 
 
 class Actor(models.Model):
-    scence = models.ForeignKey(Scene, blank=True, default=None, on_delete=models.CASCADE, related_name="actors")
+    scene = models.ForeignKey(Scene, blank=True, default=None, on_delete=models.CASCADE, related_name="actors")
     name = models.TextField()
+    image = models.ImageField(blank=True, default=None, upload_to="images")
+    scale = models.TextField(default="scale(1)")
+    top = models.TextField(default="0px")
+    left = models.TextField(default="0px")
 
 
 class Dialog(models.Model):
-    name = models.TextField(unique=True)
+    name = models.TextField()
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name="dialogs")
     bubble = models.TextField()
 

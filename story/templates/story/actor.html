@@ -114,9 +114,11 @@
 
                 var img = document.createElement("img");
                 img.src = URL.createObjectURL(image);
-                img.style.width = "100%";
-                img.style.height = "100%";
+                img.style.width = "50%";
                 img.position = "relative";
+                img.style.marginLeft= "auto";
+                img.style.marginRight= "auto";
+                img.style.display= "block";
                 portrait = document.getElementById('portrait');
                 portrait.innerHTML="";
                 portrait.append(img);
@@ -134,7 +136,11 @@
             }
             var img = document.createElement("img");
             img.src = "data:image/png;base64," + dataImage;
-            img.style.width = "100%";
+            img.style.width = "50%";
+            img.position = "relative";
+            img.style.marginLeft= "auto";
+            img.style.marginRight= "auto";
+            img.style.display= "block";
             portrait = document.getElementById("portrait");
             portrait.innerHTML="";
             portrait.append(img);
@@ -143,6 +149,21 @@
         function setName(){
             name = document.getElementById("char_name").value;
             localStorage.setItem("name",name);
+        }
+
+        function createChar(){
+            id = document.getElementById("id_storage").dataset.sceneid;
+            let formData = new FormData()
+            formData.append('image', image)
+            formData.append('name', name)
+            formData.append(
+                'id_to_dialog',
+                JSON.stringify(id_to_dialog)
+            );
+            fetch('/create_character/' + id, {
+                method: 'POST',
+                body: formData
+            })
         }
 
         document.addEventListener( "DOMContentLoaded", () => {
@@ -186,9 +207,14 @@
                 localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
             }
 
+            show_dialog = document.getElementById('dialog');
+            show_dialog.onclick = () => {
+                send_dialog();
+            }
+
             create_char = document.getElementById('create_char');
             create_char.onclick = () => {
-                send_dialog();
+                createChar();
             }
 
             image_input = document.getElementById('avatar');
@@ -204,6 +230,7 @@
             }
         });
     </script>
+    <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
     <div class="actor_title">
             <h1> Create new character</h1>
     </div>
@@ -271,12 +298,20 @@
                     </div>
                     <div style="margin:5px;">
                         <a class="btn btn-secondary"
+                           style="width:100%; margin-bottom: 5px;"
+                           type="submit"
+                           id="dialog"
+                           href="{% url 'dialog'  %}"
+                           value="Create character">
+                            Test dialog
+                        </a>
+                        <a class="btn btn-secondary"
                            style="width:100%;"
                            type="submit"
                            id="create_char"
-                           href="{% url 'dialog'  %}"
+                           href="{% url 'create_story'  %}"
                            value="Create character">
-                            Create character
+                            Create Character
                         </a>
                     </div>
                 </div>

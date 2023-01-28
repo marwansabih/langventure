@@ -24,6 +24,22 @@
 
     </script>
     <div style="margin:0; padding:3px;">
+        <h4> Use Langventures to gather experience with a language and improve your vocabulary</h4>
+        {% for story in stories %}
+            <a href="{% url 'story' story.id %}">
+                <div class="index_entry">
+                    <div class="index_title">
+                        <p style="font-weight:bold; ">
+                            The Adventures of Eton the Husk a test langventure
+                        </p>
+                    </div>
+                    <p style="font-size:15px;padding-left:5px;">
+                        Eton the Husk has taken over the Witter Central and now is threatening to...
+                    </p>
+                </div>
+            </a>
+        {% endfor %}
+        <div style="width=400px;display:block;margin-top:130px"><h4> Use gapfillers to improve your grammar.</h4></div>
         {% for entry in entries %}
         <a href="{% url 'show' entry.id %}">
             <div class="index_entry">
