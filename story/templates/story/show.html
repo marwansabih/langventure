@@ -52,16 +52,25 @@
                     opts.innerHTML = ""
                     options.forEach( option => {
                         div = document.createElement("div");
-                        description = document.createElement("label");
-                        description.innerHTML = `&nbsp;${option["content"]}`
-                        label = document.createElement("label")
+                        description = document.createElement("div");
+                        description.innerHTML = `${option["content"]}`
+                        description.style.display = "inline-block";
+                        description.style.width = "95%";
+                        description.style.verticalAlign = "middle";
+                        description.style.padding = "5px";
+                        label = document.createElement("div")
+                        label.style.display = "inline-block";
                         label.style.borderRadius = "5px";
-                        label.style.padding = "3px";
+                        label.style.padding = "5px";
                         label.className = "btn btn-secondary"
-                        label.innerHTML = "->"
-                        div.append(label)
-                        div.append(description)
-                        //div.innerHTML = `<label class="btn btn-secondary" style="border-radius:5px;padding:3px" ><b>-></b></label>&nbsp;${option["content"]}`;
+                        label.innerHTML = "&#x2192;"
+                        label.style.width = "5%";
+                        label.style.verticalAlign = "middle";
+                        container = document.createElement("div");
+                        container.style.verticalAlign = "middle";
+                        container.append(label);
+                        container.append(description);
+                        div.append(container);
                         label.dataset.next = option["selection"];
                         label.onclick =  e => {
                             current_id = e.target.dataset.next;
