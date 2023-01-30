@@ -90,10 +90,13 @@
                     method: 'GET'
                 })
                 .then(response => response.json())
-                .then(id_to_dialog => {
-                    current_id_to_dialog = id_to_dialog;
-                    console.log(id_to_dialog);
+                .then(dialog_info => {
+                    current_id_to_dialog = dialog_info["id_to_dialog"];
                     current_id = "start";
+                    n = dialog_info["name"];
+                    console.log(n);
+                    name_header = document.getElementById("name");
+                    name_header.innerHTML = `${n} says:`;
                     set_dialog();
                 });
 
@@ -153,7 +156,7 @@
                         You're inside the new witter central from Eton the Husk, click on the Husk to start a dialog.
                     </div>
                     <div style="padding-left:5px;">
-                        <h4 id="name">The ranger says:</h4>
+                        <h4 id="name"></h4>
                     </div>
                     <div id="bubble"
                          style="background:white;margin:5px;border-radius:5px;color:black;padding:5px"

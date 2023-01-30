@@ -132,6 +132,9 @@ def get_dialog(request, char_id):
             options = [{"content": option.text, "selection": option.target.name} for option in opts]
             id_to_dialog[id] = {"bubble": bubble, "options": options}
 
-        print(id_to_dialog)
+        dialog_info = {
+            "name": actor.name,
+            "id_to_dialog": id_to_dialog
+        }
 
-        return JsonResponse(id_to_dialog)
+        return JsonResponse(dialog_info)
