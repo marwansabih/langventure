@@ -61,12 +61,28 @@ def dialog(request):
 
 
 @csrf_exempt
+def set_scene_name(request, scene_id):
+    if request.method == "POST":
+        scene = Scene.objects.get(pk=scene_id)
+        scene.name = request.Post.get("name")
+        scene.save()
+        return render(request, "story/success.html")
+
+@csrf_exempt
+def set_scene_description(request, scene_id):
+    if request.method == "POST":
+        scene = Scene.objects.get(pk=scene_id)
+        scene.description = request.POST.get("description")
+        scene.save()
+        return render(request, "story/success.html")
+
+@csrf_exempt
 def set_background(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         scene.background = request.FILES.get("image")
         scene.save()
-        return render(request, "story/success.html")
+        return JsonResponse({"message": "scene description successfully updated."}, status=201)
 
 
 @csrf_exempt
@@ -104,7 +120,6 @@ def create_character(request, scene_id):
 def set_character_pos_scale(request, char_id):
     if request.method == "POST":
         actor = Actor.objects.get(pk=char_id)
-        print(request.POST)
         top = request.POST.get("top")
         left = request.POST.get("left")
         scale = request.POST.get("scale")
@@ -120,7 +135,6 @@ def set_character_pos_scale(request, char_id):
 @csrf_exempt
 def get_dialog(request, char_id):
     if request.method == "GET":
-        print("HERE HERE")
         actor = Actor.objects.get(pk=char_id)
         # could I simply use serialize?
         dialogs = actor.dialogs.all()

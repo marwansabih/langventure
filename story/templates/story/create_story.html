@@ -115,6 +115,21 @@
                 actor.onwheel = zoom;
                 dragElement(actor);
             })
+            //handle name
+
+            //handle background description
+            desc = document.getElementById("description");
+            desc.onchange = event => {
+                id = document.getElementById("bg").dataset.sceneid;
+                let formData = new FormData();
+                formData.append('description', event.target.value);
+                fetch('/set_scene_description/' +id, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            //handle background
             background_input = document.getElementById("bgi");
             background_input.oninput = function (event) {
                 id = document.getElementById("bg").dataset.sceneid;
@@ -127,6 +142,8 @@
                     body: formData
                 })
             }
+
+
         });
     </script>
     <div class="actor_title">
@@ -163,6 +180,17 @@
             <div class="right_actor_box">
                 <div class="inner_box" style="padding:5px;">
                      <h4>Sence name</h4>
+                     <input type="text"
+                            id="name"
+                            style="margin-top:-5px; margin-bottom:5px; border-radius:5px;width:100%"
+                     >
+                    <h4>Sence description</h4>
+                     <textarea
+                            id="description"
+                            rows="3"
+                            style="margin-top:-5px; margin-bottom:5px; border-radius:5px; width:100%; rows:3;"
+                     ></textarea>
+                    <h4>background</h4>
                      <input type="file"
                             id="bgi" name="bgi"
                             accept="image/png, image/jpeg"

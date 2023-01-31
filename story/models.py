@@ -12,6 +12,7 @@ class Scene(models.Model):
     story = models.ForeignKey(Story, blank=True, default=None, on_delete=models.CASCADE, related_name="scenes")
     name = models.TextField()
     background = models.ImageField(blank=True, default=None, upload_to="images")
+    description = models.TextField(default="")
 
 
 class Actor(models.Model):
