@@ -183,13 +183,14 @@
                      <input type="text"
                             id="name"
                             style="margin-top:-5px; margin-bottom:5px; border-radius:5px;width:100%"
+                            value="{{ current_scene.name }}"
                      >
                     <h4>Sence description</h4>
                      <textarea
                             id="description"
                             rows="3"
                             style="margin-top:-5px; margin-bottom:5px; border-radius:5px; width:100%; rows:3;"
-                     ></textarea>
+                     >{{current_scene.description}}</textarea>
                     <h4>background</h4>
                      <input type="file"
                             id="bgi" name="bgi"

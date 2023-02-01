@@ -29,6 +29,7 @@
                 <a class="header_link btn" href="logout"> Logout {{ user.get_username }} </a>
                 <a class="header_link btn" href="{% url 'create' %}"> Create new Text </a>
                 <a class="header_link btn" href="{% url 'create_story' %}"> Create new Langventure </a>
+                <a class="header_link btn" href="{% url 'update_menu' %}"> Update Langventure </a>
             {% else %}
                 <a class="header_link btn" href="{% url 'login' %}"> Login </a>
             {% endif %}

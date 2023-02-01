@@ -1,0 +1,8 @@
+{% extends "gapfiller/layout.html" %}
+{% block body %}
+    <ul>
+        {% for story in stories %}
+            <li><a href="{% url 'update_story' story.id %}">{{story.name}}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

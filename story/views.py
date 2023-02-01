@@ -9,6 +9,7 @@ import PIL
 import base64
 
 
+@login_required
 def story(request, id):
     story = Story.objects.get(pk=id)
     current_scene = story.scenes.filter(name="start").first()
@@ -30,8 +31,27 @@ def create_story(request):
         scene = Scene(story=story, name="start")
         scene.save()
 
-    current_scene = story.scenes.filter(name="start").first()
-    print(current_scene)
+    current_scene = story.scenes.all().first()
+
+    return render(request, "story/create_story.html", {
+        "story": story,
+        "current_scene": current_scene,
+        "current_scene_id": current_scene.id
+    })
+
+
+@login_required
+def update_menu(request):
+    user = request.user
+    stories = Story.objects.filter(user=user).all()
+    return render(request, "story/update_menu.html", {
+        "stories": stories
+    })
+
+@login_required
+def update_story(request, story_id):
+    story = Story.objects.get(pk=story_id)
+    current_scene = story.scenes.all().first()
 
     return render(request, "story/create_story.html", {
         "story": story,
@@ -55,9 +75,6 @@ def dialog(request):
         data = json.loads(request.body)
         print(data)
     return render(request, "story/dialog.html")
-    #render(request, "story/success.html")
-    #redirect("show", id=1)
-    #HttpResponseRedirect(reverse("story", kwargs={"id": 1})) #JsonResponse({"message": "Character successfully created."}, status=201)
 
 
 @csrf_exempt
