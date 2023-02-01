@@ -9,6 +9,18 @@ import PIL
 import base64
 
 
+#   TODO
+"""
+    - knowledge items through conversation
+    - speech 
+    - items to collect
+    - add translation
+    - update character menu
+    - enable new scenes
+    - add current scene
+"""
+
+
 @login_required
 def story(request, id):
     story = Story.objects.get(pk=id)
