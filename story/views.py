@@ -18,6 +18,8 @@ import base64
     - update character menu
     - enable new scenes
     - add current scene
+    - return json responses
+    - fix bug after creating new characters with javascript
 """
 
 
@@ -81,11 +83,18 @@ def actor(request, scene_id):
 
 
 @csrf_exempt
+def set_story_name(request, story_id):
+    if request.method == "POST":
+        story = Story.objects.get(pk=story_id)
+        story.name = request.POST.get("name")
+        story.save()
+        return render(request, "story/success.html")
+
+@csrf_exempt
 def dialog(request):
     print(request)
     if request == "POST":
         data = json.loads(request.body)
-        print(data)
     return render(request, "story/dialog.html")
 
 
@@ -93,7 +102,8 @@ def dialog(request):
 def set_scene_name(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
-        scene.name = request.Post.get("name")
+        scene.name = request.POST.get("name")
+        print(scene.name)
         scene.save()
         return render(request, "story/success.html")
 

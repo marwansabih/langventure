@@ -115,9 +115,33 @@
                 actor.onwheel = zoom;
                 dragElement(actor);
             })
-            //handle name
 
-            //handle background description
+            //handle story name
+            na = document.getElementById("story_name");
+            na.onchange = event => {
+                id = document.getElementById("bg").dataset.storyid;
+                console.log(id);
+                let formData = new FormData();
+                formData.append('name', event.target.value);
+                fetch('/set_story_name/' + id, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            //handle scene name
+            na = document.getElementById("name");
+            na.onchange = event => {
+                id = document.getElementById("bg").dataset.sceneid;
+                let formData = new FormData();
+                formData.append('name', event.target.value);
+                fetch('/set_scene_name/' + id, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            //handle description
             desc = document.getElementById("description");
             desc.onchange = event => {
                 id = document.getElementById("bg").dataset.sceneid;
@@ -172,10 +196,15 @@
             <div class="left_actor_box"
                  id="bg"
                  data-sceneid="{{ current_scene_id }}"
-                 style="background:black; width:600px">
+                 data-storyid="{{ story.id }}"
+                 style="width:800px;background:#39395f;color:#f5eec2;">
                 {% if current_scene.background %}
                     <img src="{{ current_scene.background.url }}" style="width:800px;height:600px;border-radius:5px;">
                 {% endif %}
+                <div style="padding:5px;">
+                    <label for="story_name"> Story title </label>
+                    <input type="text" id="story_name" style="width:100%;border-radius:5px;" value="{{story.name}}">
+                </div>
             </div>
             <div class="right_actor_box">
                 <div class="inner_box" style="padding:5px;">
@@ -196,12 +225,12 @@
                             id="bgi" name="bgi"
                             accept="image/png, image/jpeg"
                      >
-                    <divs>
+                    <div>
                         <h4>Select Scene</h4>
                         {% for scene in story.scenes.all %}
                             <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
                         {% endfor %}
-                    </divs>
+                    </div>
                     <div>
                         <h4>Select Character</h4>
                         {% for scene in story.character.all %}
