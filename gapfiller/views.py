@@ -288,6 +288,7 @@ def register(request):
     else:
         return render(request, "gapfiller/register.html")
 
+
 @login_required
 def logout_view(request):
     logout(request)

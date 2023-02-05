@@ -116,6 +116,10 @@
                 dragElement(actor);
             })
 
+            right_box = document.getElementById("right_box");
+            console.log(`${window.innerHeight - 820}px`);
+            right_box.style.width = `${window.innerWidth - 860}px`;
+
             //handle story name
             na = document.getElementById("story_name");
             na.onchange = event => {
@@ -206,8 +210,8 @@
                     <input type="text" id="story_name" style="width:100%;border-radius:5px;" value="{{story.name}}">
                 </div>
             </div>
-            <div class="right_actor_box">
-                <div class="inner_box" style="padding:5px;">
+            <div class="right_actor_box" id="right_box" style="margin:0px">
+                <div class="inner_box" style="padding:5px;width:49%;display:inline-block;margin:0px;">
                      <h4>Sence name</h4>
                      <input type="text"
                             id="name"
@@ -231,11 +235,15 @@
                             <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
                         {% endfor %}
                     </div>
+                </div>
+                <div class="inner_box" style="padding:5px;width:49%;display:inline-block;vertical-align:top;margin:0px;">
                     <div>
-                        <h4>Select Character</h4>
-                        {% for scene in story.character.all %}
-                            <div class="btn btn-secondary" style="width:100%">{{scene.characters}}</div>
-                        {% endfor %}
+                        <h4>To edit a character click on him</h4>
+                        <div style="background:white;color:black;border-radius:5px;">
+                            {% for actor in current_scene.actors.all %}
+                                <div style="width:100%">{{ actor.name }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
                     <a class="btn btn-secondary" style="width:100%" href="{% url 'actor' current_scene.id %}">
                         add new character

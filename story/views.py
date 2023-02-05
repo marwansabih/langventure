@@ -80,7 +80,8 @@ def actor(request, scene_id):
     return render(request, "story/actor.html", {
         "scene_id": scene_id
     })
-
+def edit_actor(request, actor_id):
+    return
 
 @csrf_exempt
 def set_story_name(request, story_id):
