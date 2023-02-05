@@ -242,7 +242,11 @@
                         <div style="background:white;color:black;border-radius:5px;width=100%">
                             {% for actor in current_scene.actors.all %}
                             <div>
-                                <a href="{% url 'edit_actor' actor.id %}" style="width:100%">{{ actor.name }}</a>
+                                {% if actor.name %}
+                                    <a href="{% url 'edit_actor' actor.id %}" style="width:100%">{{ actor.name }}</a>
+                                {% else %}
+                                    <a href="{% url 'edit_actor' actor.id %}" style="width:100%">No Name</a>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>

@@ -8,6 +8,7 @@ urlpatterns = [
     path("edit_actor/<int:actor_id>", views.edit_actor, name="edit_actor"),
     path("get_actor_info/<int:actor_id>", views.get_character_info, name="get_actor"),
     path("create_character/<int:scene_id>", views.create_character, name="create_character"),
+    path("update_character/<int:char_id>", views.update_character, name="update_character"),
     path("dialog", views.dialog, name="dialog"),
     path("background/<int:scene_id>", views.set_background, name="background"),
     path("set_character_pos_scale/<int:char_id>", views.set_character_pos_scale, name="set_character_pos_scale"),

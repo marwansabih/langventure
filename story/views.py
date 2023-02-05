@@ -133,7 +133,6 @@ def set_scene_name(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         scene.name = request.POST.get("name")
-        print(scene.name)
         scene.save()
         return render(request, "story/success.html")
 
@@ -189,12 +188,15 @@ def create_character(request, scene_id):
 def update_character(request, char_id):
     if request.method == "POST":
         actor = Actor.objects.get(pk=char_id)
-        image = request.FILES.get("image")
+        #image = request.FILES.get("image")
         name = request.POST.get("name")
+        actor.name = name
+        print(name)
         actor.save()
         id_to_dialog = request.POST.get("id_to_dialog")
         dialogs = json.loads(id_to_dialog)
         id_to_m_dialog = {}
+        actor.dialogs.all().delete()
         for id in dialogs:
             dialog = dialogs[id]
             d = Dialog(name=id, actor=actor, bubble=dialog["bubble"])

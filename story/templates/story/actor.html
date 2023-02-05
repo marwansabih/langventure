@@ -166,6 +166,22 @@
             })
         }
 
+
+        function updateChar(){
+            id = document.getElementById("id_actor").dataset.actorid;
+            let formData = new FormData();
+            formData.append('name', name)
+            formData.append(
+                'id_to_dialog',
+                JSON.stringify(id_to_dialog)
+            );
+            fetch('/update_character/' + id, {
+                method: 'POST',
+                body: formData
+            })
+        }
+
+
         document.addEventListener( "DOMContentLoaded", () => {
 
             actor_id = document.getElementById("id_actor");
@@ -233,6 +249,13 @@
             if(create_char) {
                 create_char.onclick = () => {
                     createChar();
+                }
+            }
+
+            update_char = document.getElementById('update_char');
+            if(update_char) {
+                update_char.onclick = () => {
+                    updateChar();
                 }
             }
 
