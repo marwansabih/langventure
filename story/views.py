@@ -80,8 +80,35 @@ def actor(request, scene_id):
     return render(request, "story/actor.html", {
         "scene_id": scene_id
     })
+
+
 def edit_actor(request, actor_id):
-    return
+    return render(request, "story/actor.html", {
+        "actor_id": actor_id
+    })
+
+
+@csrf_exempt
+def get_character_info(request, actor_id):
+    if request.method == "GET":
+        actor = Actor.objects.get(pk=actor_id)
+        actor_info = {}
+        actor_info["name"] = actor.name
+        id_to_dialog = {}
+        for dialog in actor.dialogs.all():
+            dialog_info = {
+                "bubble": dialog.bubble,
+                "options": []
+            }
+            for option in dialog.options.all():
+                opt_info = {
+                    "content": option.text,
+                    "selection": option.target.name,
+                }
+                dialog_info["options"].append(opt_info)
+            id_to_dialog[dialog.name] = dialog_info
+    return JsonResponse(id_to_dialog)
+
 
 @csrf_exempt
 def set_story_name(request, story_id):
@@ -90,6 +117,7 @@ def set_story_name(request, story_id):
         story.name = request.POST.get("name")
         story.save()
         return render(request, "story/success.html")
+
 
 @csrf_exempt
 def dialog(request):
@@ -153,6 +181,36 @@ def create_character(request, scene_id):
 
     return render(request, "story/dialog.html", {
         "scene_id": scene_id
+    })
+
+
+@csrf_exempt
+def update_character(request, char_id):
+    if request.method == "POST":
+        actor = Actor.objects.get(pk=char_id)
+        image = request.FILES.get("image")
+        name = request.POST.get("name")
+        actor.save()
+        id_to_dialog = request.POST.get("id_to_dialog")
+        dialogs = json.loads(id_to_dialog)
+        id_to_m_dialog = {}
+        for id in dialogs:
+            dialog = dialogs[id]
+            d = Dialog(name=id, actor=actor, bubble=dialog["bubble"])
+            id_to_m_dialog[id] = d
+            d.save()
+        for id in dialogs:
+            options = dialogs[id]["options"]
+            for option in options:
+                target = option["selection"]
+                text = option["content"]
+                origin = id_to_m_dialog[id]
+                target = id_to_m_dialog[target]
+                opt = Option(origin=origin, target=target, text=text)
+                opt.save()
+
+    return render(request, "story/dialog.html", {
+        "actor_id": char_id
     })
 
 

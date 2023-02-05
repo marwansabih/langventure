@@ -5,7 +5,7 @@
             bubble : "Hi!",
             options : [],
         }
-        id_to_dialog = {
+        var id_to_dialog = {
             "start": start_dialog,
         };
 
@@ -168,6 +168,22 @@
 
         document.addEventListener( "DOMContentLoaded", () => {
 
+            actor_id = document.getElementById("id_actor");
+            if ( actor_id ) {
+                id = actor_id.dataset.actorid;
+                fetch('/get_actor_info/' + id, {
+                    method: 'GET',
+                }).then(response => response.json())
+                .then(actor_info => {
+                    id_to_dialog = actor_info;
+                    console.log(id_to_dialog);
+                    createDialogIds();
+                    setCurrentDialog();
+                    setSelection();
+                    setOptions();
+                    setImageFromStore();
+                });
+            }
             createDialogIds();
             setCurrentDialog();
             setSelection();
@@ -213,8 +229,10 @@
             }
 
             create_char = document.getElementById('create_char');
-            create_char.onclick = () => {
-                createChar();
+            if(create_char) {
+                create_char.onclick = () => {
+                    createChar();
+                }
             }
 
             image_input = document.getElementById('avatar');
@@ -230,7 +248,12 @@
             }
         });
     </script>
-    <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
+    {% if scene_id %}
+        <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
+    {% endif %}
+    {% if actor_id %}
+        <div id="id_actor" data-actorid="{{ actor_id }}"></div>
+    {% endif %}
     <div class="actor_title">
             <h1> Create new character</h1>
     </div>
@@ -305,14 +328,26 @@
                            value="Create character">
                             Test dialog
                         </a>
-                        <a class="btn btn-secondary"
-                           style="width:100%;"
-                           type="submit"
-                           id="create_char"
-                           href="{% url 'create_story'  %}"
-                           value="Create character">
-                            Create Character
-                        </a>
+                        {% if scene_id %}
+                            <a class="btn btn-secondary"
+                                style="width:100%;"
+                                type="submit"
+                                id="create_char"
+                                href="{% url 'create_story'  %}"
+                                value="Create character">
+                                Create Character
+                            </a>
+                        {% endif %}
+                        {% if actor_id %}
+                            <a class="btn btn-secondary"
+                                style="width:100%;"
+                                type="submit"
+                                id="update_char"
+                                href="{% url 'create_story'  %}"
+                                value="Update character">
+                                Update Character
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

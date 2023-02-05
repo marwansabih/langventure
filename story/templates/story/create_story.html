@@ -239,9 +239,11 @@
                 <div class="inner_box" style="padding:5px;width:49%;display:inline-block;vertical-align:top;margin:0px;">
                     <div>
                         <h4>To edit a character click on him</h4>
-                        <div style="background:white;color:black;border-radius:5px;">
+                        <div style="background:white;color:black;border-radius:5px;width=100%">
                             {% for actor in current_scene.actors.all %}
-                                <div style="width:100%">{{ actor.name }}</div>
+                            <div>
+                                <a href="{% url 'edit_actor' actor.id %}" style="width:100%">{{ actor.name }}</a>
+                            </div>
                             {% endfor %}
                         </div>
                     </div>
