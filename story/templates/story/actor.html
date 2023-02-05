@@ -181,14 +181,15 @@
                     setCurrentDialog();
                     setSelection();
                     setOptions();
-                    setImageFromStore();
+                    localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+                    //setImageFromStore();
                 });
             }
             createDialogIds();
             setCurrentDialog();
             setSelection();
             setOptions();
-            setImageFromStore();
+            //setImageFromStore();
 
             bubble_button = document.getElementById('update_bubble')
             bubble_button.onclick = () => {
@@ -356,18 +357,35 @@
                     <div class="name_box">
                         <h4 style="margin:0px;">Name</h4>
                         <div class="form-group" style="margin:0px;">
+                            {% if name %}
                             <input autofocus class="form-control"
                                    type="text"
                                    name="name"
                                    id="char_name"
+                                   value="{{ name }}"
+                                >
+                            {% else %}
+                                <input autofocus class="form-control"
+                                   type="text"
+                                   name="name"
+                                   id="char_name"
                                    placeholder="Choose the name of the character"
-                            >
+                                >
+                            {% endif %}
                         </div>
                     </div>
                     <div class="inner_box">
                         <h4 style="margin:0px;">Image</h4>
                         <div id="portrait">
-
+                            {% if image %}
+                                <img src="{{ image.url }}"
+                                     style="width:50%;
+                                            position:relative;
+                                            margin-left:auto;
+                                            margin-right:auto;
+                                            display:block;"
+                                >
+                            {% endif %}
                         </div>
                         <input type="file"
                             id="avatar" name="avatar"
@@ -377,7 +395,8 @@
                         <div style=
                                 "border-top-right-radius:5px;
                                 border-top-left-radius:5px;
-                                margin-top:5px;">
+                                margin-top:5px;"
+                        >
                             <h4 style="margin:0px;">Dialogs</h4>
                         </div>
                         <div class="dialog_selection" id="dialogs">

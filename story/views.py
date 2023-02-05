@@ -83,8 +83,11 @@ def actor(request, scene_id):
 
 
 def edit_actor(request, actor_id):
+    actor = Actor.objects.get(pk=actor_id)
     return render(request, "story/actor.html", {
-        "actor_id": actor_id
+        "actor_id": actor_id,
+        "name": actor.name,
+        "image": actor.image
     })
 
 
@@ -92,8 +95,6 @@ def edit_actor(request, actor_id):
 def get_character_info(request, actor_id):
     if request.method == "GET":
         actor = Actor.objects.get(pk=actor_id)
-        actor_info = {}
-        actor_info["name"] = actor.name
         id_to_dialog = {}
         for dialog in actor.dialogs.all():
             dialog_info = {
