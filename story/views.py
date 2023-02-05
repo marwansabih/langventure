@@ -26,7 +26,7 @@ import base64
 @login_required
 def story(request, id):
     story = Story.objects.get(pk=id)
-    current_scene = story.scenes.filter(name="start").first()
+    current_scene = story.scenes.all().first()
     return render(request, "story/show.html", {
         "story": story,
         "current_scene": current_scene
