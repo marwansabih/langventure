@@ -191,12 +191,12 @@ def update_character(request, char_id):
         #image = request.FILES.get("image")
         name = request.POST.get("name")
         actor.name = name
-        print(name)
         actor.save()
         id_to_dialog = request.POST.get("id_to_dialog")
         dialogs = json.loads(id_to_dialog)
         id_to_m_dialog = {}
-        actor.dialogs.all().delete()
+        for old_dialog in actor.dialogs.all():
+            old_dialog.delete()
         for id in dialogs:
             dialog = dialogs[id]
             d = Dialog(name=id, actor=actor, bubble=dialog["bubble"])

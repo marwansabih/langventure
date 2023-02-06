@@ -19,7 +19,7 @@
 
         function setCurrentDialog() {
             bubble_content = id_to_dialog[current_dialog].bubble;
-            document.getElementById('bubble').innerHTML = bubble_content;
+            document.getElementById('bubble').value = bubble_content;
         }
 
         function setSelection() {
@@ -69,6 +69,8 @@
 
                 dialog.onclick = (event) => {
                     current_dialog = event.target.dataset.id;
+                    c_d = document.getElementById("current_dialog");
+                    c_d.innerHTML = "Current dialog: " + current_dialog;
                     createDialogIds();
                     setSelection();
                     setOptions();
@@ -192,6 +194,7 @@
                 }).then(response => response.json())
                 .then(actor_info => {
                     id_to_dialog = actor_info;
+                    setName();
                     console.log(id_to_dialog);
                     createDialogIds();
                     setCurrentDialog();
@@ -207,6 +210,7 @@
             setOptions();
             //setImageFromStore();
 
+            /*
             bubble_button = document.getElementById('update_bubble')
             bubble_button.onclick = () => {
                 bubble_content = document.getElementById('bubble_content').value;
@@ -214,6 +218,13 @@
                 id_to_dialog[current_dialog].bubble = bubble_content;
                 localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
             };
+            */
+            bubble = document.getElementById('bubble');
+            bubble.onchange = event => {
+                id_to_dialog[current_dialog].bubble = event.target.value;
+                console.log(id_to_dialog);
+                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+            }
             create_option = document.getElementById('create_option')
             create_option.onclick = () => {
                 sel = document.getElementById('selection').value;
@@ -292,22 +303,27 @@
             <div class="left_actor_box">
                 <div class="inner_box">
                     <div>
-                        <h4 style="margin:0px;margin-left:5px;">Current dialog: start</h4>
+                        <h4 id="current_dialog" style="margin:0px;margin-left:5px;">Current dialog: start</h4>
                     </div>
                     <div style="background:white;
                                 padding:0px;
-                                padding-left:5px;
                                 border-radius:5px;
                                 color:black;
                                 margin:5px;
                                 margin-top:2px;
                                 min-height:50px;"
                     >
-                        <p id="bubble">
+                        <textarea id="bubble"
+                              style="width:100%;
+                                     margin:0px;
+                                     border-radius:5px;
+                                    "
+                        ></textarea>
+                        <!--p id="bubble">
                             Hello how can i help you?
-                        </p>
+                        <-p-->
                     </div>
-                    <div class="form-group" style="margin:0px;padding:5px;color:black;display:flex">
+                    <!--div class="form-group" style="margin:0px;padding:5px;color:black;display:flex">
                             <input autofocus class="form-control" style="width:90%;"
                                    type="text"
                                    name="name"
@@ -320,7 +336,7 @@
                             >
                                 update bubble
                             </div>
-                    </div>
+                    </div-->
                     <div style="background: white;
                                 color:black;
                                 margin:5px;
