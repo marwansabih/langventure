@@ -38,6 +38,15 @@
             }
         }
 
+        function generateTextarea(content) {
+            const area = document.createElement("textarea");
+            area.innerHTML = content;
+            area.rows = "2";
+            area.style.borderRadius = "5px";
+            area.style.width = "99%";
+            return area;
+        }
+
         function setOptions() {
             console.log(current_dialog);
             current_options = id_to_dialog[current_dialog].options;
@@ -47,7 +56,12 @@
                 option = current_options[id];
                 var row = options.insertRow(-1);
                 var cell = row.insertCell(0);
-                cell.innerHTML = option.content;
+                area = generateTextarea(option.content);
+                area.onchange = event => {
+                    id_to_dialog[current_dialog].options[id].content = event.target.value;
+                }
+                cell.append(area);
+                //cell.innerHTML = `<textarea cols="140" rows="2" style="border-radius:5px;">${option.content}</textarea>`;
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
             }
@@ -319,24 +333,7 @@
                                      border-radius:5px;
                                     "
                         ></textarea>
-                        <!--p id="bubble">
-                            Hello how can i help you?
-                        <-p-->
                     </div>
-                    <!--div class="form-group" style="margin:0px;padding:5px;color:black;display:flex">
-                            <input autofocus class="form-control" style="width:90%;"
-                                   type="text"
-                                   name="name"
-                                   id="bubble_content"
-                                   placeholder="Choose content of speech bubble"
-                            >
-                            <div class="btn btn-secondary"
-                                        id="update_bubble"
-                                        style="font-size:13px;width:10%;margin-top:0px;"
-                            >
-                                update bubble
-                            </div>
-                    </div-->
                     <div style="background: white;
                                 color:black;
                                 margin:5px;
