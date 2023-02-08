@@ -34,7 +34,6 @@
             update_pos_scale(event.target);
         }
 
-
         function dragElement(elmnt) {
             var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             if (document.getElementById(elmnt.id + "header")) {
@@ -108,6 +107,20 @@
             actor.style.left = actor.dataset.left;
         }
 
+        function create_scene(name) {
+                id = document.getElementById("bg").dataset.storyid;
+                formData = new FormData();
+                formData.append('name', name);
+                fetch('/create_scene/' + id, {
+                    method: 'POST',
+                    body: formData
+                }).then(
+                    response => response.json()
+                ).then (
+                    data => console.log(data.scene_id)
+                )
+        }
+
 
         document.addEventListener( "DOMContentLoaded", () => {
             document.querySelectorAll(".actor").forEach( actor => {
@@ -171,6 +184,14 @@
                 })
             }
 
+            //handle adding new scene
+            add_scene = document.getElementById("add_scene")
+            add_scene.onclick =() => {
+                name = document.getElementById("scene_name").value;
+                document.getElementById("scene_name").value = "";
+                console.log(name);
+                create_scene(name);
+            }
 
         });
     </script>
@@ -229,17 +250,28 @@
                             id="bgi" name="bgi"
                             accept="image/png, image/jpeg"
                      >
-                    <div>
-                        <h4>Select Scene</h4>
+                    <h4>Select Scene</h4>
+                    <div style="background:white;border-radius:5px;color:black;padding:5px;">
                         {% for scene in story.scenes.all %}
-                            <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
+                            <div style="width:100%">{{scene.name}}</div>
                         {% endfor %}
+                    </div>
+                    <input type="text"
+                           id="scene_name"
+                           placeholder="choose new scene name"
+                           style="width:100%"
+                    >
+                    <div class="btn btn-secondary"
+                         id="add_scene"
+                         style="width:100%;margin-top:5px;"
+                    >
+                        add new scene
                     </div>
                 </div>
                 <div class="inner_box" style="padding:5px;width:49%;display:inline-block;vertical-align:top;margin:0px;">
                     <div>
                         <h4>To edit a character click on him</h4>
-                        <div style="background:white;color:black;border-radius:5px;width=100%">
+                        <div style="background:white;color:black;border-radius:5px;width=100%;padding:5px;">
                             {% for actor in current_scene.actors.all %}
                             <div>
                                 {% if actor.name %}
@@ -251,7 +283,7 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <a class="btn btn-secondary" style="width:100%" href="{% url 'actor' current_scene.id %}">
+                    <a class="btn btn-secondary" style="width:100%;margin-top:5px;" href="{% url 'actor' current_scene.id %}">
                         add new character
                     </a>
                 </div>

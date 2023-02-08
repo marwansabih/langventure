@@ -129,6 +129,16 @@ def dialog(request):
 
 
 @csrf_exempt
+def create_new_scene(request, story_id):
+    if request.method == "POST":
+        story = Story.objects.get(pk=story_id)
+        name = request.POST.get("name")
+        print(name)
+        scene = Scene(story=story, name=name)
+        scene.save()
+        return JsonResponse({"scene_id": scene.pk}, status=201)
+
+@csrf_exempt
 def set_scene_name(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
