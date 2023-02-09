@@ -76,7 +76,7 @@ def update_story(request, story_id):
 
 
 @login_required
-def change_story_scene(request, story_id, scene_id):
+def update_story_scene(request, story_id, scene_id):
     story = Story.objects.get(pk=story_id)
     current_scene = Scene.objects.get(pk=scene_id)
 

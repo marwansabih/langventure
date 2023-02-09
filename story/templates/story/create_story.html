@@ -268,18 +268,22 @@
                     <div id="all_scenes" style="background:white;border-radius:5px;color:black;padding:5px;">
                         {% for scene in story.scenes.all %}
                             {% if scene.name == current_scene.name %}
-                                <div class="scene_selection"
-                                     style="width:100%;background:#f5eec2;"
-                                     data-sceneid="{{ scene.id }}"
+                                <a class="scene_selection"
+                                   href="{% url 'update_story_scene' story.id scene.id %}"
+                                   style="width:100%;background:#f5eec2;"
+                                   data-sceneid="{{ scene.id }}"
                                 >
                                     {{scene.name}}
-                                </div>
+                                </a>
                             {% else %}
-                                <div class="scene_selection"
-                                     style="width:100%"
-                                     data-sceneid="{{ scene.id }}"
-                                >
-                                    {{scene.name}}
+                                <div>
+                                    <a class="scene_selection"
+                                    href="{% url 'update_story_scene' story.id scene.id %}"
+                                    style="width:100%"
+                                    data-sceneid="{{ scene.id }}"
+                                    >
+                                        {{scene.name}}
+                                    </a>
                                 </div>
                             {% endif %}
                         {% endfor %}
