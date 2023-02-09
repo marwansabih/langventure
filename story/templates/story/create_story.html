@@ -22,8 +22,6 @@
             target = event.target
             let scale = target.getBoundingClientRect().width / target.offsetWidth;
             event.preventDefault();
-
-
             scale += event.deltaY * -0.0001;
 
             // Restrict scale
@@ -108,19 +106,35 @@
         }
 
         function create_scene(name) {
-                id = document.getElementById("bg").dataset.storyid;
-                formData = new FormData();
-                formData.append('name', name);
-                fetch('/create_scene/' + id, {
-                    method: 'POST',
-                    body: formData
-                }).then(
-                    response => response.json()
-                ).then (
-                    data => console.log(data.scene_id)
-                )
+            id = document.getElementById("bg").dataset.storyid;
+            formData = new FormData();
+            formData.append('name', name);
+            fetch('/create_scene/' + id, {
+                method: 'POST',
+                body: formData
+            }).then(
+                response => response.json()
+            ).then (
+                data => {
+                    div = document.createElement("div");
+                    div.classList.add("scene_selection");
+                    div.style.width = "100%";
+                    div.dataset.sceneid = data.scene_id;
+                    div.innerHTML = name;
+                    all_scenes = document.getElementById("all_scenes");
+                    all_scenes.append(div);
+                }
+            )
         }
 
+        function enable_scene_selection() {
+            const scene_selections = document.getElementsByClassName("scene_selection")
+            scene_selections.forEach( selection => {
+                selection.onclick = event => {
+
+                }
+            });
+        }
 
         document.addEventListener( "DOMContentLoaded", () => {
             document.querySelectorAll(".actor").forEach( actor => {
@@ -186,7 +200,7 @@
 
             //handle adding new scene
             add_scene = document.getElementById("add_scene")
-            add_scene.onclick =() => {
+            add_scene.onclick = () => {
                 name = document.getElementById("scene_name").value;
                 document.getElementById("scene_name").value = "";
                 console.log(name);
@@ -251,9 +265,23 @@
                             accept="image/png, image/jpeg"
                      >
                     <h4>Select Scene</h4>
-                    <div style="background:white;border-radius:5px;color:black;padding:5px;">
+                    <div id="all_scenes" style="background:white;border-radius:5px;color:black;padding:5px;">
                         {% for scene in story.scenes.all %}
-                            <div style="width:100%">{{scene.name}}</div>
+                            {% if scene.name == current_scene.name %}
+                                <div class="scene_selection"
+                                     style="width:100%;background:#f5eec2;"
+                                     data-sceneid="{{ scene.id }}"
+                                >
+                                    {{scene.name}}
+                                </div>
+                            {% else %}
+                                <div class="scene_selection"
+                                     style="width:100%"
+                                     data-sceneid="{{ scene.id }}"
+                                >
+                                    {{scene.name}}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <input type="text"

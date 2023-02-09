@@ -54,6 +54,7 @@ def create_story(request):
     })
 
 
+
 @login_required
 def update_menu(request):
     user = request.user
@@ -73,6 +74,17 @@ def update_story(request, story_id):
         "current_scene_id": current_scene.id
     })
 
+
+@login_required
+def change_story_scene(request, story_id, scene_id):
+    story = Story.objects.get(pk=story_id)
+    current_scene = Scene.objects.get(pk=scene_id)
+
+    return render(request, "story/create_story.html", {
+        "story": story,
+        "current_scene": current_scene,
+        "current_scene_id": current_scene.id
+    })
 
 def actor(request, scene_id):
     if request == "POST":
@@ -138,6 +150,7 @@ def create_new_scene(request, story_id):
         scene.save()
         return JsonResponse({"scene_id": scene.pk}, status=201)
 
+
 @csrf_exempt
 def set_scene_name(request, scene_id):
     if request.method == "POST":
@@ -146,6 +159,7 @@ def set_scene_name(request, scene_id):
         scene.save()
         return render(request, "story/success.html")
 
+
 @csrf_exempt
 def set_scene_description(request, scene_id):
     if request.method == "POST":
@@ -153,6 +167,7 @@ def set_scene_description(request, scene_id):
         scene.description = request.POST.get("description")
         scene.save()
         return render(request, "story/success.html")
+
 
 @csrf_exempt
 def set_background(request, scene_id):
@@ -242,6 +257,7 @@ def set_character_pos_scale(request, char_id):
     return render(request, "story/dialog.html", {
         "scene_id": char_id
     })
+
 
 @csrf_exempt
 def get_dialog(request, char_id):
