@@ -70,8 +70,6 @@
                 // stop moving when mouse button is released:
                 document.onmouseup = null;
                 document.onmousemove = null;
-                console.log("HERE");
-                console.log(e.target.style.top);
                 update_pos_scale(e.target);
             }
         }
@@ -120,7 +118,10 @@
                     div.classList.add("scene_selection");
                     div.style.width = "100%";
                     div.dataset.sceneid = data.scene_id;
-                    div.innerHTML = name;
+                    a = document.createElement("a");
+                    a.href = `/update_story_scene/${id}/${data.scene_id}`;
+                    a.innerHTML = name;
+                    div.append(a);
                     all_scenes = document.getElementById("all_scenes");
                     all_scenes.append(div);
                 }
@@ -207,6 +208,16 @@
                 create_scene(name);
             }
 
+            delete_scenes = document.getElementsByClassName("del_scene");
+            for( delete_scene in delete_scenes){
+                delete_scenes[delete_scene].onclick = event => {
+                    id = event.target.dataset.sceneid;
+                    console.log("I");
+                    fetch('/delete_scene/' +id, {
+                    method: 'POST'
+                    })
+                }
+            };
         });
     </script>
     <div class="actor_title">
@@ -239,6 +250,8 @@
                  style="width:800px;background:#39395f;color:#f5eec2;">
                 {% if current_scene.background %}
                     <img src="{{ current_scene.background.url }}" style="width:800px;height:600px;border-radius:5px;">
+                {% else %}
+                    <img style="width:800px;height:600px;border-radius:5px;background:black">
                 {% endif %}
                 <div style="padding:5px;">
                     <label for="story_name"> Story title </label>
@@ -268,13 +281,15 @@
                     <div id="all_scenes" style="background:white;border-radius:5px;color:black;padding:5px;">
                         {% for scene in story.scenes.all %}
                             {% if scene.name == current_scene.name %}
-                                <a class="scene_selection"
-                                   href="{% url 'update_story_scene' story.id scene.id %}"
-                                   style="width:100%;background:#f5eec2;"
-                                   data-sceneid="{{ scene.id }}"
-                                >
+                                <div style="width:100%;background:#f5eec2;border-radius:5px;">
+                                    <a class="scene_selection"
+                                        href="{% url 'update_story_scene' story.id scene.id %}"
+                                        style="width:100%;background:#f5eec2;"
+                                        data-sceneid="{{ scene.id }}"
+                                    >
                                     {{scene.name}}
-                                </a>
+                                    </a>
+                                </div>
                             {% else %}
                                 <div>
                                     <a class="scene_selection"
@@ -284,6 +299,12 @@
                                     >
                                         {{scene.name}}
                                     </a>
+                                    <img src="/media/delete.png"
+                                         width="20px"
+                                         class="del_scene"
+                                         data-sceneid="{{ scene.id }}"
+                                         style="float:right"
+                                    >
                                 </div>
                             {% endif %}
                         {% endfor %}

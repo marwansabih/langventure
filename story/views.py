@@ -86,6 +86,15 @@ def update_story_scene(request, story_id, scene_id):
         "current_scene_id": current_scene.id
     })
 
+
+@csrf_exempt
+def delete_scene(request, scene_id):
+    scene = Scene.objects.get(pk=scene_id)
+    scene.delete()
+    return render(request, "story/actor.html", {
+        "scene_id": scene_id
+    })
+
 def actor(request, scene_id):
     if request == "POST":
         return HttpResponse("HEY")
