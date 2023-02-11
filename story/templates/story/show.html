@@ -184,9 +184,13 @@
                 </div>
             </div>
             <div>
-                <h4>Select Scene</h4>
+                <h4>Switch Scene</h4>
                 {% for scene in story.scenes.all %}
-                    <div class="btn btn-secondary" style="width:100%">{{scene.name}}</div>
+                    {% if scene.id == current_scene.id %}
+                        <a href="{% url 'story_scene' story.id scene.id %}" class="btn btn-primary">{{scene.name}}</a>
+                    {% else %}
+                        <a href="{% url 'story_scene' story.id scene.id %}" class="btn btn-secondary">{{scene.name}}</a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

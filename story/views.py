@@ -34,6 +34,16 @@ def story(request, id):
 
 
 @login_required
+def story_scene(request, id, scene_id):
+    story = Story.objects.get(pk=id)
+    current_scene = Scene.objects.get(pk=scene_id)
+    return render(request, "story/show.html", {
+        "story": story,
+        "current_scene": current_scene
+    })
+
+
+@login_required
 def create_story(request):
     user = request.user
     story = Story(user=user, finished=False, name="No Title")

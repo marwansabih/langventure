@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("story/<int:id>", views.story, name="story"),
+    path("story_scene/<int:id>/<int:scene_id>", views.story_scene, name="story_scene"),
     path("create_story/", views.create_story, name="create_story"),
     path("actor/<int:scene_id>", views.actor, name="actor"),
     path("edit_actor/<int:actor_id>", views.edit_actor, name="edit_actor"),
