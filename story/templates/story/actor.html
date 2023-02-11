@@ -51,20 +51,23 @@
             console.log(current_dialog);
             current_options = id_to_dialog[current_dialog].options;
             options = document.getElementById('options');
-            options.innerHTML = "<tr> <th> option </th> <th> target </th> </tr>";
-            for(var id in current_options) {
-                option = current_options[id];
+            options.innerHTML = "<tr> <th> option </th> <th> target </th> <th> delete </th> </tr>";
+            console.log(current_options)
+            current_options.forEach( option => {
                 var row = options.insertRow(-1);
                 var cell = row.insertCell(0);
                 area = generateTextarea(option.content);
-                area.onchange = event => {
-                    id_to_dialog[current_dialog].options[id].content = event.target.value;
+                area.onkeyup = event => {
+                    idx = id_to_dialog[current_dialog].options.indexOf(option);
+                    console.log(idx);
+                    id_to_dialog[current_dialog].options[idx].content = event.target.value;
+                    localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
                 }
                 cell.append(area);
                 //cell.innerHTML = `<textarea cols="140" rows="2" style="border-radius:5px;">${option.content}</textarea>`;
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
-            }
+            });
         }
 
         function createDialogIds() {

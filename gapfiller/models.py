@@ -41,12 +41,13 @@ class Rule(models.Model):
 class Choice(models.Model):
     choices = models.ForeignKey(ChoiceSelection, on_delete=models.CASCADE, related_name="choices")
     choice = models.TextField()
-    rule = models.ForeignKey(Rule,
-                             blank=True,
-                             null=True,
-                             default=None,
-                             on_delete=models.CASCADE,
-                             related_name="choices"
+    rule = models.ForeignKey(
+        Rule,
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.CASCADE,
+        related_name="choices"
     )
 
     def __str__(self):
