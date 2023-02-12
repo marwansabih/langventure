@@ -28,15 +28,27 @@ class Dialog(models.Model):
     name = models.TextField()
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name="dialogs")
     bubble = models.TextField()
+    translation = models.TextField(default="")
 
 
 class Option(models.Model):
     origin = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name="options")
     target = models.ForeignKey(Dialog, on_delete=models.CASCADE, blank=True, null=True)
     text = models.TextField()
+    translation = models.TextField(default="")
 
 
 class UserStoryConfig(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="stories")
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="configs")
     current_dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE)
+
+
+class OptionTokens(models.Model):
+    option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name="tokens")
+    word = models.CharField(max_length=50)
+
+
+class DialogTokens(models.Model):
+    dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name="tokens")
+    word = models.CharField(max_length=50)

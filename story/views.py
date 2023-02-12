@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gapfiller.models import User
+from gapfiller.helsinki_translator import hel_translate
 from .models import Story, Scene, Actor, Dialog, Option
 import json
 import PIL
@@ -130,11 +131,13 @@ def get_character_info(request, actor_id):
         for dialog in actor.dialogs.all():
             dialog_info = {
                 "bubble": dialog.bubble,
+                "translation": dialog.translation,
                 "options": []
             }
             for option in dialog.options.all():
                 opt_info = {
                     "content": option.text,
+                    "translation": option.translation,
                     "selection": option.target.name,
                 }
                 dialog_info["options"].append(opt_info)
@@ -210,7 +213,8 @@ def create_character(request, scene_id):
         id_to_m_dialog = {}
         for id in dialogs:
             dialog = dialogs[id]
-            d = Dialog(name=id, actor=actor, bubble=dialog["bubble"])
+            translation = hel_translate(dialog["bubble"])
+            d = Dialog(name=id, actor=actor, bubble=dialog["bubble"], translation=translation)
             id_to_m_dialog[id] = d
             d.save()
         for id in dialogs:
@@ -220,7 +224,8 @@ def create_character(request, scene_id):
                 text = option["content"]
                 origin = id_to_m_dialog[id]
                 target = id_to_m_dialog[target]
-                opt = Option(origin=origin, target=target, text=text)
+                translation = hel_translate(text)
+                opt = Option(origin=origin, target=target, text=text, translation=translation)
                 opt.save()
 
     return render(request, "story/dialog.html", {
@@ -243,7 +248,8 @@ def update_character(request, char_id):
             old_dialog.delete()
         for id in dialogs:
             dialog = dialogs[id]
-            d = Dialog(name=id, actor=actor, bubble=dialog["bubble"])
+            translation = hel_translate(dialog["bubble"])
+            d = Dialog(name=id, actor=actor, bubble=dialog["bubble"], translation=translation)
             id_to_m_dialog[id] = d
             d.save()
         for id in dialogs:
@@ -253,7 +259,8 @@ def update_character(request, char_id):
                 text = option["content"]
                 origin = id_to_m_dialog[id]
                 target = id_to_m_dialog[target]
-                opt = Option(origin=origin, target=target, text=text)
+                translation = hel_translate(text)
+                opt = Option(origin=origin, target=target, text=text, translation=translation)
                 opt.save()
 
     return render(request, "story/dialog.html", {
@@ -288,9 +295,21 @@ def get_dialog(request, char_id):
         for dialog in dialogs:
             id = dialog.name
             bubble = dialog.bubble
+            translation = dialog.translation
             opts = dialog.options.all()
-            options = [{"content": option.text, "selection": option.target.name} for option in opts]
-            id_to_dialog[id] = {"bubble": bubble, "options": options}
+
+            options = [
+                {"content": option.text,
+                 "translation": option.translation,
+                 "selection": option.target.name}
+                for option in opts
+            ]
+
+            id_to_dialog[id] = {
+                "bubble": bubble,
+                "translation": translation,
+                "options": options
+            }
 
         dialog_info = {
             "name": actor.name,
