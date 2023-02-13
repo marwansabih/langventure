@@ -67,6 +67,18 @@
                 //cell.innerHTML = `<textarea cols="140" rows="2" style="border-radius:5px;">${option.content}</textarea>`;
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
+                var cell = row.insertCell(2);
+                img = document.createElement("img");
+                img.src = "/media/delete.png";
+                img.style.width = "20px";
+                img.onclick = event => {
+                    const index = current_options.indexOf(option);
+                    console.log("In onclick");
+                    console.log(index);
+                    delete id_to_dialog[current_dialog].options[index];
+                    setOptions();
+                }
+                cell.append(img);
             });
         }
 

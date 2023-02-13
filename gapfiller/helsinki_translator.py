@@ -3,10 +3,17 @@ import translators as ts
 import translators.server as tss
 from transformers import FSMTForConditionalGeneration, FSMTTokenizer
 
-model_name = "Helsinki-NLP/opus-mt-gem-en"
-modeL_name = "mbart-large-50-English_German_Translation"
-model_facebook = "wmt19-de-en"
+from deep_translator import GoogleTranslator
 
+proxies_example = {
+    "https": "34.195.196.27:8080",
+    "http": "34.195.196.27:8080"
+}
+#translated = GoogleTranslator(source='auto', target='de', proxies=proxies_example).translate("keep it up, you are awesome")
+
+model_name = "Helsinki-NLP/opus-mt-gem-en"
+#modeL_name = "mbart-large-50-English_German_Translation"
+model_facebook = "wmt19-de-en"
 
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -24,6 +31,7 @@ model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 def hel_translate(sentence):
     tokens = tokenizer.encode(sentence, return_tensors="pt")
     outputs = model.generate(tokens)
-    decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    decoded = " ".join([tokenizer.decode(output, skip_special_tokens=False) for output in outputs])
 
-    return decoded #tss.google(sentence, 'de', 'en')#decoded
+    return tss.google(sentence, 'de', 'en')#decoded
+    #return GoogleTranslator(source='auto', target='de', proxies=proxies_example).translate(sentence)
