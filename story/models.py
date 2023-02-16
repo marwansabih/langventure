@@ -20,8 +20,8 @@ class Actor(models.Model):
     name = models.TextField()
     image = models.ImageField(blank=True, default=None, upload_to="images")
     scale = models.TextField(default="scale(1)")
-    top = models.TextField(default="0px")
-    left = models.TextField(default="0px")
+    top = models.TextField(default="100px")
+    left = models.TextField(default="50px")
 
 
 class Dialog(models.Model):

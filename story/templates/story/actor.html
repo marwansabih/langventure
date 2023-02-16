@@ -380,12 +380,12 @@
                            value="Create character">
                             Test dialog
                         </a>
-                        {% if scene_id %}
+                        {% if not actor_id %}
                             <a class="btn btn-secondary"
                                 style="width:100%;"
                                 type="submit"
                                 id="create_char"
-                                href="{% url 'create_story'  %}"
+                                href="{% url 'update_story_scene' story_id scene_id %}"
                                 value="Create character">
                                 Create Character
                             </a>
@@ -395,7 +395,7 @@
                                 style="width:100%;"
                                 type="submit"
                                 id="update_char"
-                                href="{% url 'create_story'  %}"
+                                href="{% url 'update_story_scene' story_id scene_id %}"
                                 value="Update character">
                                 Update Character
                             </a>

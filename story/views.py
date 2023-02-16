@@ -9,6 +9,8 @@ import json
 import PIL
 import base64
 
+from django.core.files.images import get_image_dimensions
+
 
 #   TODO
 """
@@ -107,19 +109,25 @@ def delete_scene(request, scene_id):
     })
 
 def actor(request, scene_id):
+    story_id = Scene.objects.get(pk=scene_id).story.id
     if request == "POST":
         return HttpResponse("HEY")
     return render(request, "story/actor.html", {
+        "story_id": story_id,
         "scene_id": scene_id
     })
 
 
 def edit_actor(request, actor_id):
     actor = Actor.objects.get(pk=actor_id)
+    sence_id = actor.scene.id
+    story_id = actor.scene.story.id
     return render(request, "story/actor.html", {
         "actor_id": actor_id,
         "name": actor.name,
-        "image": actor.image
+        "image": actor.image,
+        "story_id": story_id,
+        "scene_id": sence_id,
     })
 
 
@@ -205,8 +213,11 @@ def create_character(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         image = request.FILES.get("image")
+        width, height = get_image_dimensions(image)
+        scale = str(50/height)
+        print(scale)
         name = request.POST.get("name")
-        actor = Actor(scene=scene, name=name, image=image)
+        actor = Actor(scene=scene, name=name, image=image, scale=scale)
         actor.save()
         id_to_dialog = request.POST.get("id_to_dialog")
         dialogs = json.loads(id_to_dialog)
