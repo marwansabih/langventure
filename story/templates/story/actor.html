@@ -73,9 +73,9 @@
                 img.style.width = "20px";
                 img.onclick = event => {
                     const index = current_options.indexOf(option);
-                    console.log("In onclick");
-                    console.log(index);
-                    delete id_to_dialog[current_dialog].options[index];
+                    id_to_dialog[current_dialog].options.splice(index,1);
+                    console.log(id_to_dialog[current_dialog])
+                    localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
                     setOptions();
                 }
                 cell.append(img);
