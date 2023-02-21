@@ -44,11 +44,25 @@ class UserStoryConfig(models.Model):
     current_dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE)
 
 
+class Knowledge(models.Model):
+    item = models.CharField(max_length=50)
+
+
 class OptionTokens(models.Model):
     option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name="tokens")
     word = models.CharField(max_length=50)
+    acquired = models.ForeignKey(
+        Knowledge,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="acquire_options"
+    )
+    required_k_items = models.ManyToManyField(Knowledge, related_name="require_options")
+    disabled_k_items = models.ManyToManyField(Knowledge, related_name="disabled_options")
 
 
 class DialogTokens(models.Model):
     dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name="tokens")
     word = models.CharField(max_length=50)
+

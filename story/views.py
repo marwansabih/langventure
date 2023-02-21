@@ -213,8 +213,8 @@ def create_character(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         image = request.FILES.get("image")
-        width, height = get_image_dimensions(image)
-        scale = str(50/height)
+        height, width = get_image_dimensions(image)
+        scale = str(25/height)
         print(scale)
         name = request.POST.get("name")
         actor = Actor(scene=scene, name=name, image=image, scale=scale)
