@@ -51,7 +51,15 @@
             console.log(current_dialog);
             current_options = id_to_dialog[current_dialog].options;
             options = document.getElementById('options');
-            options.innerHTML = "<tr> <th> option </th> <th> target </th> <th> delete </th> </tr>";
+            options.innerHTML = `
+            <tr>
+                <th> option </th>
+                <th> target </th>
+                <th> acquires </th>
+                <th> requires </th>
+                <th> deactivates </th>
+                <th> delete </th>
+            </tr>`;
             console.log(current_options)
             current_options.forEach( option => {
                 var row = options.insertRow(-1);
@@ -68,6 +76,12 @@
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
                 var cell = row.insertCell(2);
+                cell.innerHTML = "to be implemented";
+                var cell = row.insertCell(3);
+                cell.innerHTML = "to be implemented";
+                var cell = row.insertCell(4);
+                cell.innerHTML = "to be implemented";
+                var cell = row.insertCell(5);
                 img = document.createElement("img");
                 img.src = "/media/delete.png";
                 img.style.width = "20px";
