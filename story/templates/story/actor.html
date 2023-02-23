@@ -51,6 +51,23 @@
             return area;
         }
 
+        function createOptionDropDown(choosen, excluded){
+            selection = document.createElement("select");
+            opt = document.createElement("option")
+            opt.innerHTML = choosen
+            selection.append(opt)
+            items = ["None"].concat(knowledge_items);
+            for (const item of knowledge_items){
+                        if(item === choosen){
+                            continue;
+                        }
+                        opt = document.createElement("option");
+                        opt.innerHTML = item
+                        selection.append(opt)
+            }
+            return selection
+        }
+
         function setOptions() {
             console.log(current_dialog);
             current_options = id_to_dialog[current_dialog].options;
@@ -80,11 +97,29 @@
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
                 var cell = row.insertCell(2);
-                cell.innerHTML = "to be implemented";
+                if ( option.acquires ){
+                    selection = createOptionDropDown(option.acquires, [])
+                    cell.append(selection)
+                }else {
+                    selection = createOptionDropDown("None", [])
+                    cell.append(selection)
+                }
                 var cell = row.insertCell(3);
-                cell.innerHTML = "to be implemented";
+                if ( option.requires ){
+                    selection = createOptionDropDown("None", [])
+                    cell.append(selection)
+                }else {
+                    selection = createOptionDropDown("None", [])
+                    cell.append(selection)
+                }
                 var cell = row.insertCell(4);
-                cell.innerHTML = "to be implemented";
+                if ( option.deactivates ){
+                    selection = createOptionDropDown("None", [])
+                    cell.append(selection)
+                }else {
+                    selection = createOptionDropDown("None", [])
+                    cell.append(selection)
+                }
                 var cell = row.insertCell(5);
                 img = document.createElement("img");
                 img.src = "/media/delete.png";
@@ -233,6 +268,7 @@
         function setKnowledge(){
             item_field = document.getElementById("knowledge");
             item_field.innerHTML = knowledge_items.join(" ");
+            setOptions();
         }
 
 
