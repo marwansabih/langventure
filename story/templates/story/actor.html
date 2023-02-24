@@ -68,6 +68,21 @@
             return selection
         }
 
+        function createButtonDiv(title){
+            div = document.createElement("div");
+            div.classList.add("btn");
+            div.classList.add("btn-secondary");
+            div.classList.add("btn-sm");
+            div.style.marginLeft = "3px";
+            div.style.height = "24px";
+            div.style.marginTop = "-5px";
+            div.style.fontSize = "12px";
+            div.style.padding = "0.25rem 0.5rem";
+            div.style.lineHeight = "1";
+            div.innerHTML = title;
+            return div;
+        }
+
         function setOptions() {
             console.log(current_dialog);
             current_options = id_to_dialog[current_dialog].options;
@@ -97,7 +112,7 @@
                 var cell = row.insertCell(1);
                 cell.innerHTML = option.selection;
                 var cell = row.insertCell(2);
-                if ( option.acquires ){
+                if ( option.acquires){
                     selection = createOptionDropDown(option.acquires, [])
                     cell.append(selection)
                 }else {
@@ -105,20 +120,35 @@
                     cell.append(selection)
                 }
                 var cell = row.insertCell(3);
-                if ( option.requires ){
-                    selection = createOptionDropDown("None", [])
+                if ( option.requires.length > 0 ){
+                    selection = createOptionDropDown("None", option.requires)
                     cell.append(selection)
+                    button = createButtonDiv("add");
+                    cell.append(button);
                 }else {
-                    selection = createOptionDropDown("None", [])
+                    cell.innerHTML = "<div> Test morning test</div>"
+                    selection = createOptionDropDown("None", option.requires)
                     cell.append(selection)
+                    button = createButtonDiv("add");
+                    button.onclick = () => {
+                        console.log(selection.options)
+                        value = selection.options[selection.selectedIndex].text;
+                        option.requires.push(value);
+                        console.log(value);
+                    }
+                    cell.append(button);
                 }
                 var cell = row.insertCell(4);
-                if ( option.deactivates ){
+                if ( option.deactivates.length > 0 ){
                     selection = createOptionDropDown("None", [])
                     cell.append(selection)
+                    button = createButtonDiv("add");
+                    cell.append(button);
                 }else {
                     selection = createOptionDropDown("None", [])
                     cell.append(selection)
+                    button = createButtonDiv("add");
+                    cell.append(button);
                 }
                 var cell = row.insertCell(5);
                 img = document.createElement("img");
@@ -331,6 +361,9 @@
                 var option = {
                     content: option_content,
                     selection: sel,
+                    acquires: null,
+                    requires: [],
+                    deactivates: []
                 }
                 id_to_dialog[current_dialog].options.push(option);
                 setOptions();
