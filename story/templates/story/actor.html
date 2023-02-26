@@ -9,21 +9,44 @@
             "start": start_dialog,
         };
 
-        knowledge_items = ["test"]
+        var knowledge_items = []
 
-
+        var storage_id = null;
 
         var image = null;
 
         localStorage.setItem("name","no name");
 
-        localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+        function restore_actor_data_from_id(id){
+            id_to_dialog_text = localStorage.getItem(id)
+            if (id_to_dialog_text === null) {
+                return null;
+            }
+            current_id_to_dialog = JSON.parse(id_to_dialog_text)
+            if (current_id_to_dialog){
+                id_to_dialog = current_id_to_dialog;
+            }
+            k_items = localStorage.getItem(`${id}_k_items`)
+            console.log(`${id}_k_items`)
+            console.log("k_items")
+            console.log(k_items)
+            console.log(knowledge_items);
+            if(k_items !== null){
+                knowledge_items = JSON.parse(k_items)
+            }
+        }
+
+        function save_actor_data(){
+            localStorage.setItem(storage_id,JSON.stringify(id_to_dialog));
+            localStorage.setItem(`${storage_id}_k_items`, JSON.stringify(knowledge_items));
+        }
 
         var current_dialog = "start";
 
         function setCurrentDialog() {
             bubble_content = id_to_dialog[current_dialog].bubble;
             document.getElementById('bubble').value = bubble_content;
+            save_actor_data()
         }
 
         function setSelection() {
@@ -57,7 +80,7 @@
             opt.innerHTML = chosen
             selection.append(opt)
             items = ["None"].concat(knowledge_items);
-            for (const item of knowledge_items){
+            for (const item of items){
                         if(item === chosen){
                             continue;
                         }
@@ -125,10 +148,14 @@
                 div.innerHTML = option.requires.toString()
                 cell.append(div);
                 select1 = createOptionDropDown("None", option.requires)
-                cell.append(selection)
+                uuid2 = crypto.randomUUID();
+                select1.id = uuid2 + "s";
+                cell.append(select1)
                 button = createButtonDiv("add");
-                button.onclick = () => {
-                    value = select1.options[select1.selectedIndex].text;
+                button.id = uuid2;
+                button.onclick = (event) => {
+                    sel = document.getElementById(event.target.id + "s");
+                    value = sel.options[sel.selectedIndex].text;
                     option.requires.push(value);
                     setOptions();
                     console.log(value);
@@ -139,10 +166,14 @@
                 div.innerHTML = option.deactivates.toString()
                 cell.append(div);
                 select = createOptionDropDown("None", option.deactivates)
+                uuid = crypto.randomUUID();
+                select.id = uuid + "s";
                 cell.append(selection)
                 button = createButtonDiv("add");
-                button.onclick = () => {
-                    value = select.options[select.selectedIndex].text;
+                button.id = uuid;
+                button.onclick = (event) => {
+                    sel = document.getElementById(event.target.id + "s");
+                    value = sel.options[sel.selectedIndex].text;
                     option.deactivates.push(value);
                     setOptions();
                     console.log(value);
@@ -161,6 +192,7 @@
                 }
                 cell.append(img);
             });
+            save_actor_data();
         }
 
         function createDialogIds() {
@@ -189,6 +221,7 @@
 
                 dialogs.append(dialog);
             }
+            save_actor_data();
         }
 
         function send_dialog() {
@@ -197,7 +230,6 @@
                 body: JSON.stringify({
                     id_to_dialog
                 })
-
             })
             .then(response => response.json())
             .then(result => {
@@ -297,18 +329,17 @@
             item_field = document.getElementById("knowledge");
             item_field.innerHTML = knowledge_items.join(" ");
             setOptions();
+            save_actor_data()
         }
 
 
         document.addEventListener( "DOMContentLoaded", () => {
 
-            setKnowledge();
-
             add_k = document.getElementById("add-k")
 
             add_k.onclick = () => {
                 k_text = document.getElementById("k-text");
-                console.log(k_text.value);
+                console.log(knowledge_items);
                 knowledge_items.push(k_text.value);
                 setKnowledge();
             }
@@ -321,36 +352,40 @@
                 }).then(response => response.json())
                 .then(actor_info => {
                     id_to_dialog = actor_info;
+                    storage_id = `${id}_actor`;
+                    restore_actor_data_from_id(storage_id);
                     setName();
-                    console.log(id_to_dialog);
+                    //console.log(id_to_dialog);
                     createDialogIds();
                     setCurrentDialog();
                     setSelection();
                     setOptions();
-                    localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+                    setKnowledge();
+
                     //setImageFromStore();
                 });
             }
+            scene_id = document.getElementById("id_storage");
+            console.log(scene_id)
+            console.log(actor_id)
+            if( scene_id ){
+                id = scene_id.dataset.sceneid;
+                storage_id = `${id}_scene`
+                restore_actor_data_from_id(`${id}_scene`)
+            }
+
             createDialogIds();
             setCurrentDialog();
             setSelection();
             setOptions();
+            setKnowledge();
             //setImageFromStore();
 
-            /*
-            bubble_button = document.getElementById('update_bubble')
-            bubble_button.onclick = () => {
-                bubble_content = document.getElementById('bubble_content').value;
-                document.getElementById('bubble').innerHTML = bubble_content;
-                id_to_dialog[current_dialog].bubble = bubble_content;
-                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
-            };
-            */
             bubble = document.getElementById('bubble');
             bubble.onchange = event => {
                 id_to_dialog[current_dialog].bubble = event.target.value;
                 console.log(id_to_dialog);
-                localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+                save_actor_data()
             }
             create_option = document.getElementById('create_option')
             create_option.onclick = () => {
