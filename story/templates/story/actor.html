@@ -27,10 +27,6 @@
                 id_to_dialog = current_id_to_dialog;
             }
             k_items = localStorage.getItem(`${id}_k_items`)
-            console.log(`${id}_k_items`)
-            console.log("k_items")
-            console.log(k_items)
-            console.log(knowledge_items);
             if(k_items !== null){
                 knowledge_items = JSON.parse(k_items)
             }
@@ -301,6 +297,10 @@
             formData.append('image', image)
             formData.append('name', name)
             formData.append(
+                'knowledge_items',
+                JSON.stringify(knowledge_items)
+            )
+            formData.append(
                 'id_to_dialog',
                 JSON.stringify(id_to_dialog)
             );
@@ -315,6 +315,7 @@
             id = document.getElementById("id_actor").dataset.actorid;
             let formData = new FormData();
             formData.append('name', name)
+            formData.append('image', image)
             formData.append(
                 'id_to_dialog',
                 JSON.stringify(id_to_dialog)
@@ -324,6 +325,13 @@
                 body: formData
             })
         }
+
+        function get_knowledge_items_from_page() {
+            k = document.getElementById("knowledge")
+            items = k.innerHTML.match(/\b(\w+)\b/g)
+            return items
+        }
+
 
         function setKnowledge(){
             item_field = document.getElementById("knowledge");
@@ -471,7 +479,11 @@
                         <h4 style="margin:0px;margin-left:5px;margin-bottom:5px;">Knowlegde items</h4>
                     </div>
                     <div style="display: flex; margin:5px; border-radius:5px; color:black">
-                        <div id="knowledge" style="background-color: white; height: 80px; flex: 1; border-radius: 5px; padding: 5px;"></div>
+                        <div id="knowledge" style="background-color: white; height: 80px; flex: 1; border-radius: 5px; padding: 5px;">
+                            {% for item in story.knowledge_items.all %}
+                                {{ item.item }}
+                            {% endfor %}
+                        </div>
                         <div style="display: flex; flex-direction: column; width: 200px;">
                             <input id = "k-text" type="text" style="height: 40px; margin-left: 1px; border-radius: 5px;">
                             <div id = "add-k" class="btn btn-secondary" style="height: 40px; margin-left: 1px">Add knowledge-item</div>

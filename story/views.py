@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gapfiller.models import User
 from gapfiller.helsinki_translator import hel_translate
-from .models import Story, Scene, Actor, Dialog, Option
+from .models import Story, Scene, Actor, Dialog, Option, Knowledge
 import json
 import PIL
 import base64
@@ -110,11 +110,13 @@ def delete_scene(request, scene_id):
 
 def actor(request, scene_id):
     story_id = Scene.objects.get(pk=scene_id).story.id
+    story = Story.objects.get(pk=story_id)
     if request == "POST":
         return HttpResponse("HEY")
     return render(request, "story/actor.html", {
         "story_id": story_id,
-        "scene_id": scene_id
+        "scene_id": scene_id,
+        "story": story
     })
 
 
@@ -212,10 +214,18 @@ def set_background(request, scene_id):
 def create_character(request, scene_id):
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
+        story = scene.story
+        knowledge_items = request.POST.get("knowledge_items")
+        knowledge_items = json.loads(knowledge_items)
+        items = [k_i.item for k_i in story.knowledge_items.all()]
+        for item in knowledge_items:
+            if item not in items:
+                new_item = Knowledge(item=item, story=story)
+                new_item.save()
+
         image = request.FILES.get("image")
         height, width = get_image_dimensions(image)
         scale = str(25/height)
-        print(scale)
         name = request.POST.get("name")
         actor = Actor(scene=scene, name=name, image=image, scale=scale)
         actor.save()
@@ -238,9 +248,9 @@ def create_character(request, scene_id):
                 translation = hel_translate(text)
                 opt = Option(origin=origin, target=target, text=text, translation=translation)
                 opt.save()
-
-    return render(request, "story/dialog.html", {
-        "scene_id": scene_id
+    print(story)
+    return render(request, "story/dialog.html", context={
+        "scene_id": scene_id,
     })
 
 
