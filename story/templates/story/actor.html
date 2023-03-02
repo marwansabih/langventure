@@ -326,10 +326,15 @@
             })
         }
 
-        function get_knowledge_items_from_page() {
-            k = document.getElementById("knowledge")
+        function set_knowledge_items_from_page() {
+            k = document.getElementById("knowledge_items")
             items = k.innerHTML.match(/\b(\w+)\b/g)
-            return items
+            items.forEach( item => {
+                if( !knowledge_items.includes(item) ){
+                    knowledge_items.push(item);
+                }
+            });
+            return items;
         }
 
 
@@ -362,6 +367,7 @@
                     id_to_dialog = actor_info;
                     storage_id = `${id}_actor`;
                     restore_actor_data_from_id(storage_id);
+                    set_knowledge_items_from_page();
                     setName();
                     //console.log(id_to_dialog);
                     createDialogIds();
@@ -386,6 +392,7 @@
             setCurrentDialog();
             setSelection();
             setOptions();
+            set_knowledge_items_from_page();
             setKnowledge();
             //setImageFromStore();
 
@@ -479,10 +486,12 @@
                         <h4 style="margin:0px;margin-left:5px;margin-bottom:5px;">Knowlegde items</h4>
                     </div>
                     <div style="display: flex; margin:5px; border-radius:5px; color:black">
-                        <div id="knowledge" style="background-color: white; height: 80px; flex: 1; border-radius: 5px; padding: 5px;">
+                        <div id="knowledge_items" style="display:none">
                             {% for item in story.knowledge_items.all %}
                                 {{ item.item }}
                             {% endfor %}
+                        </div>
+                        <div id="knowledge" style="background-color: white; height: 80px; flex: 1; border-radius: 5px; padding: 5px;">
                         </div>
                         <div style="display: flex; flex-direction: column; width: 200px;">
                             <input id = "k-text" type="text" style="height: 40px; margin-left: 1px; border-radius: 5px;">

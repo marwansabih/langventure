@@ -243,10 +243,23 @@ def create_character(request, scene_id):
             for option in options:
                 target = option["selection"]
                 text = option["content"]
+                acquires = option["acquires"]
+                requires = option["requires"]
+                deactivates = option["deactivates"]
                 origin = id_to_m_dialog[id]
                 target = id_to_m_dialog[target]
                 translation = hel_translate(text)
                 opt = Option(origin=origin, target=target, text=text, translation=translation)
+                opt.save()
+                if acquires:
+                    acq = Knowledge.objects.filter(item=acquires, story=story).first()
+                    opt.acquired = acq
+                if requires:
+                    reqs = [Knowledge.objects.filter(item=req, story=story).first() for req in requires]
+                    [opt.required_k_items.add(req) for req in reqs]
+                if deactivates:
+                    deas = [Knowledge.objects.filter(item=dea, story=story).first() for dea in deactivates]
+                    [opt.disabled_k_items.add(dea) for dea in deas]
                 opt.save()
     print(story)
     return render(request, "story/dialog.html", context={
@@ -320,9 +333,14 @@ def get_dialog(request, char_id):
             opts = dialog.options.all()
 
             options = [
-                {"content": option.text,
-                 "translation": option.translation,
-                 "selection": option.target.name}
+                {
+                    "content": option.text,
+                    "translation": option.translation,
+                    "selection": option.target.name,
+                    "acquires": None if not option.acquired else option.acquired.item,
+                    "requires": [ki.item for ki in option.required_k_items.all()],
+                    "deactivates": [ki.item for ki in option.disabled_k_items.all()]
+                 }
                 for option in opts
             ]
 
