@@ -84,12 +84,27 @@
                         container.append(description);
                         div.append(container);
                         label.dataset.next = option["selection"];
+                        label.dataset.acquires = option["acquires"];
+                        console.log("acquires");
+                        console.log(option["acquires"]);
                         label.onclick =  e => {
                             current_id = e.target.dataset.next;
+                            acquires = e.target.dataset.acquires;
+                            if(acquires){
+                                if( !user_knowledge.includes(acquires) ){
+                                    user_knowledge.push(acquires);
+                                }
+                            }
                             console.log(current_id);
                             set_dialog();
                         };
-                        opts.append(div);
+                        if(option["requires"].length === 0){
+                            opts.append(div);
+                        }else {
+                            console.log(option["requires"])
+                            option.requires.forEach( req => {
+                            })
+                        }
                     });
         }
 

@@ -49,8 +49,16 @@ class Option(models.Model):
         null=True,
         related_name="acquire_options"
     )
-    required_k_items = models.ManyToManyField(Knowledge, related_name="require_options")
-    disabled_k_items = models.ManyToManyField(Knowledge, related_name="disabled_options")
+    required_k_items = models.ManyToManyField(
+        Knowledge,
+        blank=True,
+        related_name="require_options"
+    )
+    disabled_k_items = models.ManyToManyField(
+        Knowledge,
+        blank=True,
+        related_name="disabled_options"
+    )
 
 
 class UserStoryConfig(models.Model):

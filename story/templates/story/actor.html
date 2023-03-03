@@ -329,6 +329,9 @@
         function set_knowledge_items_from_page() {
             k = document.getElementById("knowledge_items")
             items = k.innerHTML.match(/\b(\w+)\b/g)
+            if(!items){
+                return items
+            }
             items.forEach( item => {
                 if( !knowledge_items.includes(item) ){
                     knowledge_items.push(item);
