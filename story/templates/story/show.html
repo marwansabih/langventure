@@ -45,6 +45,30 @@
             console.log(`{$window.innerWidth-850}px`)
         }
 
+        function contains_all_requirements(reqs){
+            if( reqs.length === 0 ){
+                return true;
+            }
+            console.log("ALL REQ");
+            console.log(reqs);
+            console.log(user_knowledge.includes(reqs[0]))
+            console.log(reqs.every( (req) => {
+                return user_knowledge.includes(req)
+            }))
+            return reqs.every( (req) => {
+                return user_knowledge.includes(req);
+            })
+        }
+
+        function not_deactivated(deactivations){
+            if( deactivations.length === 0 ){
+                return true;
+            }
+            return !deactivations.every( (dea) => {
+                return user_knowledge.includes(dea);
+            })
+        }
+
         function set_dialog(){
                     start = current_id_to_dialog[current_id];
                     bubble = document.getElementById("bubble");
@@ -98,12 +122,11 @@
                             console.log(current_id);
                             set_dialog();
                         };
-                        if(option["requires"].length === 0){
+                        console.log("requires")
+                        console.log(option["requires"])
+                        if(contains_all_requirements(option["requires"])
+                           && not_deactivated(option["deactivates"]) ){
                             opts.append(div);
-                        }else {
-                            console.log(option["requires"])
-                            option.requires.forEach( req => {
-                            })
                         }
                     });
         }
@@ -131,7 +154,20 @@
             }
         }
 
-
+        function update_user_knowledge(item){
+                fetch(`/get_dialog/${id}`, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(dialog_info => {
+                    current_id_to_dialog = dialog_info["id_to_dialog"];
+                    current_id = "start";
+                    n = dialog_info["name"];
+                    name_header = document.getElementById("name");
+                    name_header.innerHTML = `${n} says:`;
+                    set_dialog();
+                });
+        }
 
         document.addEventListener( "DOMContentLoaded", () => {
             scale_dialog();

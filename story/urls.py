@@ -21,5 +21,6 @@ urlpatterns = [
     path("update_story/<int:story_id>", views.update_story, name="update_story"),
     path("update_story_scene/<int:story_id>/<int:scene_id>", views.update_story_scene, name="update_story_scene"),
     path("update_menu", views.update_menu, name="update_menu"),
-    path("delete_scene/<int:scene_id>", views.delete_scene, name="delete_scene")
+    path("delete_scene/<int:scene_id>", views.delete_scene, name="delete_scene"),
+    path("c", views.update_user_knowledge, name="update_user_knowledge")
 ]

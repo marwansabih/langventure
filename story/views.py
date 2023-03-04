@@ -14,15 +14,17 @@ from django.core.files.images import get_image_dimensions
 
 #   TODO
 """
-    - knowledge items through conversation
     - speech 
     - items to collect
-    - add translation
+    - add translation for tokens
     - update character menu
-    - enable new scenes
     - add current scene
     - return json responses
     - fix bug after creating new characters with javascript
+    - add custom translation
+    - add custom speech
+    - add items
+    - add enable scenes with knowledge items
 """
 
 
@@ -44,6 +46,18 @@ def story_scene(request, id, scene_id):
         "story": story,
         "current_scene": current_scene
     })
+
+
+@login_required
+def update_user_knowledge(request):
+    if request.method == "PUT":
+        user = request.user
+        story_id = request.POST.get("story_id")
+        story = Story.objects.get(id=story_id)
+        item = request.PUT.get("item")
+        item = Knowledge.objects.filter(story=story, item=item).first()
+        item.users.add(user)
+        return JsonResponse({"content": "Put knowledge item"}, status=201)
 
 
 @login_required
@@ -210,6 +224,28 @@ def set_background(request, scene_id):
         return JsonResponse({"message": "scene description successfully updated."}, status=201)
 
 
+def save_option(option, id_to_m_dialog):
+    target = option["selection"]
+    text = option["content"]
+    acquires = option["acquires"]
+    requires = option["requires"]
+    deactivates = option["deactivates"]
+    origin = id_to_m_dialog[id]
+    target = id_to_m_dialog[target]
+    translation = hel_translate(text)
+    opt = Option(origin=origin, target=target, text=text, translation=translation)
+    opt.save()
+    if acquires:
+        acq = Knowledge.objects.filter(item=acquires, story=story).first()
+        opt.acquired = acq
+    if requires:
+        reqs = [Knowledge.objects.filter(item=req, story=story).first() for req in requires]
+        [opt.required_k_items.add(req) for req in reqs]
+    if deactivates:
+        deas = [Knowledge.objects.filter(item=dea, story=story).first() for dea in deactivates]
+        [opt.disabled_k_items.add(dea) for dea in deas]
+    opt.save()
+
 @csrf_exempt
 def create_character(request, scene_id):
     if request.method == "POST":
@@ -241,26 +277,7 @@ def create_character(request, scene_id):
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:
-                target = option["selection"]
-                text = option["content"]
-                acquires = option["acquires"]
-                requires = option["requires"]
-                deactivates = option["deactivates"]
-                origin = id_to_m_dialog[id]
-                target = id_to_m_dialog[target]
-                translation = hel_translate(text)
-                opt = Option(origin=origin, target=target, text=text, translation=translation)
-                opt.save()
-                if acquires:
-                    acq = Knowledge.objects.filter(item=acquires, story=story).first()
-                    opt.acquired = acq
-                if requires:
-                    reqs = [Knowledge.objects.filter(item=req, story=story).first() for req in requires]
-                    [opt.required_k_items.add(req) for req in reqs]
-                if deactivates:
-                    deas = [Knowledge.objects.filter(item=dea, story=story).first() for dea in deactivates]
-                    [opt.disabled_k_items.add(dea) for dea in deas]
-                opt.save()
+                save_option(option, id_to_m_dialog)
     print(story)
     return render(request, "story/dialog.html", context={
         "scene_id": scene_id,
@@ -289,13 +306,7 @@ def update_character(request, char_id):
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:
-                target = option["selection"]
-                text = option["content"]
-                origin = id_to_m_dialog[id]
-                target = id_to_m_dialog[target]
-                translation = hel_translate(text)
-                opt = Option(origin=origin, target=target, text=text, translation=translation)
-                opt.save()
+                save_option(option, id_to_m_dialog)
 
     return render(request, "story/dialog.html", {
         "actor_id": char_id

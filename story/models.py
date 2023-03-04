@@ -34,7 +34,7 @@ class Dialog(models.Model):
 class Knowledge(models.Model):
     item = models.CharField(max_length=50)
     story = models.ForeignKey(Story, on_delete=models.CASCADE, blank=True, null=True, related_name="knowledge_items")
-    users = models.ManyToManyField(User, related_name="knowledge_items")
+    users = models.ManyToManyField(User, blank=True, related_name="knowledge_items")
 
 
 class Option(models.Model):
