@@ -3,6 +3,7 @@
     <script>
         start_dialog = {
             bubble : "Hi!",
+            translation: "",
             options : [],
         }
         var id_to_dialog = {
@@ -42,7 +43,11 @@
         function setCurrentDialog() {
             bubble_content = id_to_dialog[current_dialog].bubble;
             document.getElementById('bubble').value = bubble_content;
-            save_actor_data()
+            translation = id_to_dialog[current_dialog].translation;
+            if(translation){
+                document.getElementById('translation').value = translation;
+            }
+            save_actor_data();
         }
 
         function setSelection() {
@@ -64,7 +69,7 @@
         function generateTextarea(content) {
             const area = document.createElement("textarea");
             area.innerHTML = content;
-            area.rows = "2";
+            area.rows = "3";
             area.style.borderRadius = "5px";
             area.style.width = "99%";
             return area;
@@ -112,6 +117,7 @@
             options.innerHTML = `
             <tr>
                 <th> option </th>
+                <th> translation </th>
                 <th> target </th>
                 <th> acquires </th>
                 <th> requires </th>
@@ -127,21 +133,39 @@
                     idx = id_to_dialog[current_dialog].options.indexOf(option);
                     console.log(idx);
                     id_to_dialog[current_dialog].options[idx].content = event.target.value;
+                    save_actor_data();
                     localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
                 }
                 cell.append(area);
-                //cell.innerHTML = `<textarea cols="140" rows="2" style="border-radius:5px;">${option.content}</textarea>`;
+
                 var cell = row.insertCell(1);
-                cell.innerHTML = option.selection;
+                area = generateTextarea(option.translation);
+                area.placeholder = "enter high quality translation otherwise a medium translation will be generated for you"
+                area.onkeyup = event => {
+                    idx = id_to_dialog[current_dialog].options.indexOf(option);
+                    console.log(idx);
+                    id_to_dialog[current_dialog].options[idx].translation = event.target.value;
+                    console.log(event.target.value);
+                    save_actor_data();
+                    localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));
+                }
+                cell.append(area);
+
                 var cell = row.insertCell(2);
+                cell.innerHTML = option.selection;
+                var cell = row.insertCell(3);
                 select_acq = createOptionDropDown(option.acquires, [])
                 select_acq.onchange = (event) => {
-                    option.acquires = event.target.value
+                    option.acquires = event.target.value;
+                    save_actor_data();
+                    console.log(option.acquires)
                 }
                 cell.append(selection)
-                var cell = row.insertCell(3);
+                var cell = row.insertCell(4);
                 div = document.createElement("div");
-                div.innerHTML = option.requires.toString()
+                if(option.requires){
+                    div.innerHTML = option.requires.toString()
+                }
                 cell.append(div);
                 select1 = createOptionDropDown("None", option.requires)
                 uuid2 = crypto.randomUUID();
@@ -153,13 +177,16 @@
                     sel = document.getElementById(event.target.id + "s");
                     value = sel.options[sel.selectedIndex].text;
                     option.requires.push(value);
+                    save_actor_data();
                     setOptions();
                     console.log(value);
                 }
                 cell.append(button);
-                var cell = row.insertCell(4);
+                var cell = row.insertCell(5);
                 div = document.createElement("div");
-                div.innerHTML = option.deactivates.toString()
+                if(option.deactivates){
+                    div.innerHTML = option.deactivates.toString()
+                }
                 cell.append(div);
                 select = createOptionDropDown("None", option.deactivates)
                 uuid = crypto.randomUUID();
@@ -171,11 +198,12 @@
                     sel = document.getElementById(event.target.id + "s");
                     value = sel.options[sel.selectedIndex].text;
                     option.deactivates.push(value);
+                    save_actor_data();
                     setOptions();
                     console.log(value);
                 }
                 cell.append(button);
-                var cell = row.insertCell(5);
+                var cell = row.insertCell(6);
                 img = document.createElement("img");
                 img.src = "/media/delete.png";
                 img.style.width = "20px";
@@ -307,6 +335,11 @@
             fetch('/create_character/' + id, {
                 method: 'POST',
                 body: formData
+            }).then( data => {
+                story_id = document.getElementById('id_story').dataset.storyid
+                scene_id = document.getElementById('id_storage').dataset.sceneid
+                console.log("to new location");
+                location.href = `/update_story_scene/${story_id}/${scene_id}`
             })
         }
 
@@ -320,9 +353,18 @@
                 'id_to_dialog',
                 JSON.stringify(id_to_dialog)
             );
+            formData.append(
+                'knowledge_items',
+                JSON.stringify(knowledge_items)
+            )
             fetch('/update_character/' + id, {
                 method: 'POST',
                 body: formData
+            }).then( data => {
+                story_id = document.getElementById('id_story').dataset.storyid
+                scene_id = document.getElementById('id_storage').dataset.sceneid
+                console.log("to new location");
+                location.href = `/update_story_scene/${story_id}/${scene_id}`
             })
         }
 
@@ -368,8 +410,10 @@
                 }).then(response => response.json())
                 .then(actor_info => {
                     id_to_dialog = actor_info;
+                    console.log("ID TO DIALOG");
+                    console.log(id_to_dialog);
                     storage_id = `${id}_actor`;
-                    restore_actor_data_from_id(storage_id);
+                    //restore_actor_data_from_id(storage_id);
                     set_knowledge_items_from_page();
                     setName();
                     //console.log(id_to_dialog);
@@ -405,12 +449,21 @@
                 console.log(id_to_dialog);
                 save_actor_data()
             }
+
+            translation = document.getElementById('translation');
+            translation.onchange = event => {
+                id_to_dialog[current_dialog].translation = event.target.value;
+                console.log(id_to_dialog);
+                save_actor_data()
+            }
+
             create_option = document.getElementById('create_option')
             create_option.onclick = () => {
                 sel = document.getElementById('selection').value;
                 option_content = document.getElementById('option_content').value;
                 var option = {
                     content: option_content,
+                    translation:null,
                     selection: sel,
                     acquires: null,
                     requires: [],
@@ -466,6 +519,7 @@
             }
         });
     </script>
+    <div id="id_story" data-storyid="{{ story_id }}"></div>
     {% if scene_id %}
         <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
     {% endif %}
@@ -520,6 +574,25 @@
                                     "
                         ></textarea>
                     </div>
+                    <div>
+                        <h4 id="translation_title" style="margin:0px;margin-left:5px;">Translation</h4>
+                    </div>
+                    <div style="background:white;
+                                padding:0px;
+                                border-radius:5px;
+                                color:black;
+                                margin:5px;
+                                margin-top:2px;
+                                min-height:50px;"
+                    >
+                        <textarea id="translation"
+                              style="width:100%;
+                                     margin:0px;
+                                     border-radius:5px;
+                                    "
+                        ></textarea>
+                    </div>
+
                     <div style="background: white;
                                 color:black;
                                 margin:5px;
@@ -552,24 +625,24 @@
                             Test dialog
                         </a>
                         {% if not actor_id %}
-                            <a class="btn btn-secondary"
+                            <div class="btn btn-secondary"
                                 style="width:100%;"
                                 type="submit"
                                 id="create_char"
                                 href="{% url 'update_story_scene' story_id scene_id %}"
                                 value="Create character">
                                 Create Character
-                            </a>
+                            </div>
                         {% endif %}
                         {% if actor_id %}
-                            <a class="btn btn-secondary"
+                            <div class="btn btn-secondary"
                                 style="width:100%;"
                                 type="submit"
                                 id="update_char"
                                 href="{% url 'update_story_scene' story_id scene_id %}"
                                 value="Update character">
                                 Update Character
-                            </a>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

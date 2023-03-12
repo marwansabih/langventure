@@ -49,12 +49,7 @@
             if( reqs.length === 0 ){
                 return true;
             }
-            console.log("ALL REQ");
-            console.log(reqs);
-            console.log(user_knowledge.includes(reqs[0]))
-            console.log(reqs.every( (req) => {
-                return user_knowledge.includes(req)
-            }))
+
             return reqs.every( (req) => {
                 return user_knowledge.includes(req);
             })
@@ -114,10 +109,9 @@
                         label.onclick =  e => {
                             current_id = e.target.dataset.next;
                             acquires = e.target.dataset.acquires;
-                            if(acquires){
-                                if( !user_knowledge.includes(acquires) ){
-                                    user_knowledge.push(acquires);
-                                }
+                            if(acquires !== "null" && !user_knowledge.includes(acquires) ){
+                                user_knowledge.push(acquires);
+                                update_user_knowledge(acquires);
                             }
                             console.log(current_id);
                             set_dialog();
@@ -155,18 +149,22 @@
         }
 
         function update_user_knowledge(item){
-                fetch(`/get_dialog/${id}`, {
-                    method: 'GET'
-                })
-                .then(response => response.json())
-                .then(dialog_info => {
-                    current_id_to_dialog = dialog_info["id_to_dialog"];
-                    current_id = "start";
-                    n = dialog_info["name"];
-                    name_header = document.getElementById("name");
-                    name_header.innerHTML = `${n} says:`;
-                    set_dialog();
-                });
+            let story_id = document.getElementById("story_id").dataset.storyid;
+            let formData = new FormData();
+            formData.append('item', item);
+            formData.append('story_id', story_id);
+            fetch('/update_user_knowledge', {
+                method: 'POST',
+                body: formData
+            })
+        }
+
+        function set_existing_user_knowledge(){
+            const items = document.getElementsByClassName("knowledge_item")
+            Array.from(items).forEach( item => {
+                k_i = item.dataset.item;
+                user_knowledge.push(k_i);
+            })
         }
 
         document.addEventListener( "DOMContentLoaded", () => {
@@ -174,6 +172,7 @@
             window.onresize = () => {
                 scale_dialog();
             };
+            set_existing_user_knowledge();
             document.querySelectorAll(".actor").forEach( actor => {
                 place_actor(actor);
                 add_dialog(actor);
@@ -182,6 +181,13 @@
             background_input = document.getElementById("bgi");
         });
     </script>
+
+    <div id="story_id" data-storyid="{{ story.id }}"></div>
+
+    {% for item in knowledge_items %}
+        <div class="knowledge_item" data-item="{{ item.item }}"></div>
+    {% endfor %}
+
     <div class="actor_title">
             <h1>{{ story.name }}</h1>
     </div>

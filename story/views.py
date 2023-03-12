@@ -32,9 +32,11 @@ from django.core.files.images import get_image_dimensions
 def story(request, id):
     story = Story.objects.get(pk=id)
     current_scene = story.scenes.all().first()
+    user = request.user
     return render(request, "story/show.html", {
         "story": story,
-        "current_scene": current_scene
+        "current_scene": current_scene,
+        "knowledge_items": user.knowledge_items.all()
     })
 
 
@@ -47,17 +49,17 @@ def story_scene(request, id, scene_id):
         "current_scene": current_scene
     })
 
-
+@csrf_exempt
 @login_required
 def update_user_knowledge(request):
-    if request.method == "PUT":
+    if request.method == "POST":
         user = request.user
         story_id = request.POST.get("story_id")
-        story = Story.objects.get(id=story_id)
-        item = request.PUT.get("item")
+        story = Story.objects.get(pk=story_id)
+        item = request.POST.get("item")
         item = Knowledge.objects.filter(story=story, item=item).first()
         item.users.add(user)
-        return JsonResponse({"content": "Put knowledge item"}, status=201)
+        return JsonResponse({"body": "Successfully added item to user knowledge"}, status=201)
 
 
 @login_required
@@ -122,6 +124,8 @@ def delete_scene(request, scene_id):
         "scene_id": scene_id
     })
 
+
+
 def actor(request, scene_id):
     story_id = Scene.objects.get(pk=scene_id).story.id
     story = Story.objects.get(pk=story_id)
@@ -144,6 +148,7 @@ def edit_actor(request, actor_id):
         "image": actor.image,
         "story_id": story_id,
         "scene_id": sence_id,
+        "story": actor.scene.story
     })
 
 
@@ -163,6 +168,9 @@ def get_character_info(request, actor_id):
                     "content": option.text,
                     "translation": option.translation,
                     "selection": option.target.name,
+                    "acquires": None if not option.acquired else option.acquired.item,
+                    "requires": [k.item for k in option.required_k_items.all()],
+                    "deactivates": [k.item for k in option.disabled_k_items.all()]
                 }
                 dialog_info["options"].append(opt_info)
             id_to_dialog[dialog.name] = dialog_info
@@ -180,7 +188,6 @@ def set_story_name(request, story_id):
 
 @csrf_exempt
 def dialog(request):
-    print(request)
     if request == "POST":
         data = json.loads(request.body)
     return render(request, "story/dialog.html")
@@ -224,7 +231,7 @@ def set_background(request, scene_id):
         return JsonResponse({"message": "scene description successfully updated."}, status=201)
 
 
-def save_option(option, id_to_m_dialog):
+def save_option(option, id, id_to_m_dialog, story):
     target = option["selection"]
     text = option["content"]
     acquires = option["acquires"]
@@ -232,7 +239,14 @@ def save_option(option, id_to_m_dialog):
     deactivates = option["deactivates"]
     origin = id_to_m_dialog[id]
     target = id_to_m_dialog[target]
-    translation = hel_translate(text)
+    if "translation" in option:
+
+        translation = option["translation"]
+    else:
+        translation = hel_translate(text)
+    print(origin)
+    print(target)
+    print(translation)
     opt = Option(origin=origin, target=target, text=text, translation=translation)
     opt.save()
     if acquires:
@@ -248,9 +262,11 @@ def save_option(option, id_to_m_dialog):
 
 @csrf_exempt
 def create_character(request, scene_id):
+    print("in update char")
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         story = scene.story
+        print("HEY HEY")
         knowledge_items = request.POST.get("knowledge_items")
         knowledge_items = json.loads(knowledge_items)
         items = [k_i.item for k_i in story.knowledge_items.all()]
@@ -277,8 +293,7 @@ def create_character(request, scene_id):
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:
-                save_option(option, id_to_m_dialog)
-    print(story)
+                save_option(option, id, id_to_m_dialog, story)
     return render(request, "story/dialog.html", context={
         "scene_id": scene_id,
     })
@@ -288,6 +303,15 @@ def create_character(request, scene_id):
 def update_character(request, char_id):
     if request.method == "POST":
         actor = Actor.objects.get(pk=char_id)
+        story = actor.scene.story
+        knowledge_items = request.POST.get("knowledge_items")
+        print(knowledge_items)
+        knowledge_items = json.loads(knowledge_items)
+        items = [k_i.item for k_i in story.knowledge_items.all()]
+        for item in knowledge_items:
+            if item not in items:
+                new_item = Knowledge(item=item, story=story)
+                new_item.save()
         #image = request.FILES.get("image")
         name = request.POST.get("name")
         actor.name = name
@@ -299,18 +323,20 @@ def update_character(request, char_id):
             old_dialog.delete()
         for id in dialogs:
             dialog = dialogs[id]
-            translation = hel_translate(dialog["bubble"])
+            if "translation" in dialog:
+                translation = dialog["translation"]
+            else:
+                translation = hel_translate(dialog["bubble"])
             d = Dialog(name=id, actor=actor, bubble=dialog["bubble"], translation=translation)
             id_to_m_dialog[id] = d
             d.save()
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:
-                save_option(option, id_to_m_dialog)
+                save_option(option, id, id_to_m_dialog, story)
 
-    return render(request, "story/dialog.html", {
-        "actor_id": char_id
-    })
+        return JsonResponse({"body": "successfully updated character"}, status= 200)
+
 
 
 @csrf_exempt
