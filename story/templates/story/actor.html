@@ -1,8 +1,7 @@
 {% extends "gapfiller/layout.html" %}
 {% load static %}
 {% block body %}
-    <script type="text/javascript" src="{% static 'story/actor.js' %}">
-    </script>
+    <script type="text/javascript" src="{% static 'story/actor.js' %}"></script>
     <div id="id_story" data-storyid="{{ story_id }}"></div>
     {% if scene_id %}
         <div id="id_storage" data-sceneid="{{ scene_id }}"></div>

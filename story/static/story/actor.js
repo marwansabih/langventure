@@ -35,6 +35,11 @@ function save_actor_data(){
     localStorage.setItem(`${storage_id}_k_items`, JSON.stringify(knowledge_items));
 }
 
+function delete_actor_data(){
+    localStorage.removeItem(storage_id);
+    localStorage.removeItem(`${storage_id}_k_items`);
+}
+
 var current_dialog = "start";
 
 function setCurrentDialog() {
@@ -336,10 +341,10 @@ function createChar(){
         story_id = document.getElementById('id_story').dataset.storyid
         scene_id = document.getElementById('id_storage').dataset.sceneid
         console.log("to new location");
+        delete_actor_data();
         location.href = `/update_story_scene/${story_id}/${scene_id}`
     })
 }
-
 
 function updateChar(){
     id = document.getElementById("id_actor").dataset.actorid;
@@ -358,9 +363,9 @@ function updateChar(){
         method: 'POST',
         body: formData
     }).then( data => {
-        story_id = document.getElementById('id_story').dataset.storyid
-        scene_id = document.getElementById('id_storage').dataset.sceneid
-        console.log("to new location");
+        story_id = document.getElementById('id_story').dataset.storyid;
+        scene_id = document.getElementById('id_storage').dataset.sceneid;
+        delete_actor_data();
         location.href = `/update_story_scene/${story_id}/${scene_id}`
     })
 }
@@ -410,7 +415,7 @@ document.addEventListener( "DOMContentLoaded", () => {
             console.log("ID TO DIALOG");
             console.log(id_to_dialog);
             storage_id = `${id}_actor`;
-            //restore_actor_data_from_id(storage_id);
+            restore_actor_data_from_id(storage_id);
             set_knowledge_items_from_page();
             setName();
             //console.log(id_to_dialog);
