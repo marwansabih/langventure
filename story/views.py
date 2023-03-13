@@ -275,7 +275,7 @@ def create_character(request, scene_id):
 
         image = request.FILES.get("image")
         height, width = get_image_dimensions(image)
-        scale = str(25/height)
+        scale = str(120.0/height)
         name = request.POST.get("name")
         actor = Actor(scene=scene, name=name, image=image, scale=scale)
         actor.save()

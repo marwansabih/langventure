@@ -20,7 +20,7 @@ class Actor(models.Model):
     name = models.TextField()
     image = models.ImageField(blank=True, default=None, upload_to="images")
     scale = models.TextField(default="scale(1)")
-    top = models.TextField(default="100px")
+    top = models.TextField(default="10px")
     left = models.TextField(default="50px")
 
 
@@ -52,13 +52,11 @@ class Option(models.Model):
     required_k_items = models.ManyToManyField(
         Knowledge,
         blank=True,
-        null=True,
         related_name="require_options"
     )
     disabled_k_items = models.ManyToManyField(
         Knowledge,
         blank=True,
-        null=True,
         related_name="disabled_options"
     )
 

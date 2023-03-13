@@ -11,7 +11,7 @@
             let formData = new FormData();
             formData.append('top', z);
             formData.append('left', left);
-            formData.append('scale', scale);
+            formData.append('scale', scale.substring(6, scale.length-1));
             fetch('/set_character_pos_scale/' + id, {
                method: 'POST',
                body: formData
@@ -26,6 +26,7 @@
 
             // Restrict scale
             scale = Math.min(Math.max(.05, scale), 4);
+            console.log(scale);
 
             // Apply scale transform
             event.target.style.transform = `scale(${scale})`;
@@ -98,7 +99,8 @@
         function place_actor(actor) {
             console.log(actor.dataset)
             console.log(actor.dataset.top)
-            actor.style.transform = actor.dataset.scale;
+            actor.style.transform = `scale(${actor.dataset.scale})` //actor.dataset.scale;
+            console.log(actor.dataset.scale);
             actor.style.top = actor.dataset.top;
             actor.style.left = actor.dataset.left;
         }
