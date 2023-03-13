@@ -23,7 +23,6 @@ from django.core.files.images import get_image_dimensions
     - fix bug after creating new characters with javascript
     - add custom translation
     - add custom speech
-    - add items
     - add enable scenes with knowledge items
 """
 
@@ -239,14 +238,12 @@ def save_option(option, id, id_to_m_dialog, story):
     deactivates = option["deactivates"]
     origin = id_to_m_dialog[id]
     target = id_to_m_dialog[target]
-    if "translation" in option:
+    if "translation" in option and option["translation"]:
 
         translation = option["translation"]
     else:
         translation = hel_translate(text)
-    print(origin)
-    print(target)
-    print(translation)
+
     opt = Option(origin=origin, target=target, text=text, translation=translation)
     opt.save()
     if acquires:
@@ -259,6 +256,7 @@ def save_option(option, id, id_to_m_dialog, story):
         deas = [Knowledge.objects.filter(item=dea, story=story).first() for dea in deactivates]
         [opt.disabled_k_items.add(dea) for dea in deas]
     opt.save()
+
 
 @csrf_exempt
 def create_character(request, scene_id):

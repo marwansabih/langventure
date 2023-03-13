@@ -52,11 +52,13 @@ class Option(models.Model):
     required_k_items = models.ManyToManyField(
         Knowledge,
         blank=True,
+        null=True,
         related_name="require_options"
     )
     disabled_k_items = models.ManyToManyField(
         Knowledge,
         blank=True,
+        null=True,
         related_name="disabled_options"
     )
 
