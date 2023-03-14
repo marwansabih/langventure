@@ -24,6 +24,10 @@ from django.core.files.images import get_image_dimensions
     - add custom translation
     - add custom speech
     - add enable scenes with knowledge items
+    - todo clean up menu 
+    - warning if char is incomplete or ill designed
+    - publish only available after correcting all mistakes
+    - show author of story
 """
 
 

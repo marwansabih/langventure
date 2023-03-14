@@ -35,6 +35,8 @@ class Knowledge(models.Model):
     item = models.CharField(max_length=50)
     story = models.ForeignKey(Story, on_delete=models.CASCADE, blank=True, null=True, related_name="knowledge_items")
     users = models.ManyToManyField(User, blank=True, related_name="knowledge_items")
+    required_scenes = models.ManyToManyField(Scene, blank=True, related_name="requires")
+    deactivated_scenes = models.ManyToManyField(Scene, blank=True, related_name="deactivates")
 
 
 class Option(models.Model):
