@@ -34,7 +34,8 @@
         function place_actor(actor) {
             console.log(actor.dataset)
             console.log(actor.dataset.top)
-            actor.style.transform = actor.dataset.scale;
+            console.log(actor.dataset.scale)
+            actor.style.transform = `scale(${actor.dataset.scale})`;
             actor.style.top = actor.dataset.top;
             actor.style.left = actor.dataset.left;
         }
