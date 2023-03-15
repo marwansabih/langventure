@@ -136,12 +136,40 @@ function enable_scene_selection() {
     });
 }
 
+function register_add_to_selection(button_id, selection_id, display_id, collection) {
+    button = document.getElementById(button_id);
+    button.dataset.sel_id = selection_id
+    button.onclick = (element) => {
+        select = document.getElementById(selection_id)
+        collection.push(select.value)
+        display_items(display_id, collection)
+    }
+}
+
+function display_items(display_id, collection) {
+    display = document.getElementById(display_id)
+    display.innerHTML = "None"
+    if (collection){
+        display.innerHTML = collection.toString();
+    }
+}
+
 document.addEventListener( "DOMContentLoaded", () => {
+
+    requires = []
+    deactivates = []
+    console.log("here here here")
+
+    register_add_to_selection("add_dea", "deactivates", "display_dea", deactivates)
+    register_add_to_selection("add_req", "requires", "display_req", requires)
+
     document.querySelectorAll(".actor").forEach( actor => {
         place_actor(actor);
         actor.onwheel = zoom;
         dragElement(actor);
     })
+
+    console.log("after?")
 
     right_box = document.getElementById("right_box");
     console.log(`${window.innerHeight - 820}px`);

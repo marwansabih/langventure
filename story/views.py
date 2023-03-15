@@ -65,6 +65,16 @@ def update_user_knowledge(request):
         return JsonResponse({"body": "Successfully added item to user knowledge"}, status=201)
 
 
+@csrf_exempt
+@login_required
+def get_scene_knowledge(request, scene_id):
+    if request.method == "GET":
+        scene = Scene.get(pk=scene_id)
+        requires = [req.item for req in scene.requires]
+        deactivates = [req.item for req in scene.deactivates]
+        return JsonResponse({"requires": requires, "deactivates": deactivates}, status=200)
+
+
 @login_required
 def create_story(request):
     user = request.user

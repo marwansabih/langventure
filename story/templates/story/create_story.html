@@ -67,30 +67,30 @@
                             {% endfor %}
                         </div>
                         <h5>Requires</h5>
-                        <div style="background:white; color:black;padding:3px;border-radius:5px;margin-bottom:3px">
+                        <div id="display_req" style="background:white; color:black;padding:3px;border-radius:5px;margin-bottom:3px">
                             None
                         </div>
                         <div class="d-flex">
-                            <select name="requires" class="form-control">
+                            <select id="requires" name="requires" class="form-control">
                             <option value="">None</option>
                                 {% for item in story.knowledge_items.all %}
                                 <option value="{{item.item}}">{{item.item}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="btn btn-secondary btn-sm">add</div>
+                            <div id="add_req" class="btn btn-secondary btn-sm">add</div>
                         </div>
                         <h5>Deactivates</h5>
-                        <div style="background:white; color:black;padding:3px;border-radius:5px;margin-bottom:3px">
+                        <div id="display_dea" style="background:white; color:black;padding:3px;border-radius:5px;margin-bottom:3px">
                             None
                         </div>
                         <div class="d-flex">
-                            <select name="deactivates" class="form-control">
+                            <select id="deactivates" name="deactivates" class="form-control">
                             <option value="">None</option>
                                 {% for item in story.knowledge_items.all %}
                                 <option value="{{item.item}}">{{item.item}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="btn btn-secondary btn-sm">add</div>
+                            <div id="add_dea" class="btn btn-secondary btn-sm">add</div>
                         </div>
                     </div>
                     <h4>Select Scene</h4>
