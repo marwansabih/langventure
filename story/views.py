@@ -52,6 +52,7 @@ def story_scene(request, id, scene_id):
         "current_scene": current_scene
     })
 
+
 @csrf_exempt
 @login_required
 def update_user_knowledge(request):
@@ -72,6 +73,31 @@ def get_scene_knowledge(request, scene_id):
         scene = Scene.get(pk=scene_id)
         requires = [req.item for req in scene.requires]
         deactivates = [req.item for req in scene.deactivates]
+        return JsonResponse({"requires": requires, "deactivates": deactivates}, status=200)
+
+@csrf_exempt
+@login_required
+def update_scene_knowledge(request, scene_id):
+    if request.method == "POST":
+        scene = Scene.get(pk=scene_id)
+
+        requires = json.loads(request.POST.get("requires"))
+        deactivates = json.loads(request.Post.get("deactivates"))
+
+        existing_reqs = [req.item for req in scene.requires.all()]
+        for req in requires:
+            if req not in existing_reqs:
+                item = Knowledge(item=req, story=scene.story)
+                item.save()
+                scene.requires.add(item)
+
+        existing_deas = [req.item for req in scene.deactivates.all()]
+        for dea in deactivates:
+            if dea not in existing_deas:
+                item = Knowledge(item=dea, story=scene.story)
+                item.save()
+                scene.deactivates.add(item)
+
         return JsonResponse({"requires": requires, "deactivates": deactivates}, status=200)
 
 
@@ -96,7 +122,6 @@ def create_story(request):
     })
 
 
-
 @login_required
 def update_menu(request):
     user = request.user
@@ -104,6 +129,7 @@ def update_menu(request):
     return render(request, "story/update_menu.html", {
         "stories": stories
     })
+
 
 @login_required
 def update_story(request, story_id):
@@ -136,7 +162,6 @@ def delete_scene(request, scene_id):
     return render(request, "story/actor.html", {
         "scene_id": scene_id
     })
-
 
 
 def actor(request, scene_id):
@@ -348,7 +373,6 @@ def update_character(request, char_id):
                 save_option(option, id, id_to_m_dialog, story)
 
         return JsonResponse({"body": "successfully updated character"}, status= 200)
-
 
 
 @csrf_exempt

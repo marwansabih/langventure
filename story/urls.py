@@ -22,5 +22,7 @@ urlpatterns = [
     path("update_story_scene/<int:story_id>/<int:scene_id>", views.update_story_scene, name="update_story_scene"),
     path("update_menu", views.update_menu, name="update_menu"),
     path("delete_scene/<int:scene_id>", views.delete_scene, name="delete_scene"),
-    path("update_user_knowledge", views.update_user_knowledge, name="update_user_knowledge")
+    path("update_user_knowledge", views.update_user_knowledge, name="update_user_knowledge"),
+    path("update_scene_knowledge", views.update_scene_knowledge, name="update_scene_knowledge"),
+    path("get_scene_knowledge", views.get_scene_knowledge, name="get_scene_knowledge")
 ]
