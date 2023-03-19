@@ -254,6 +254,7 @@ document.addEventListener( "DOMContentLoaded", () => {
     add_scene.onclick = () => {
         name = document.getElementById("scene_name").value;
         document.getElementById("scene_name").value = "";
+        create_scene(name);
     }
 
     delete_scenes = document.getElementsByClassName("del_scene");
