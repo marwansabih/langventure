@@ -137,39 +137,62 @@ function enable_scene_selection() {
 }
 
 function register_add_to_selection(button_id, selection_id, display_id, collection) {
+    display_items(display_id, collection);
     button = document.getElementById(button_id);
     button.dataset.sel_id = selection_id
     button.onclick = (element) => {
         select = document.getElementById(selection_id)
         collection.push(select.value)
         display_items(display_id, collection)
+        id = document.getElementById("bg").dataset.sceneid;
+        let formData = new FormData();
+        formData.append(selection_id, JSON.stringify(collection))
+        fetch('/update_scene_knowledge/' + id, {
+            method: "POST",
+            body: formData,
+        }).then(
+            data => console.log("Successfully updated scene condition")
+        )
+
     }
 }
 
 function display_items(display_id, collection) {
     display = document.getElementById(display_id)
-    display.innerHTML = "None"
-    if (collection){
+    if (collection.length === 0){
+        display.innerHTML = "None"
+    }else{
         display.innerHTML = collection.toString();
     }
 }
 
+function init_scene_conditions(requires, deactivates) {
+    id = document.getElementById("bg").dataset.sceneid;
+    fetch('/get_scene_knowledge/' + id, {
+        method: "GET"
+    }).then(response => response.json()
+    ).then(
+        data => {
+            requires = data["requires"];
+            deactivates = data["deactivates"];
+            register_add_to_selection("add_dea", "deactivates", "display_dea", deactivates)
+            register_add_to_selection("add_req", "requires", "display_req", requires)
+        }
+    )
+}
+
 document.addEventListener( "DOMContentLoaded", () => {
-
-    requires = []
+    requires =  []
     deactivates = []
-    console.log("here here here")
 
-    register_add_to_selection("add_dea", "deactivates", "display_dea", deactivates)
-    register_add_to_selection("add_req", "requires", "display_req", requires)
+    // adds logic for requires and deactivates
+    init_scene_conditions(requires, deactivates)
 
     document.querySelectorAll(".actor").forEach( actor => {
         place_actor(actor);
         actor.onwheel = zoom;
         dragElement(actor);
     })
-
-    console.log("after?")
 
     right_box = document.getElementById("right_box");
     console.log(`${window.innerHeight - 820}px`);
@@ -231,8 +254,6 @@ document.addEventListener( "DOMContentLoaded", () => {
     add_scene.onclick = () => {
         name = document.getElementById("scene_name").value;
         document.getElementById("scene_name").value = "";
-        console.log(name);
-        create_scene(name);
     }
 
     delete_scenes = document.getElementsByClassName("del_scene");

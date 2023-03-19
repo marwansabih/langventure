@@ -36,21 +36,68 @@ def story(request, id):
     story = Story.objects.get(pk=id)
     current_scene = story.scenes.all().first()
     user = request.user
+    user_knowldge = user.knowledge_items.all()
+    activated_scenes = [
+        scene for scene in story.scenes.all()
+        if scene_is_activated(scene, user_knowldge)
+    ]
     return render(request, "story/show.html", {
         "story": story,
         "current_scene": current_scene,
-        "knowledge_items": user.knowledge_items.all()
+        "knowledge_items": user_knowldge,
+        "activated_scenes": activated_scenes
     })
 
+
+def scene_is_activated(scene, knowledge_items):
+    def query_set_to_set(q_set):
+        return set(item.id for item in q_set)
+
+    knowledge_items = query_set_to_set(knowledge_items)
+
+    deactivates = query_set_to_set(scene.deactivates.all())
+
+    requires = query_set_to_set(scene.requires.all())
+
+    if deactivates.issubset(knowledge_items):
+        return False
+    if requires.issubset(knowledge_items):
+        return True
+    return False
 
 @login_required
 def story_scene(request, id, scene_id):
     story = Story.objects.get(pk=id)
     current_scene = Scene.objects.get(pk=scene_id)
+    user = request.user
+    user_knowldge = user.knowledge_items.all()
+    activated_scenes = [
+        scene for scene in story.scenes.all()
+        if scene_is_activated(scene, user_knowldge)
+    ]
+
     return render(request, "story/show.html", {
         "story": story,
-        "current_scene": current_scene
+        "current_scene": current_scene,
+        "activated_scenes": activated_scenes
     })
+
+
+def scene_is_activated(scene, knowledge_items):
+    def query_set_to_set(q_set):
+        return set(item.id for item in q_set)
+
+    knowledge_items = query_set_to_set(knowledge_items)
+
+    deactivates = query_set_to_set(scene.deactivates.all())
+
+    requires = query_set_to_set(scene.requires.all())
+
+    if deactivates.issubset(knowledge_items):
+        return False
+    if requires.issubset(knowledge_items):
+        return True
+    return False
 
 
 @csrf_exempt
@@ -70,19 +117,23 @@ def update_user_knowledge(request):
 @login_required
 def get_scene_knowledge(request, scene_id):
     if request.method == "GET":
-        scene = Scene.get(pk=scene_id)
-        requires = [req.item for req in scene.requires]
-        deactivates = [req.item for req in scene.deactivates]
+        scene = Scene.objects.get(pk=scene_id)
+        requires = [req.item for req in scene.requires.all()]
+        deactivates = [req.item for req in scene.deactivates.all()]
         return JsonResponse({"requires": requires, "deactivates": deactivates}, status=200)
 
 @csrf_exempt
 @login_required
 def update_scene_knowledge(request, scene_id):
     if request.method == "POST":
-        scene = Scene.get(pk=scene_id)
+        scene = Scene.objects.get(pk=scene_id)
 
-        requires = json.loads(request.POST.get("requires"))
-        deactivates = json.loads(request.Post.get("deactivates"))
+        requires = []
+        deactivates = []
+        if request.POST.get("requires"):
+            requires = json.loads(request.POST.get("requires"))
+        if request.POST.get("deactivates"):
+            deactivates = json.loads(request.POST.get("deactivates"))
 
         existing_reqs = [req.item for req in scene.requires.all()]
         for req in requires:
