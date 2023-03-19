@@ -4,6 +4,7 @@
     <script type="text/javascript" src="{% static 'story/show.js' %}"></script>
 
     <div id="story_id" data-storyid="{{ story.id }}"></div>
+    <div id="scene_id" data-sceneid="{{ current_scene.id }}"></div>
 
     {% for item in knowledge_items %}
         <div class="knowledge_item" data-item="{{ item.item }}"></div>

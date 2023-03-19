@@ -36,34 +36,17 @@ def story(request, id):
     story = Story.objects.get(pk=id)
     current_scene = story.scenes.all().first()
     user = request.user
-    user_knowldge = user.knowledge_items.all()
-    activated_scenes = [
-        scene for scene in story.scenes.all()
-        if scene_is_activated(scene, user_knowldge)
-    ]
+    user_knowledge = user.knowledge_items.all()
+
+    activated_scenes = [scene for scene in story.scenes.all()
+                        if activated_scene(scene, user_knowledge)]
     return render(request, "story/show.html", {
         "story": story,
         "current_scene": current_scene,
-        "knowledge_items": user_knowldge,
+        "knowledge_items": user_knowledge,
         "activated_scenes": activated_scenes
     })
 
-
-def scene_is_activated(scene, knowledge_items):
-    def query_set_to_set(q_set):
-        return set(item.id for item in q_set)
-
-    knowledge_items = query_set_to_set(knowledge_items)
-
-    deactivates = query_set_to_set(scene.deactivates.all())
-
-    requires = query_set_to_set(scene.requires.all())
-
-    if deactivates.issubset(knowledge_items):
-        return False
-    if requires.issubset(knowledge_items):
-        return True
-    return False
 
 @login_required
 def story_scene(request, id, scene_id):
@@ -73,7 +56,7 @@ def story_scene(request, id, scene_id):
     user_knowldge = user.knowledge_items.all()
     activated_scenes = [
         scene for scene in story.scenes.all()
-        if scene_is_activated(scene, user_knowldge)
+        if activated_scene(scene, user_knowldge)
     ]
 
     return render(request, "story/show.html", {
@@ -83,22 +66,23 @@ def story_scene(request, id, scene_id):
     })
 
 
-def scene_is_activated(scene, knowledge_items):
+def activated_scene(scene, knowledge_items):
     def query_set_to_set(q_set):
-        return set(item.id for item in q_set)
+        return set(item.item for item in q_set)
 
     knowledge_items = query_set_to_set(knowledge_items)
 
     deactivates = query_set_to_set(scene.deactivates.all())
 
     requires = query_set_to_set(scene.requires.all())
+    print(requires)
+    print(knowledge_items)
 
-    if deactivates.issubset(knowledge_items):
+    if deactivates.issubset(knowledge_items) and deactivates:
         return False
     if requires.issubset(knowledge_items):
         return True
     return False
-
 
 @csrf_exempt
 @login_required

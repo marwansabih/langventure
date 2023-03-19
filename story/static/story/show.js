@@ -148,13 +148,17 @@ function add_dialog(actor){
 
 function update_user_knowledge(item){
     let story_id = document.getElementById("story_id").dataset.storyid;
+    let scene_id = document.getElementById("scene_id").dataset.sceneid;
     let formData = new FormData();
     formData.append('item', item);
     formData.append('story_id', story_id);
     fetch('/update_user_knowledge', {
         method: 'POST',
         body: formData
-    })
+    }).then(
+        location.href =`/story_scene/${story_id}/${scene_id}`
+    )
+
 }
 
 function set_existing_user_knowledge(){
