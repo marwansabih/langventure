@@ -28,6 +28,7 @@ from django.core.files.images import get_image_dimensions
     - warning if char is incomplete or ill designed
     - publish only available after correcting all mistakes
     - show author of story
+    - answer can be spoken for training
 """
 
 
@@ -38,13 +39,10 @@ def story(request, id):
     user = request.user
     user_knowledge = user.knowledge_items.all()
 
-    activated_scenes = [scene for scene in story.scenes.all()
-                        if activated_scene(scene, user_knowledge)]
     return render(request, "story/show.html", {
         "story": story,
         "current_scene": current_scene,
         "knowledge_items": user_knowledge,
-        "activated_scenes": activated_scenes
     })
 
 
@@ -53,18 +51,35 @@ def story_scene(request, id, scene_id):
     story = Story.objects.get(pk=id)
     current_scene = Scene.objects.get(pk=scene_id)
     user = request.user
-    user_knowldge = user.knowledge_items.all()
-    activated_scenes = [
-        scene for scene in story.scenes.all()
-        if activated_scene(scene, user_knowldge)
-    ]
+    user_knowledge = user.knowledge_items.all()
 
     return render(request, "story/show.html", {
         "story": story,
         "current_scene": current_scene,
-        "activated_scenes": activated_scenes
+        "knowledge_items": user_knowledge
     })
 
+@login_required
+@csrf_exempt
+def get_active_scenes(request, scene_id):
+    if request.method == "GET":
+        current_scene = Scene.objects.get(pk=scene_id)
+        story = current_scene.story
+        user = request.user
+        user_knowldge = user.knowledge_items.all()
+        activated_scenes = [
+            scene.name for scene in story.scenes.all()
+            if activated_scene(scene, user_knowldge) or scene.id == current_scene.id
+        ]
+        activated_scenes_ids = [
+            scene.id for scene in story.scenes.all()
+            if activated_scene(scene, user_knowldge) or scene.id == current_scene.id
+        ]
+        return JsonResponse({
+            "scenes": activated_scenes,
+            "ids": activated_scenes_ids,
+            "current_id": current_scene.id
+        }, status=200)
 
 def activated_scene(scene, knowledge_items):
     def query_set_to_set(q_set):

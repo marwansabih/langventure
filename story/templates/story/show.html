@@ -74,13 +74,8 @@
             </div>
             <div>
                 <h4>Switch Scene</h4>
-                {% for scene in activated_scenes %}
-                    {% if scene.id == current_scene.id %}
-                        <a href="{% url 'story_scene' story.id scene.id %}" class="btn btn-primary">{{scene.name}}</a>
-                    {% else %}
-                        <a href="{% url 'story_scene' story.id scene.id %}" class="btn btn-secondary">{{scene.name}}</a>
-                    {% endif %}
-                {% endfor %}
+                <div id="scenes">
+                </div>
             </div>
         </div>
     </div>

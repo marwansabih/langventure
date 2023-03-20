@@ -24,5 +24,6 @@ urlpatterns = [
     path("delete_scene/<int:scene_id>", views.delete_scene, name="delete_scene"),
     path("update_user_knowledge", views.update_user_knowledge, name="update_user_knowledge"),
     path("update_scene_knowledge/<int:scene_id>", views.update_scene_knowledge, name="update_scene_knowledge"),
-    path("get_scene_knowledge/<int:scene_id>", views.get_scene_knowledge, name="get_scene_knowledge")
+    path("get_scene_knowledge/<int:scene_id>", views.get_scene_knowledge, name="get_scene_knowledge"),
+    path("get_active_scenes/<int:scene_id>", views.get_active_scenes, name="get_active_scenes")
 ]

@@ -156,7 +156,7 @@ function update_user_knowledge(item){
         method: 'POST',
         body: formData
     }).then(
-        location.href =`/story_scene/${story_id}/${scene_id}`
+        set_active_scenes()
     )
 
 }
@@ -167,6 +167,36 @@ function set_existing_user_knowledge(){
         k_i = item.dataset.item;
         user_knowledge.push(k_i);
     })
+    set_active_scenes()
+}
+
+function set_active_scenes(){
+    const scene_id = document.getElementById("scene_id").dataset.sceneid;
+    const story_id = document.getElementById("story_id").dataset.storyid;
+    fetch('/get_active_scenes/' + scene_id, {
+        method: 'GET'
+    }).then( response => response.json()
+    ).then( data => {
+        active_scenes = data["scenes"]
+        ids = data["ids"]
+        current_id = data["current_id"]
+        scene_div = document.getElementById("scenes")
+        scene_div.innerHTML = "";
+        active_scenes.forEach( (scene, idx) => {
+            a = document.createElement("a")
+            a.href = `/story_scene/${story_id}/${ids[idx]}`
+            a.classList.add("btn")
+            if(ids[idx] === current_id){
+                a.classList.add("btn-primary")
+            }else{
+                a.classList.add("btn-secondary")
+            }
+            a.style.marginLeft="3px"
+            a.innerHTML = scene
+            scene_div.append(a)
+            console.log(a)
+        });
+    })
 }
 
 document.addEventListener( "DOMContentLoaded", () => {
@@ -174,11 +204,11 @@ document.addEventListener( "DOMContentLoaded", () => {
     window.onresize = () => {
         scale_dialog();
     };
+    set_active_scenes();
     set_existing_user_knowledge();
     document.querySelectorAll(".actor").forEach( actor => {
         place_actor(actor);
         add_dialog(actor);
-
     })
     background_input = document.getElementById("bgi");
 });
