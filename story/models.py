@@ -39,6 +39,16 @@ class Knowledge(models.Model):
     deactivated_scenes = models.ManyToManyField(Scene, blank=True, related_name="deactivates")
 
 
+class Collectible(models.Model):
+    scene = models.ForeignKey(Scene, blank=True, default=None, on_delete=models.CASCADE, related_name="collectibles")
+    name = models.TextField()
+    knowledge_item = models.ForeignKey(Knowledge, on_delete=models.CASCADE, related_name="collectible")
+    image = models.ImageField(blank=True, default=None, upload_to="images")
+    scale = models.TextField(default="scale(1)")
+    top = models.TextField(default="10px")
+    left = models.TextField(default="50px")
+
+
 class Option(models.Model):
     origin = models.ForeignKey(Dialog, on_delete=models.CASCADE, related_name="options")
     target = models.ForeignKey(Dialog, on_delete=models.CASCADE, blank=True, null=True)

@@ -137,15 +137,13 @@ def update_scene_knowledge(request, scene_id):
         existing_reqs = [req.item for req in scene.requires.all()]
         for req in requires:
             if req not in existing_reqs:
-                item = Knowledge(item=req, story=scene.story)
-                item.save()
+                item = Knowledge.objects.filter(item=req).first()
                 scene.requires.add(item)
 
         existing_deas = [req.item for req in scene.deactivates.all()]
         for dea in deactivates:
             if dea not in existing_deas:
-                item = Knowledge(item=dea, story=scene.story)
-                item.save()
+                item = Knowledge.objects.filter(item=dea).first()
                 scene.deactivates.add(item)
 
         return JsonResponse({"requires": requires, "deactivates": deactivates}, status=200)
