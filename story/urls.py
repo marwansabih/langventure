@@ -6,6 +6,7 @@ urlpatterns = [
     path("story_scene/<int:id>/<int:scene_id>", views.story_scene, name="story_scene"),
     path("create_story/", views.create_story, name="create_story"),
     path("actor/<int:scene_id>", views.actor, name="actor"),
+    path("collectible/<int:scene_id>", views.collectible, name="collectible"),
     path("edit_actor/<int:actor_id>", views.edit_actor, name="edit_actor"),
     path("get_actor_info/<int:actor_id>", views.get_character_info, name="get_actor"),
     path("create_character/<int:scene_id>", views.create_character, name="create_character"),

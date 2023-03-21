@@ -70,3 +70,23 @@
   max-width: 600px;
 }
 
+/* collectible */
+
+col_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    margin-right: 10px;
+}

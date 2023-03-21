@@ -1,0 +1,32 @@
+{% extends "gapfiller/layout.html" %}
+{% load static %}
+{% block body %}
+    <script type="text/javascript" src="{% static 'story/actor.js' %}"></script>
+    <div id="id_story" data-storyid="{{ story_id }}"></div>
+    {% if scene_id %}
+        <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
+    {% endif %}
+    {% if actor_id %}
+        <div id="id_collectible" data-collectibleid="{{ collectible_id }}"></div>
+    {% endif %}
+    <div class="actor_title">
+            <h1> Create new Collectible</h1>
+    </div>
+    <div class="create_section">
+        {% if message %}
+            <div class="create_warning"> <p>{{ message }}</p> </div>
+        {% endif %}
+        <div>
+            {% csrf_token %}
+    <col_body>
+        <div class="input-container">
+            <input type="text" placeholder="Enter text">
+            <select>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
+        </div>
+        <img src="your-image-url.jpg" alt="Centered Image">
+    </col_body>
+{% endblock %}

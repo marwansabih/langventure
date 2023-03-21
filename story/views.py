@@ -238,6 +238,11 @@ def edit_actor(request, actor_id):
     })
 
 
+def collectible(request, scene_id):
+
+    return render(request, "story/collectible.html")
+
+
 @csrf_exempt
 def get_character_info(request, actor_id):
     if request.method == "GET":
