@@ -39,6 +39,7 @@
                     <label for="story_name"> Story title </label>
                     <input type="text" id="story_name" style="width:100%;border-radius:5px;" value="{{story.name}}">
                 </div>
+
             </div>
             <div class="right_actor_box" id="right_box" style="margin:0px">
                 <div class="inner_box" style="padding:5px;width:49%;display:inline-block;margin:0px;">
@@ -155,6 +156,14 @@
                     <a class="btn btn-secondary" style="width:100%;margin-top:5px;" href="{% url 'actor' current_scene.id %}">
                         add new character
                     </a>
+
+                    <div style="margin-top:20px;">
+                        <h4>To update collectible click on it</h4>
+                        <div style="background:white;color:black;border-radius:5px;width=100%;padding:5px;">
+                            None
+                        </div>
+                        <a class="btn btn-secondary" style="width:100%" href="{% url 'collectible' current_scene.id %}">Add new Collectible</a>
+                    </div>
                 </div>
             </div>
         </div>

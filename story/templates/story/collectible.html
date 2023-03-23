@@ -1,32 +1,48 @@
 {% extends "gapfiller/layout.html" %}
 {% load static %}
+
 {% block body %}
-    <script type="text/javascript" src="{% static 'story/actor.js' %}"></script>
-    <div id="id_story" data-storyid="{{ story_id }}"></div>
-    {% if scene_id %}
-        <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
+  <script type="text/javascript" src="{% static 'story/actor.js' %}"></script>
+
+  <div id="id_story" data-storyid="{{ story_id }}"></div>
+
+  {% if scene_id %}
+    <div id="id_storage" data-sceneid="{{ scene_id }}"></div>
+  {% endif %}
+
+  {% if actor_id %}
+    <div id="id_collectible" data-collectibleid="{{ collectible_id }}"></div>
+  {% endif %}
+
+  <div class="actor_title">
+    <h1>Create new Collectible</h1>
+  </div>
+
+  <div class="create_section" style="display: flex; align-items: center; justify-content: center;">
+    {% if message %}
+      <div class="create_warning">
+        <p>{{ message }}</p>
+      </div>
     {% endif %}
-    {% if actor_id %}
-        <div id="id_collectible" data-collectibleid="{{ collectible_id }}"></div>
-    {% endif %}
-    <div class="actor_title">
-            <h1> Create new Collectible</h1>
-    </div>
-    <div class="create_section">
-        {% if message %}
-            <div class="create_warning"> <p>{{ message }}</p> </div>
-        {% endif %}
-        <div>
-            {% csrf_token %}
-    <col_body>
-        <div class="input-container">
-            <input type="text" placeholder="Enter text">
-            <select>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
-        </div>
-        <img src="your-image-url.jpg" alt="Centered Image">
-    </col_body>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; margin-right: 20px;">
+        <label for="collectible_name" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Name:</label>
+        <input type="text" id="collectible_name" name="collectible_name" placeholder="Enter collectible name" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
+
+        <label for="knowledge_item" style="color: black; font-size: 16px; margin-bottom: 10px;">Acquires Knowledge Item:</label>
+        <select id="knowledge_item" name="knowledge_item" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
+          {% for item in knowledge_items %}
+            <option> {{item}} </option>
+          {% endfor %}
+        </select>
+
+        <label for="collectible_image" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Image:</label>
+        <input type="file" id="collectible_image" name="collectible_image" accept="image/png, image/jpeg" style="margin-bottom: 10px;">
+      </div>
+    </form>
+
+    <div id="image_box" style="width: 300px; height: 300px; border: 1px solid black; background-color: black;border-radius:5px"></div>
+  </div>
 {% endblock %}

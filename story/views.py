@@ -239,8 +239,11 @@ def edit_actor(request, actor_id):
 
 
 def collectible(request, scene_id):
-
-    return render(request, "story/collectible.html")
+    scene = Scene.objects.get(pk=scene_id)
+    knowlede_items = [ki.item for ki in scene.story.knowledge_items.all()]
+    return render(request, "story/collectible.html", {
+        "knowledge_items": knowlede_items
+    })
 
 
 @csrf_exempt
