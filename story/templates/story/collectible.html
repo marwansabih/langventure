@@ -2,7 +2,34 @@
 {% load static %}
 
 {% block body %}
-  <script type="text/javascript" src="{% static 'story/actor.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInput = document.getElementById('image');
+      const imageBox = document.getElementById('image_box');
+
+      function previewImage(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            img.style.borderRadius = '5px';
+            imageBox.innerHTML = ''; // Clear the image_box content
+            imageBox.appendChild(img); // Append the img element to the image_box
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      imageInput.addEventListener('change', function() {
+        previewImage(this);
+      });
+    });
+  </script>
 
   <div id="id_story" data-storyid="{{ story_id }}"></div>
 
@@ -18,7 +45,7 @@
     <h1>Create new Collectible</h1>
   </div>
 
-  <div class="create_section" style="display: flex; align-items: center; justify-content: center;">
+  <div class="create_section" style="display: flex; align-items: center; justify-content: center; height:300px">
     {% if message %}
       <div class="create_warning">
         <p>{{ message }}</p>
@@ -28,8 +55,8 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; margin-right: 20px;">
-        <label for="collectible_name" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Name:</label>
-        <input type="text" id="collectible_name" name="collectible_name" placeholder="Enter collectible name" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
+        <label for="name" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter collectible name" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
 
         <label for="knowledge_item" style="color: black; font-size: 16px; margin-bottom: 10px;">Acquires Knowledge Item:</label>
         <select id="knowledge_item" name="knowledge_item" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
@@ -38,9 +65,11 @@
           {% endfor %}
         </select>
 
-        <label for="collectible_image" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Image:</label>
-        <input type="file" id="collectible_image" name="collectible_image" accept="image/png, image/jpeg" style="margin-bottom: 10px;">
+        <label for="image" style="color: black; font-size: 16px; margin-bottom: 10px;">Collectible Image:</label>
+        <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="margin-bottom: 10px;">
+        <input type="submit" class="btn btn-secondary" value="Create Collectible" style="width:100%">
       </div>
+
     </form>
 
     <div id="image_box" style="width: 300px; height: 300px; border: 1px solid black; background-color: black;border-radius:5px"></div>

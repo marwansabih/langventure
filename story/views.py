@@ -8,6 +8,8 @@ from .models import Story, Scene, Actor, Dialog, Option, Knowledge
 import json
 import PIL
 import base64
+from .form import CollectibleForm
+from django.contrib import messages
 
 from django.core.files.images import get_image_dimensions
 
@@ -239,9 +241,29 @@ def edit_actor(request, actor_id):
 
 
 def collectible(request, scene_id):
+
     scene = Scene.objects.get(pk=scene_id)
-    knowlede_items = [ki.item for ki in scene.story.knowledge_items.all()]
+
+    if request.method == 'POST':
+        form = CollectibleForm(request.POST, request.FILES)
+        print(form.is_valid())
+        print(form)
+
+        if form.is_valid():
+            new_collectible = form.save(commit=False)  # Don't save the instance to the database yet
+            new_collectible.scene = scene  # Assign the Scene object to the new_collectible
+            new_collectible.save()  # Save the instance to the database
+            messages.success(request, 'Collectible created successfully!')
+            return redirect('update_story_scene', story_id =scene.story.id, scene_id=scene.id)  # Replace 'some_view' with the desired view name to redirect
+        else:
+            messages.error(request, 'Failed to create the collectible. Please check your input.')
+
+    else:
+        form = CollectibleForm()
+
+    knowlede_items = scene.story.knowledge_items.all() #[ki.item for ki in scene.story.knowledge_items.all()]
     return render(request, "story/collectible.html", {
+        "form": form,
         "knowledge_items": knowlede_items
     })
 
