@@ -41,12 +41,15 @@ class Knowledge(models.Model):
 
 class Collectible(models.Model):
     scene = models.ForeignKey(Scene, blank=True, default=None, on_delete=models.CASCADE, related_name="collectibles")
-    name = models.TextField()
+    name = models.CharField(max_length=50)
     knowledge_item = models.ForeignKey(Knowledge, on_delete=models.CASCADE, related_name="collectible")
     image = models.ImageField(blank=True, default=None, upload_to="images")
     scale = models.TextField(default="scale(1)")
     top = models.TextField(default="10px")
     left = models.TextField(default="50px")
+
+    def __str__(self):
+        return self.name
 
 
 class Option(models.Model):

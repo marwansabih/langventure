@@ -61,7 +61,7 @@
         <label for="knowledge_item" style="color: black; font-size: 16px; margin-bottom: 10px;">Acquires Knowledge Item:</label>
         <select id="knowledge_item" name="knowledge_item" style="width: 300px; height: 30px; border-radius: 5px; padding: 5px; margin-bottom: 10px;">
           {% for item in knowledge_items %}
-            <option> {{item}} </option>
+            <option value="{{ item.pk }}"> {{ item.item }} </option>
           {% endfor %}
         </select>
 

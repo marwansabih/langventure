@@ -23,6 +23,16 @@
                      style="position:absolute; margin-top:0px;">
         {% endfor %}
 
+        {% for collectible in current_scene.collectibles.all %}
+                <img class="actor"
+                     src="{{ collectible.image.url }}"
+                     data-scale="{{ collectible.scale }}"
+                     data-top="{{ collectible.top }}"
+                     data-left="{{ collectible.left }}"
+                     data-charid = "{{ collectible.id }}"
+                     style="position:absolute; margin-top:0px;">
+        {% endfor %}
+
         <div>
             {% csrf_token %}
             <div class="left_actor_box"
