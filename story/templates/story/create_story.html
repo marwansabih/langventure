@@ -24,7 +24,7 @@
         {% endfor %}
 
         {% for collectible in current_scene.collectibles.all %}
-                <img class="actor"
+                <img class="collectible"
                      src="{{ collectible.image.url }}"
                      data-scale="{{ collectible.scale }}"
                      data-top="{{ collectible.top }}"

@@ -1,21 +1,36 @@
 background = null;
 
-function update_pos_scale(actor){
-    z = actor.style.top;
-    left = actor.style.left;
-    scale = actor.style.transform;
-    id = actor.dataset.charid;
+const DisplayType = {
+    actor: 0,
+    collectible: 1
+}
+
+function update_pos_scale(moveAble, displayType ){
+    z = moveAble.style.top;
+    left = moveAble.style.left;
+    scale = moveAble.style.transform;
+    id = moveAble.dataset.charid;
     let formData = new FormData();
     formData.append('top', z);
     formData.append('left', left);
     formData.append('scale', scale.substring(6, scale.length-1));
-    fetch('/set_character_pos_scale/' + id, {
-       method: 'POST',
-       body: formData
-    })
+    if(displayType === DisplayType.actor) {
+        fetch('/set_character_pos_scale/' + id, {
+            method: 'POST',
+            body: formData
+        })
+    }
+    if(displayType === DisplayType.collectible) {
+        fetch('/set_collectible_pos_scale/' + id, {
+            method: 'POST',
+            body: formData
+        })
+    }
 }
 
-function zoom(event) {
+
+
+function zoom(event, displayType) {
     target = event.target
     let scale = target.getBoundingClientRect().width / target.offsetWidth;
     event.preventDefault();
@@ -27,26 +42,32 @@ function zoom(event) {
 
     // Apply scale transform
     event.target.style.transform = `scale(${scale})`;
-    update_pos_scale(event.target);
+    update_pos_scale(event.target, displayType);
 }
 
-function dragElement(elmnt) {
+function dragElement(elmnt, displayType) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(elmnt.id + "header")) {
         // if present, the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        document.getElementById(elmnt.id + "header").onmousedown = function() {
+            dragMouseDown(event, displayType);
+        }
     } else {
         // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
+        elmnt.onmousedown = function() {
+            dragMouseDown(event, displayType);
+        }
     }
 
-    function dragMouseDown(e) {
+    function dragMouseDown(e, displayType) {
         e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
+        document.onmouseup = function() {
+                closeDragElement(event, displayType);
+        }
         // call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
     }
@@ -64,11 +85,11 @@ function dragElement(elmnt) {
         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     }
 
-    function closeDragElement(e) {
+    function closeDragElement(e, displayType) {
         // stop moving when mouse button is released:
         document.onmouseup = null;
         document.onmousemove = null;
-        update_pos_scale(e.target);
+        update_pos_scale(e.target, displayType);
     }
 }
 
@@ -190,9 +211,21 @@ document.addEventListener( "DOMContentLoaded", () => {
 
     document.querySelectorAll(".actor").forEach( actor => {
         place_actor(actor);
-        actor.onwheel = zoom;
-        dragElement(actor);
+        actor.onwheel = function () {
+            zoom(event, DisplayType.actor);
+        }
+        dragElement(actor, DisplayType.actor);
     })
+
+
+    document.querySelectorAll(".collectible").forEach( collectible => {
+        place_actor(collectible);
+        collectible.onwheel = function () {
+            zoom(event, DisplayType.collectible);
+        }
+        dragElement(collectible, DisplayType.collectible);
+    })
+
 
     right_box = document.getElementById("right_box");
     console.log(`${window.innerHeight - 820}px`);

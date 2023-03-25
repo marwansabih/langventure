@@ -15,6 +15,7 @@ urlpatterns = [
     path("dialog", views.dialog, name="dialog"),
     path("background/<int:scene_id>", views.set_background, name="background"),
     path("set_character_pos_scale/<int:char_id>", views.set_character_pos_scale, name="set_character_pos_scale"),
+    path("set_collectible_pos_scale/<int:char_id>", views.set_collectible_pos_scale, name="set_collectible_pos_scale"),
     path("get_dialog/<int:char_id>", views.get_dialog, name="get_dialog"),
     path("set_scene_description/<int:scene_id>", views.set_scene_description, name="set_scene_description"),
     path("set_scene_name/<int:scene_id>", views.set_scene_name, name="set_scene_name"),

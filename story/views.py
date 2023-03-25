@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from gapfiller.models import User
 from gapfiller.helsinki_translator import hel_translate
-from .models import Story, Scene, Actor, Dialog, Option, Knowledge
+from .models import Story, Scene, Actor, Dialog, Option, Knowledge, Collectible
 import json
 import PIL
 import base64
@@ -377,11 +377,9 @@ def save_option(option, id, id_to_m_dialog, story):
 
 @csrf_exempt
 def create_character(request, scene_id):
-    print("in update char")
     if request.method == "POST":
         scene = Scene.objects.get(pk=scene_id)
         story = scene.story
-        print("HEY HEY")
         knowledge_items = request.POST.get("knowledge_items")
         knowledge_items = json.loads(knowledge_items)
         items = [k_i.item for k_i in story.knowledge_items.all()]
@@ -457,6 +455,23 @@ def update_character(request, char_id):
 def set_character_pos_scale(request, char_id):
     if request.method == "POST":
         actor = Actor.objects.get(pk=char_id)
+        top = request.POST.get("top")
+        left = request.POST.get("left")
+        scale = request.POST.get("scale")
+        actor.top = top
+        actor.left = left
+        actor.scale = scale
+        actor.save()
+
+    return render(request, "story/dialog.html", {
+        "scene_id": char_id
+    })
+
+
+@csrf_exempt
+def set_collectible_pos_scale(request, char_id):
+    if request.method == "POST":
+        actor = Collectible.objects.get(pk=char_id)
         top = request.POST.get("top")
         left = request.POST.get("left")
         scale = request.POST.get("scale")
