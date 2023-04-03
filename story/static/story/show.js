@@ -40,7 +40,6 @@ function place_actor(actor) {
 function scale_dialog(){
     field = document.getElementById("dialog_field")
     field.style.width = `${window.innerWidth-880}px`
-    console.log(`{$window.innerWidth-850}px`)
 }
 
 function contains_all_requirements(reqs){
@@ -63,12 +62,15 @@ function not_deactivated(deactivations){
 }
 
 function set_dialog(){
-            start = current_id_to_dialog[current_id];
             bubble = document.getElementById("bubble");
+            start = current_id_to_dialog[current_id];
             bubble.innerHTML = start["bubble"];
             bubble.onclick = () => {
                 translation = document.getElementById("translation");
-                translation.innerHTML = start["translation"];
+                translation.style.whiteSpace= "pre-wrap";
+                translation.style.overflowY = "scroll";
+                translation.style.height = "225px"
+                translation.innerHTML = start["bubble"] + "\n\n" + start["translation"];
             }
 
             options = start["options"];
@@ -85,7 +87,10 @@ function set_dialog(){
                 description.style.padding = "5px";
                 description.onclick = () => {
                     translation = document.getElementById("translation");
-                    translation.innerHTML = option["translation"];
+                    translation.style.whiteSpace= "pre-wrap";
+                    translation.style.overflowY = "scroll";
+                    translation.style.height = "225px"
+                    translation.innerHTML = option["content"] + "\n\n" + option["translation"];
                 }
                 label = document.createElement("div")
                 label.style.display = "inline-block";
@@ -105,6 +110,12 @@ function set_dialog(){
                 console.log("acquires");
                 console.log(option["acquires"]);
                 label.onclick =  e => {
+                    if (current_id === e.target.dataset.next)
+                    {
+                        hide = document.getElementById("hide");
+                        hide.style.display = "None"
+                        return ""
+                    }
                     current_id = e.target.dataset.next;
                     acquires = e.target.dataset.acquires;
                     if(acquires !== "null" && !user_knowledge.includes(acquires) ){
@@ -146,7 +157,7 @@ function add_dialog(actor){
     }
 }
 
-function update_user_knowledge(item){
+async function update_user_knowledge(item){
     let story_id = document.getElementById("story_id").dataset.storyid;
     let scene_id = document.getElementById("scene_id").dataset.sceneid;
     let formData = new FormData();
@@ -194,9 +205,34 @@ function set_active_scenes(){
             a.style.marginLeft="3px"
             a.innerHTML = scene
             scene_div.append(a)
-            console.log(a)
-        });
+            //const scene_id = document.getElementById("scene_id").dataset.sceneid;
+            //const story_id = document.getElementById("story_id").dataset.storyid
+        })
     })
+}
+
+function acquire_collectible(collectible) {
+  collectible.onclick = async event => {
+    item = event.target.dataset.knowledge_item;
+    name = event.target.dataset.name;
+    await update_user_knowledge(item);
+    await showDialog(name);
+    const scene_id = document.getElementById("scene_id").dataset.sceneid;
+    const story_id = document.getElementById("story_id").dataset.storyid;
+    location.href = "/story_scene/" + story_id + "/" + scene_id;
+  }
+}
+
+async function showDialog(item) {
+  const item_acquired = document.getElementById('item_acquired');
+  const acquired_item = item_acquired.querySelector('.acquired-item');
+  acquired_item.textContent = `${item}`;
+  item_acquired.style.display = 'block';
+
+  return new Promise(resolve => setTimeout(() => {
+    item_acquired.style.display = 'none';
+    resolve();
+  }, 3000));
 }
 
 document.addEventListener( "DOMContentLoaded", () => {
@@ -209,6 +245,10 @@ document.addEventListener( "DOMContentLoaded", () => {
     document.querySelectorAll(".actor").forEach( actor => {
         place_actor(actor);
         add_dialog(actor);
+    })
+    document.querySelectorAll(".collectible").forEach( collectible => {
+        place_actor(collectible);
+        acquire_collectible(collectible);
     })
     background_input = document.getElementById("bgi");
 });

@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.core.files.images import get_image_dimensions
 
 
+
 #   TODO
 """
     - speech 
@@ -83,6 +84,7 @@ def get_active_scenes(request, scene_id):
             "current_id": current_scene.id
         }, status=200)
 
+
 def activated_scene(scene, knowledge_items):
     def query_set_to_set(q_set):
         return set(item.item for item in q_set)
@@ -92,8 +94,6 @@ def activated_scene(scene, knowledge_items):
     deactivates = query_set_to_set(scene.deactivates.all())
 
     requires = query_set_to_set(scene.requires.all())
-    print(requires)
-    print(knowledge_items)
 
     if deactivates.issubset(knowledge_items) and deactivates:
         return False
@@ -205,6 +205,17 @@ def update_story_scene(request, story_id, scene_id):
     })
 
 
+@login_required
+@csrf_exempt
+def publish_story(request, story_id):
+    story = Story.objects.get(pk=story_id)
+    story.finished = True
+    story.save()
+    return JsonResponse({
+        "body": "Successfully published story!"
+    }, status=201)
+
+
 @csrf_exempt
 def delete_scene(request, scene_id):
     scene = Scene.objects.get(pk=scene_id)
@@ -314,7 +325,6 @@ def create_new_scene(request, story_id):
     if request.method == "POST":
         story = Story.objects.get(pk=story_id)
         name = request.POST.get("name")
-        print(name)
         scene = Scene(story=story, name=name)
         scene.save()
         return JsonResponse({"scene_id": scene.pk}, status=201)
@@ -354,7 +364,10 @@ def save_option(option, id, id_to_m_dialog, story):
     requires = option["requires"]
     deactivates = option["deactivates"]
     origin = id_to_m_dialog[id]
-    target = id_to_m_dialog[target]
+    if target == "end":
+        target = origin
+    else:
+        target = id_to_m_dialog[target]
     if "translation" in option and option["translation"]:
 
         translation = option["translation"]
@@ -373,6 +386,7 @@ def save_option(option, id, id_to_m_dialog, story):
         deas = [Knowledge.objects.filter(item=dea, story=story).first() for dea in deactivates]
         [opt.disabled_k_items.add(dea) for dea in deas]
     opt.save()
+    opt.save_audio()
 
 
 @csrf_exempt
@@ -403,6 +417,7 @@ def create_character(request, scene_id):
             d = Dialog(name=id, actor=actor, bubble=dialog["bubble"], translation=translation)
             id_to_m_dialog[id] = d
             d.save()
+            d.save_audio()
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:
@@ -443,6 +458,7 @@ def update_character(request, char_id):
             d = Dialog(name=id, actor=actor, bubble=dialog["bubble"], translation=translation)
             id_to_m_dialog[id] = d
             d.save()
+            d.save_audio()
         for id in dialogs:
             options = dialogs[id]["options"]
             for option in options:

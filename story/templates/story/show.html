@@ -14,6 +14,13 @@
             <h1>{{ story.name }}</h1>
     </div>
 
+    <div id="item_acquired" class="item-acquired"
+    >
+        <div class="congrats">Congratulations!</div>
+        <div>You have acquired:</div>
+        <div class="acquired-item"></div>
+    </div>
+
 
     <div class="create_section" style="min-height:100%;">
 
@@ -31,6 +38,21 @@
                      style="position:absolute; margin-top:0px;">
         {% endfor %}
 
+        {% for collectible in current_scene.collectibles.all %}
+                {% if not collectible.knowledge_item in user.knowledge_items.all %}
+                    <img class="collectible"
+                         src="{{ collectible.image.url }}"
+                         data-scale="{{ collectible.scale }}"
+                         data-top="{{ collectible.top }}"
+                         data-left="{{ collectible.left }}"
+                         data-charid = "{{ collectible.id }}"
+                         data-knowledge_item = "{{ collectible.knowledge_item.item }}"
+                         data-name = "{{ collectible.name }}"
+                        style="position:absolute; margin-top:0px;"
+                    >
+                {% endif %}
+        {% endfor %}
+
         <div>
             {% csrf_token %}
             <div class="left_actor_box"
@@ -40,7 +62,7 @@
                 <img src="{{ current_scene.background.url }}" style="width:800px;height:600px;border-radius:5px;">
             </div>
             <div class="right_actor_box" id="dialog_field">
-                <div class="inner_box" style="padding:5px;height:600px">
+                <div class="inner_box" style="padding:5px;height:700px">
 
                     <div id="description_box"
                          style="background:white;margin:5px;border-radius:5px;color:black;padding:5px"
@@ -66,8 +88,7 @@
                         <h4 id="translation_title">Click on a word to get for a translation</h4>
                     </div>
                     <div id="translation" style="background:white;margin:5px;border-radius:5px;color:black;padding:5px">
-                        endless<br>
-                        nothing selected
+                        No input selected
                     </div>
                     </div>
                 </div>

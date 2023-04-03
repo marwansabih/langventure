@@ -66,6 +66,9 @@ function setSelection() {
         sel.innerHTML = key;
         selection.append(sel);
     }
+    sel = document.createElement("option");
+    sel.innerHTML = "end";
+    selection.append(sel)
 }
 
 function generateTextarea(content) {
@@ -91,8 +94,8 @@ function createOptionDropDown(chosen, excluded){
                     continue;
                 }
                 opt = document.createElement("option");
-                opt.text = item
-                selection.append(opt)
+                opt.text = item;
+                selection.append(opt);
     }
     return selection
 }
@@ -133,7 +136,6 @@ function setOptions() {
         area = generateTextarea(option.content);
         area.onkeyup = event => {
             idx = id_to_dialog[current_dialog].options.indexOf(option);
-            console.log(idx);
             id_to_dialog[current_dialog].options[idx].content = event.target.value;
             save_actor_data();
             localStorage.setItem("id_to_dialog",JSON.stringify(id_to_dialog));

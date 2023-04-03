@@ -115,8 +115,6 @@ function setBackground() {
 }
 
 function place_actor(actor) {
-    console.log(actor.dataset)
-    console.log(actor.dataset.top)
     actor.style.transform = `scale(${actor.dataset.scale})` //actor.dataset.scale;
     console.log(actor.dataset.scale);
     actor.style.top = actor.dataset.top;
@@ -198,6 +196,20 @@ function init_scene_conditions(requires, deactivates) {
             deactivates = data["deactivates"];
             register_add_to_selection("add_dea", "deactivates", "display_dea", deactivates)
             register_add_to_selection("add_req", "requires", "display_req", requires)
+        }
+    )
+}
+
+
+function publish() {
+    id = document.getElementById("bg").dataset.storyid;
+    fetch('/publish/' + id, {
+        method: "POST"
+    }).then(response => response.json()
+    ).then(
+        data => {
+            console.log(data["body"])
+            location.href = "/"
         }
     )
 }
@@ -294,10 +306,12 @@ document.addEventListener( "DOMContentLoaded", () => {
     for( delete_scene in delete_scenes){
         delete_scenes[delete_scene].onclick = event => {
             id = event.target.dataset.sceneid;
-            console.log("I");
             fetch('/delete_scene/' +id, {
             method: 'POST'
             })
         }
     };
+
+    pub = document.getElementById("publish");
+    pub.onclick = publish
 });

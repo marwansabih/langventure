@@ -90,3 +90,30 @@ col_body {
 input[type="text"] {
     margin-right: 10px;
 }
+
+.item-acquired {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: none;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+}
+
+.congrats {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: 10px;
+}
+
+.acquired-item {
+  font-size: 18px;
+  color: #333;
+}

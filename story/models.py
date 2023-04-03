@@ -1,5 +1,10 @@
 from django.db import models
 from gapfiller.models import User
+from gtts import gTTS
+import io
+from django.core.files.base import ContentFile
+import tempfile
+import os
 
 
 class Story(models.Model):
@@ -28,7 +33,28 @@ class Dialog(models.Model):
     name = models.TextField()
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name="dialogs")
     bubble = models.TextField()
+    audio = models.FileField(
+        upload_to='podcasts/', null=True, blank=True)
     translation = models.TextField(default="")
+
+    def save_audio(self):
+        tts = gTTS(self.bubble, lang='de')  # Change lang as needed
+        audio_buffer = io.BytesIO()
+
+        # Create a temporary file
+        temp_file_path = f'tmp_dialog_audio_{self.pk}.mp3'
+        tts.save(temp_file_path)
+
+        # Read the temporary file into the audio_buffer
+        with open(temp_file_path, 'rb') as temp_file:
+            audio_buffer.write(temp_file.read())
+
+        audio_buffer.seek(0)
+        audio_file_name = f'dialog_audio_{self.pk}.mp3'
+        self.audio.save(audio_file_name, ContentFile(audio_buffer.read()))
+
+        # Remove the temporary file
+        os.remove(temp_file_path)
 
 
 class Knowledge(models.Model):
@@ -74,6 +100,27 @@ class Option(models.Model):
         blank=True,
         related_name="disabled_options"
     )
+    audio = models.FileField(
+        upload_to='podcasts/', null=True, blank=True)
+
+    def save_audio(self):
+        tts = gTTS(self.text, lang='de')  # Change lang as needed
+        audio_buffer = io.BytesIO()
+
+        # Create a temporary file
+        temp_file_path = f'tmp_option_audio_{self.pk}.mp3'
+        tts.save(temp_file_path)
+
+        # Read the temporary file into the audio_buffer
+        with open(temp_file_path, 'rb') as temp_file:
+            audio_buffer.write(temp_file.read())
+
+        audio_buffer.seek(0)
+        audio_file_name = f'dialog_option_audio_{self.pk}.mp3'
+        self.audio.save(audio_file_name, ContentFile(audio_buffer.read()))
+
+        # Remove the temporary file
+        os.remove(temp_file_path)
 
 
 class UserStoryConfig(models.Model):

@@ -48,6 +48,9 @@
                 <div style="padding:5px;">
                     <label for="story_name"> Story title </label>
                     <input type="text" id="story_name" style="width:100%;border-radius:5px;" value="{{story.name}}">
+                    <div id="publish" class="btn btn-secondary" style="width:100%;margin-top:3px;">
+                        publish story
+                    </div>
                 </div>
 
             </div>
@@ -170,7 +173,17 @@
                     <div style="margin-top:20px;">
                         <h4>To update collectible click on it</h4>
                         <div style="background:white;color:black;border-radius:5px;width=100%;padding:5px;">
-                            None
+                            {% for collectible in current_scene.collectibles.all %}
+                            <div>
+                                {% if collectible.name %}
+                                    <a href="#" style="width:100%">{{ collectible.name }}</a>
+                                {% else %}
+                                    <a href="#" style="width:100%">No Name</a>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                                None
+                            {% endfor %}
                         </div>
                         <a class="btn btn-secondary" style="width:100%" href="{% url 'collectible' current_scene.id %}">Add new Collectible</a>
                     </div>
