@@ -235,7 +235,6 @@ def get_token_display_updates(request, id):
     })
 
 
-
 def delete_gapfiller(request, id):
     entry = Entry.objects.get(pk=id)
     entry.delete()

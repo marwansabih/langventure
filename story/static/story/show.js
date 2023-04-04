@@ -73,6 +73,13 @@ function set_dialog(){
                 translation.innerHTML = start["bubble"] + "\n\n" + start["translation"];
             }
 
+            if (start.audio) {
+                var audioElement = document.createElement("audio");
+                audioElement.src = start.audio;
+                audioElement.controls = true;
+                bubble.append(audioElement)
+            }
+
             options = start["options"];
             opts = document.getElementById("options");
             opts.innerHTML = ""

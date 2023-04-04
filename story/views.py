@@ -10,6 +10,7 @@ import PIL
 import base64
 from .form import CollectibleForm
 from django.contrib import messages
+from django.core import serializers
 
 from django.core.files.images import get_image_dimensions
 
@@ -428,6 +429,20 @@ def create_character(request, scene_id):
 
 
 @csrf_exempt
+def get_option_audio(request, option_id):
+    option = Option.objects.get(pk=option_id)
+    option_json = serializers.serialize('json', option)
+    return JsonResponse(option_json, safe=False)
+
+
+@csrf_exempt
+def get_dialog_audio(request, dialog_id):
+    dialog = Dialog.objects.get(pk=dialog_id)
+    dialog_json = serializers.serialize('json', dialog)
+    return JsonResponse(dialog_json, safe=False)
+
+
+@csrf_exempt
 def update_character(request, char_id):
     if request.method == "POST":
         actor = Actor.objects.get(pk=char_id)
@@ -521,7 +536,8 @@ def get_dialog(request, char_id):
                     "selection": option.target.name,
                     "acquires": None if not option.acquired else option.acquired.item,
                     "requires": [ki.item for ki in option.required_k_items.all()],
-                    "deactivates": [ki.item for ki in option.disabled_k_items.all()]
+                    "deactivates": [ki.item for ki in option.disabled_k_items.all()],
+                    "audio": option.audio.url if option.audio else None
                  }
                 for option in opts
             ]
@@ -529,7 +545,8 @@ def get_dialog(request, char_id):
             id_to_dialog[id] = {
                 "bubble": bubble,
                 "translation": translation,
-                "options": options
+                "options": options,
+                "audio": dialog.audio.url if dialog.audio else None
             }
 
         dialog_info = {
