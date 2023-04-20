@@ -1,0 +1,70 @@
+{% extends "gapfiller/layout.html" %}
+{% block body %}
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.choice').forEach(
+                choice => {
+                    choice.addEventListener('click', function(event) {
+                        if ( event.target.value === event.target.dataset.correct ) {
+                            event.target.value = event.target.options[1].value;
+                        }
+                    });
+
+                    choice.addEventListener('change', function(event) {
+                        const target = event.target;
+                        if ( target.value === target.dataset.correct ) {
+                            target.style.color = "green";
+                            target.disabled = "true";
+                        }else {
+                            target.style.color = "red";
+                        }
+                    })
+            });
+        });
+    </script>
+    <div class="container">
+        <div class="row">
+            <h4>Use Langventures to gather experience with a language and improve your vocabulary</h4>
+            <div class="content-wrapper">
+                {% for story in stories %}
+                    <a href="{% url 'story' story.id %}">
+                        <div class="index_entry">
+                            <div class="index_title">
+                                <p style="font-weight:bold; ">
+                                    {{ story.name }}
+                                </p>
+                            </div>
+                            <p style="font-size:15px;padding-left:5px;">
+                                Eton the Husk has taken over the Witter Central and now is threatening to...
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <h4>Use gapfillers to improve your grammar.</h4>
+            <div class="content-wrapper">
+                {% for entry in entries %}
+                <a href="{% url 'show' entry.id %}">
+                    <div class="index_entry">
+                        <div class="index_title">
+                            <p style="font-weight:bold; ">
+                                {% for token in entry.title.tokens.all %}
+                                    {{ token.word }}
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <p style="font-size:15px;padding-left:5px;">
+                            {% for token in entry.paragraphs.first.text.tokens.all|slice:":20" %}
+                                {{ token.word }}
+                            {% endfor %}
+                            ...
+                        </p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

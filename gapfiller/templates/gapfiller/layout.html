@@ -22,19 +22,35 @@
 </head>
 <body>
     <div class="header">
-            <div  class="header_title" >
-                Langventure
+        <a href="{% url 'index' %}" class="header_title">
+            Langventure
+        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'index' %}"
+               style="float:right;
+                      font-family: sans-serif, Arial, Helvetica;
+                      font-size:16px;
+                      line-height:40px;
+                      text-decoration:none;
+                      font-weight:100;"
+               class="header_title">
+                Logout {{ user.get_username }}
+            </a>
+        {% endif %}
+        <div class="dropdown">
+            <button class="dropdown_button">Create new exercise</button>
+            <div class="dropdown_content">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create' %}">Create new Gapfiller</a>
+                    <a href="{% url 'create_story' %}">Create new Langventure</a>
+                    <a href="{% url 'update_menu' %}">Update Langventure</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
             </div>
-            {% if user.is_authenticated %}
-                <a class="header_link btn" href="logout"> Logout {{ user.get_username }} </a>
-                <a class="header_link btn" href="{% url 'create' %}"> Create new Text </a>
-                <a class="header_link btn" href="{% url 'create_story' %}"> Create new Langventure </a>
-                <a class="header_link btn" href="{% url 'update_menu' %}"> Update Langventure </a>
-            {% else %}
-                <a class="header_link btn" href="{% url 'login' %}"> Login </a>
-            {% endif %}
-            <a class="header_link btn" href="{% url 'index' %}"> Home </a>
+        </div>
     </div>
+
     <div class="body_container">
         {% block body %}
         {% endblock %}

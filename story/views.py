@@ -33,6 +33,8 @@ from django.core.files.images import get_image_dimensions
     - publish only available after correcting all mistakes
     - show author of story
     - answer can be spoken for training
+    - enable mutli person dialog - switch to person (small pictures to make sure who is speaking)
+    - fix strange bug, that translation gets deleted if not enter in translation box
 """
 
 
@@ -460,6 +462,7 @@ def update_character(request, char_id):
         actor.name = name
         actor.save()
         id_to_dialog = request.POST.get("id_to_dialog")
+        print(id_to_dialog)
         dialogs = json.loads(id_to_dialog)
         id_to_m_dialog = {}
         for old_dialog in actor.dialogs.all():

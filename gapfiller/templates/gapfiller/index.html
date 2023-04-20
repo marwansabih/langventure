@@ -21,43 +21,59 @@
                     })
             });
         });
-
     </script>
-    <div style="margin:0; padding:3px;">
-        <h4> Use Langventures to gather experience with a language and improve your vocabulary</h4>
-        {% for story in stories %}
-            <a href="{% url 'story' story.id %}">
-                <div class="index_entry">
-                    <div class="index_title">
-                        <p style="font-weight:bold; ">
-                            {{ story.name }}
+    <div class="main-content" style="margin:5px">
+        <div class="section stories">
+            <div style="background-color:#6c757d;text-align:center;color:white;padding:1px;border-radius:5px;border:solid;border-width:thin;">
+                <h4>Use Langventures to gather experience with a language and improve your vocabulary</h4>
+            </div>
+            <div class="sidebar" style="height:45%;overflow-y:scroll">
+                <div class="content-wrapper">
+                    {% for story in stories %}
+                        <a href="{% url 'story' story.id %}">
+                        <div class="index_entry">
+                            <div class="index_title">
+                                <p style="font-weight:bold; ">
+                                    {{ story.name }}
+                                </p>
+                            </div>
+                            <p style="font-size:15px;padding-left:5px;">
+                                Eton the Husk has taken over the Witter Central and now is threatening to...
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="section gapfillers">
+            <div style="background-color:#6c757d;text-align:center;color:white;padding:1px;border-radius:5px;border:solid;border-width:thin;">
+                <h4>Use gapfillers to improve your grammar.</h4>
+            </div>
+            <div class="sidebar" style="height:45%;overflow-y:scroll">
+                <!-- Your sidebar content for gapfillers here -->
+                <div class="content-wrapper">
+                {% for entry in entries %}
+                <a href="{% url 'show' entry.id %}">
+                    <div class="index_entry">
+                        <div class="index_title">
+                            <p style="font-weight:bold; ">
+                                {% for token in entry.title.tokens.all %}
+                                    {{ token.word }}
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <p style="font-size:15px;padding-left:5px;">
+                            {% for token in entry.paragraphs.first.text.tokens.all|slice:":20" %}
+                                {{ token.word }}
+                            {% endfor %}
+                            ...
                         </p>
                     </div>
-                    <p style="font-size:15px;padding-left:5px;">
-                        Eton the Husk has taken over the Witter Central and now is threatening to...
-                    </p>
-                </div>
-            </a>
-        {% endfor %}
-        <div style="width=400px;display:block;margin-top:130px"><h4> Use gapfillers to improve your grammar.</h4></div>
-        {% for entry in entries %}
-        <a href="{% url 'show' entry.id %}">
-            <div class="index_entry">
-                <div class="index_title">
-                    <p style="font-weight:bold; ">
-                        {% for token in entry.title.tokens.all %}
-                            {{ token.word }}
-                        {% endfor %}
-                    </p>
-                </div>
-                <p style="font-size:15px;padding-left:5px;">
-                    {% for token in entry.paragraphs.first.text.tokens.all|slice:":20" %}
-                        {{ token.word }}
-                    {% endfor %}
-                    ...
-                </p>
+                </a>
+                {% endfor %}
             </div>
-        </a>
-        {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

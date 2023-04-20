@@ -2,16 +2,17 @@
 {% load static %}
 {% block body %}
     <script type="text/javascript" src="{% static 'story/show.js' %}"></script>
-
+    <div style="overflow-y:hidden;">
     <div id="story_id" data-storyid="{{ story.id }}"></div>
     <div id="scene_id" data-sceneid="{{ current_scene.id }}"></div>
 
     {% for item in knowledge_items %}
         <div class="knowledge_item" data-item="{{ item.item }}"></div>
     {% endfor %}
-
-    <div class="actor_title">
-            <h1>{{ story.name }}</h1>
+    <div style="margin:16px;margin-top:5px;color:white;padding:5px;height:50px;margin-bottom:-18px;">
+        <div class="actor_title" style="padding:1px;border:solid;border-width:thin;">
+            <h3>{{ story.name }}</h3>
+        </div>
     </div>
 
     <div id="item_acquired" class="item-acquired"
@@ -99,5 +100,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}

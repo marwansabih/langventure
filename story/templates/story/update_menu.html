@@ -1,8 +1,16 @@
 {% extends "gapfiller/layout.html" %}
 {% block body %}
-    <ul>
+    <div class="story-list-container">
         {% for story in stories %}
-            <li><a href="{% url 'update_story' story.id %}">{{story.name}}</a></li>
+            <a href="{% url 'update_story' story.id %}" class="story-list-item">
+                <div class="story-list-content">
+                    {{ story.name }}
+                </div>
+            </a>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
+
+
+
+

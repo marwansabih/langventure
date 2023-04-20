@@ -1,12 +1,12 @@
 /* actor */
 
 .actor_title {
-    background: #39395f;
+    background: #6c757d;
     text-align: center;
-    margin: 0px;
-    color:#f5eec2;
+    color:white;
     padding:0px;
     margin-top:-6px;
+    border-radius:5px;
 }
 
 .left_actor_box {
@@ -116,4 +116,78 @@ input[type="text"] {
 .acquired-item {
   font-size: 18px;
   color: #333;
+}
+
+/* audio in show */
+
+.audio-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.audio-container button {
+    font-size: 12px; /* Adjust the button font size */
+    padding: 4px 8px; /* Adjust the button padding */
+    border-radius: 12px; /* Add rounded corners to the button */
+}
+
+.audio-container input[type="range"] {
+    width: 150px; /* Adjust the progress bar width */
+}
+
+
+.custom-label {
+    display: inline-block;
+    font-size: 12px; /* Adjust the button font size */
+    padding: 4px 8px; /* Adjust the button padding */
+    border-radius: 12px; /* Add rounded corners to the button */
+    width: 5%;
+    vertical-align: middle;
+    cursor: pointer; /* Change the cursor to pointer to indicate it's clickable */
+    transition: background-color 0.3s ease; /* Add a transition for the background color */
+
+    background-color: #f8f9fa; /* Adjust the background color */
+    color: #343a40; /* Adjust the text color */
+    border: 1px solid #ced4da; /* Add border */
+}
+
+.custom-label:hover {
+    background-color: #e2e6ea; /* Adjust the background color on hover */
+}
+
+/* gpt-4 css enhanced update story list */
+
+.story-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.story-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.story-list-item:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px);
+}
+
+.story-list-content {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
 }

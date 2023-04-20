@@ -61,6 +61,62 @@ function not_deactivated(deactivations){
     })
 }
 
+
+function createAudioElement(audioSrc) {
+    var audioElement = document.createElement("audio");
+    audioElement.src = audioSrc;
+
+    var playButton = document.createElement("button");
+    playButton.textContent = "Play";
+
+    playButton.addEventListener("click", function () {
+        if (audioElement.paused) {
+            audioElement.play();
+            playButton.textContent = "Pause";
+        } else {
+            audioElement.pause();
+            playButton.textContent = "Play";
+        }
+    });
+
+    var progressBar = document.createElement("input");
+    progressBar.type = "range";
+    progressBar.min = 0;
+    progressBar.value = 0;
+    progressBar.step = 1;
+
+    var currentTimeDisplay = document.createElement("span");
+
+    audioElement.addEventListener("loadedmetadata", function () {
+        progressBar.max = Math.floor(audioElement.duration);
+        currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+    });
+
+    audioElement.addEventListener("timeupdate", function () {
+        progressBar.value = Math.floor(audioElement.currentTime);
+        currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+    });
+
+    progressBar.addEventListener("input", function () {
+        audioElement.currentTime = progressBar.value;
+    });
+
+    function formatTime(seconds) {
+        var minutes = Math.floor(seconds / 60);
+        var remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+    }
+
+    var audioContainer = document.createElement("div");
+    audioContainer.className = "audio-container";
+    audioContainer.appendChild(playButton);
+    audioContainer.appendChild(progressBar);
+    audioContainer.appendChild(currentTimeDisplay);
+    audioContainer.appendChild(audioElement);
+
+    return audioContainer;
+}
+
 function set_dialog(){
             bubble = document.getElementById("bubble");
             start = current_id_to_dialog[current_id];
@@ -74,10 +130,8 @@ function set_dialog(){
             }
 
             if (start.audio) {
-                var audioElement = document.createElement("audio");
-                audioElement.src = start.audio;
-                audioElement.controls = true;
-                bubble.append(audioElement)
+                container = createAudioElement(start.audio)
+                bubble.appendChild(container)
             }
 
             options = start["options"];
@@ -99,14 +153,9 @@ function set_dialog(){
                     translation.style.height = "225px"
                     translation.innerHTML = option["content"] + "\n\n" + option["translation"];
                 }
-                label = document.createElement("div")
-                label.style.display = "inline-block";
-                label.style.borderRadius = "5px";
-                label.style.padding = "5px";
-                label.className = "btn btn-secondary"
-                label.innerHTML = "&#x2192;"
-                label.style.width = "5%";
-                label.style.verticalAlign = "middle";
+                label = document.createElement("div");
+                label.className = "custom-label";
+                label.innerHTML =  "&#x2192;";
                 container = document.createElement("div");
                 container.style.verticalAlign = "middle";
                 container.append(label);
@@ -114,9 +163,14 @@ function set_dialog(){
                 div.append(container);
                 label.dataset.next = option["selection"];
                 label.dataset.acquires = option["acquires"];
-                console.log("acquires");
-                console.log(option["acquires"]);
                 label.onclick =  e => {
+                    acquires = e.target.dataset.acquires;
+                    console.log("acquires")
+                    console.log(acquires)
+                    if(acquires !== "null" && !user_knowledge.includes(acquires) ){
+                        user_knowledge.push(acquires);
+                        update_user_knowledge(acquires);
+                    }
                     if (current_id === e.target.dataset.next)
                     {
                         hide = document.getElementById("hide");
@@ -124,11 +178,6 @@ function set_dialog(){
                         return ""
                     }
                     current_id = e.target.dataset.next;
-                    acquires = e.target.dataset.acquires;
-                    if(acquires !== "null" && !user_knowledge.includes(acquires) ){
-                        user_knowledge.push(acquires);
-                        update_user_knowledge(acquires);
-                    }
                     console.log(current_id);
                     set_dialog();
                 };
@@ -137,6 +186,10 @@ function set_dialog(){
                 if(contains_all_requirements(option["requires"])
                    && not_deactivated(option["deactivates"]) ){
                     opts.append(div);
+                }
+                if (option.audio) {
+                    var audioContainer = createAudioElement(option.audio);
+                    div.appendChild(audioContainer)
                 }
             });
 }
@@ -168,6 +221,7 @@ async function update_user_knowledge(item){
     let story_id = document.getElementById("story_id").dataset.storyid;
     let scene_id = document.getElementById("scene_id").dataset.sceneid;
     let formData = new FormData();
+    console.log(item)
     formData.append('item', item);
     formData.append('story_id', story_id);
     fetch('/update_user_knowledge', {
