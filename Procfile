@@ -1,1 +1,1 @@
-web: gunicorn langventure.wsgi --log-file -
+web: gunicorn langventure.wsgi --log-file - --timeout 600
