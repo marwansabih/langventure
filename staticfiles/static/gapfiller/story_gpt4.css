@@ -1,0 +1,138 @@
+/* actor */
+
+.actor_title {
+    background: #4a6c8e;
+    text-align: center;
+    margin: 0px;
+    color:#ffffff;
+    padding:0px;
+    margin-top:-6px;
+}
+
+.left_actor_box {
+    width: 80%;
+    display: inline-block;
+    margin: 0px;
+    border-radius:5px;
+}
+
+.right_actor_box {
+    width: 20%;
+    display: inline-block;
+    float: right;
+}
+
+.inner_box {
+    margin-right: 3px;
+    background: #4a6c8e;
+    border-radius: 5px;
+    padding: 3px;
+    color: #ffffff;
+}
+
+.name_box {
+    margin-bottom: 3px;
+    padding: 3px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.dialog_box {
+    border-radius: 5px;
+}
+
+.dialog_selection {
+    margin: 3px;
+    background: white;
+    border-radius: 5px;
+}
+
+.dialog_link {
+    color: black;
+}
+
+.add_dialog {
+    display: flex;
+    padding: 3px;
+    margin: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.character {
+  z-index: 9;
+  background-color: #e8e8e8;
+  border: 1px solid #c2c2c2;
+  text-align: center;
+  min-height: 150px;
+  min-width: 300px;
+  max-height: 300px;
+  max-width: 600px;
+}
+
+/* collectible */
+
+col_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    margin-right: 10px;
+}
+
+.item-acquired {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: none;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+}
+
+.congrats {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: 10px;
+}
+
+.acquired-item {
+  font-size: 18px;
+  color: #333;
+}
+
+/* audio in show */
+
+.audio-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.audio-container button {
+    font-size: 12px; /* Adjust the button font size */
+    padding: 4px 8px; /* Adjust the button padding */
+    border-radius: 12px; /* Add rounded corners to the button */
+}
+
+.audio-container input[type="range"] {
+    width: 150px; /* Adjust the progress bar width */
+}
