@@ -36,6 +36,7 @@ from django.core.files.images import get_image_dimensions
     - enable mutli person dialog - switch to person (small pictures to make sure who is speaking)
     - fix strange bug, that translation gets deleted if not enter in translation box
     - add ability to change start of a conversation
+    - trigger deployment
 """
 
 
