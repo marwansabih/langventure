@@ -131,8 +131,8 @@ def create_entry(title, text):
 
 
 def index(request):
-    if not request.user:
-        HttpResponseRedirect(reverse("login"))
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("login"))
     entries = Entry.objects.all()
     stories = Story.objects.filter(finished=True)
     print(stories)
