@@ -41,8 +41,13 @@ from django.core.files.images import get_image_dimensions
 @login_required
 def story(request, id):
     story = Story.objects.get(pk=id)
-    current_scene = story.scenes.all().first()
     user = request.user
+
+    current_scene = story.scenes.all().first()
+    scenes = user.scences.filter(story=story)
+    if scenes:
+        current_scene = scenes.first()
+
     user_knowledge = user.knowledge_items.all()
 
     return render(request, "story/show.html", {
@@ -58,6 +63,11 @@ def story_scene(request, id, scene_id):
     current_scene = Scene.objects.get(pk=scene_id)
     user = request.user
     user_knowledge = user.knowledge_items.all()
+    # the user should have only one current scene
+    scences = user.scences.filter(story=story)
+    if scences:
+        user.scences.remove(scences.first())
+    current_scene.users.add(user)
 
     return render(request, "story/show.html", {
         "story": story,
@@ -260,8 +270,6 @@ def collectible(request, scene_id):
 
     if request.method == 'POST':
         form = CollectibleForm(request.POST, request.FILES)
-        print(form.is_valid())
-        print(form)
 
         if form.is_valid():
             new_collectible = form.save(commit=False)  # Don't save the instance to the database yet

@@ -1,5 +1,8 @@
 {% extends "gapfiller/layout.html" %}
 {% block body %}
+    <div style="margin:20px;">
+        <h3>Choose langventure to update</h3>
+    </div>
     <div class="story-list-container">
         {% for story in stories %}
             <a href="{% url 'update_story' story.id %}" class="story-list-item">

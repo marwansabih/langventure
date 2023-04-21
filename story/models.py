@@ -18,6 +18,7 @@ class Scene(models.Model):
     name = models.TextField()
     background = models.ImageField(blank=True, default=None, upload_to="images")
     description = models.TextField(default="")
+    users = models.ManyToManyField(User, blank=True, related_name="scences")
 
 
 class Actor(models.Model):

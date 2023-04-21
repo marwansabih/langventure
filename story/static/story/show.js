@@ -29,9 +29,6 @@ function setBackground() {
 }
 
 function place_actor(actor) {
-    console.log(actor.dataset)
-    console.log(actor.dataset.top)
-    console.log(actor.dataset.scale)
     actor.style.transform = `scale(${actor.dataset.scale})`;
     actor.style.top = actor.dataset.top;
     actor.style.left = actor.dataset.left;
@@ -173,6 +170,7 @@ function set_dialog(){
                     }
                     if (current_id === e.target.dataset.next)
                     {
+                        set_active_scenes()
                         hide = document.getElementById("hide");
                         hide.style.display = "None"
                         return ""
@@ -181,8 +179,6 @@ function set_dialog(){
                     console.log(current_id);
                     set_dialog();
                 };
-                console.log("requires")
-                console.log(option["requires"])
                 if(contains_all_requirements(option["requires"])
                    && not_deactivated(option["deactivates"]) ){
                     opts.append(div);
@@ -297,6 +293,7 @@ async function showDialog(item) {
 }
 
 document.addEventListener( "DOMContentLoaded", () => {
+    document.documentElement.style.overflow = "hidden"
     scale_dialog();
     window.onresize = () => {
         scale_dialog();
