@@ -1,0 +1,1 @@
+web: gunicorn langventure.wsgi --log-file -
