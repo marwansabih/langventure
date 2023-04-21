@@ -115,6 +115,8 @@ function createAudioElement(audioSrc) {
 }
 
 function set_dialog(){
+            translation.innerHTML = "No text selected"
+            translation.style.height = "auto"
             bubble = document.getElementById("bubble");
             start = current_id_to_dialog[current_id];
             bubble.innerHTML = start["bubble"];
@@ -168,8 +170,6 @@ function set_dialog(){
                 label.dataset.acquires = option["acquires"];
                 label.onclick =  e => {
                     translation = document.getElementById("translation")
-                    translation.innerHTML = "No text selected"
-                    translation.style.height = "auto"
                     acquires = e.target.dataset.acquires;
                     console.log("acquires")
                     console.log(acquires)
