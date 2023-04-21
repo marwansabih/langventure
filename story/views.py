@@ -35,6 +35,7 @@ from django.core.files.images import get_image_dimensions
     - answer can be spoken for training
     - enable mutli person dialog - switch to person (small pictures to make sure who is speaking)
     - fix strange bug, that translation gets deleted if not enter in translation box
+    - add ability to change start of a conversation
 """
 
 
@@ -74,6 +75,7 @@ def story_scene(request, id, scene_id):
         "current_scene": current_scene,
         "knowledge_items": user_knowledge
     })
+
 
 @login_required
 @csrf_exempt

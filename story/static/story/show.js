@@ -122,7 +122,10 @@ function set_dialog(){
                 translation = document.getElementById("translation");
                 translation.style.whiteSpace= "pre-wrap";
                 translation.style.overflowY = "scroll";
-                translation.style.height = "225px"
+                const translationRect = translation.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const dynamicHeight = windowHeight - translationRect.top - 50;
+                translation.style.height = `${dynamicHeight}px`;
                 translation.innerHTML = start["bubble"] + "\n\n" + start["translation"];
             }
 
@@ -147,7 +150,10 @@ function set_dialog(){
                     translation = document.getElementById("translation");
                     translation.style.whiteSpace= "pre-wrap";
                     translation.style.overflowY = "scroll";
-                    translation.style.height = "225px"
+                    const translationRect = translation.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    const dynamicHeight = windowHeight - translationRect.top - 50;
+                    translation.style.height = `${dynamicHeight}px`;
                     translation.innerHTML = option["content"] + "\n\n" + option["translation"];
                 }
                 label = document.createElement("div");
@@ -161,6 +167,9 @@ function set_dialog(){
                 label.dataset.next = option["selection"];
                 label.dataset.acquires = option["acquires"];
                 label.onclick =  e => {
+                    translation = document.getElementById("translation")
+                    translation.innerHTML = "No text selected"
+                    translation.style.height = "auto"
                     acquires = e.target.dataset.acquires;
                     console.log("acquires")
                     console.log(acquires)
