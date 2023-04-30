@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.core import serializers
 
 from django.core.files.images import get_image_dimensions
+import datetime
 
 
 
@@ -226,6 +227,7 @@ def update_story_scene(request, story_id, scene_id):
 def publish_story(request, story_id):
     story = Story.objects.get(pk=story_id)
     story.finished = True
+    story.created = datetime.datetime.now()
     story.save()
     return JsonResponse({
         "body": "Successfully published story!"
@@ -323,6 +325,16 @@ def set_story_name(request, story_id):
     if request.method == "POST":
         story = Story.objects.get(pk=story_id)
         story.name = request.POST.get("name")
+        story.save()
+        return render(request, "story/success.html")
+
+
+@csrf_exempt
+def set_story_description(request, story_id):
+    if request.method == "POST":
+        story = Story.objects.get(pk=story_id)
+        print(request.POST.get("description"))
+        story.description = request.POST.get("description")
         story.save()
         return render(request, "story/success.html")
 

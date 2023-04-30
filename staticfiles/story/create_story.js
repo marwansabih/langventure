@@ -247,10 +247,20 @@ document.addEventListener( "DOMContentLoaded", () => {
     na = document.getElementById("story_name");
     na.onchange = event => {
         id = document.getElementById("bg").dataset.storyid;
-        console.log(id);
         let formData = new FormData();
         formData.append('name', event.target.value);
         fetch('/set_story_name/' + id, {
+            method: 'POST',
+            body: formData
+        });
+    }
+
+    des = document.getElementById("story_description")
+    des.onchange = event => {
+        id = document.getElementById("bg").dataset.storyid;
+        let formData = new FormData();
+        formData.append('description', event.target.value);
+        fetch('/set_story_description/' + id, {
             method: 'POST',
             body: formData
         });

@@ -29,7 +29,7 @@ DEBUG = True
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["*", "https://web-production-2339.up.railway.app"]
+#CSRF_TRUSTED_ORIGINS = ["https://web-production-2339.up.railway.app"]
 
 CORS_ORIGIN_WHITELIST = ['*']
 

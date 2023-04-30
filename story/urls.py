@@ -21,6 +21,7 @@ urlpatterns = [
     path("set_scene_description/<int:scene_id>", views.set_scene_description, name="set_scene_description"),
     path("set_scene_name/<int:scene_id>", views.set_scene_name, name="set_scene_name"),
     path("set_story_name/<int:story_id>", views.set_story_name, name="set_story_name"),
+    path("set_story_description/<int:story_id>", views.set_story_description, name="set_story_description"),
     path("update_story/<int:story_id>", views.update_story, name="update_story"),
     path("update_story_scene/<int:story_id>/<int:scene_id>", views.update_story_scene, name="update_story_scene"),
     path("update_menu", views.update_menu, name="update_menu"),

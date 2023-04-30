@@ -9,6 +9,8 @@ import os
 
 class Story(models.Model):
     name = models.TextField()
+    description = models.TextField(default="")
+    created = models.DateTimeField(null=True, blank=True, default=None)
     finished = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storys", default="")
 

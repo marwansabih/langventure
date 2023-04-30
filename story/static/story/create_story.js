@@ -268,6 +268,18 @@ document.addEventListener( "DOMContentLoaded", () => {
         });
     }
 
+    //handle story description
+    des = document.getElementById("story_description")
+    des.onchange = event => {
+        id = document.getElementById("bg").dataset.storyid;
+        let formData = new FormData();
+        formData.append('description', event.target.value);
+        fetch('/set_story_description/' + id, {
+            method: 'POST',
+            body: formData
+        });
+    }
+
     //handle description
     desc = document.getElementById("description");
     desc.onchange = event => {
