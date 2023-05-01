@@ -72,6 +72,9 @@ class Language(models.Model):
     name = models.TextField(default="english")
     lang_code = models.TextField(default="en")
 
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractUser):
     org_language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, default=None, null=True, related_name="target_language")

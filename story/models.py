@@ -43,7 +43,8 @@ class Dialog(models.Model):
     translation = models.TextField(default="")
 
     def save_audio(self):
-        tts = gTTS(self.bubble, lang='de')  # Change lang as needed
+        #tts = gTTS(self.bubble, lang='de')  # Change lang as needed
+        tts = gTTS(self.bubble, lang='it')  # Change lang as needed
         audio_buffer = io.BytesIO()
 
         # Create a temporary file
@@ -109,7 +110,8 @@ class Option(models.Model):
         upload_to='podcasts/', null=True, blank=True)
 
     def save_audio(self):
-        tts = gTTS(self.text, lang='de')  # Change lang as needed
+        #tts = gTTS(self.text, lang='de')  # Change lang as needed
+        tts = gTTS(self.text, lang='it')  # Change lang as needed
         audio_buffer = io.BytesIO()
 
         # Create a temporary file
