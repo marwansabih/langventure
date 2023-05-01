@@ -36,14 +36,40 @@
                class="header_title">
                 Logout {{ user.get_username }}
             </a>
-        <div class="dropdown">
-            <button class="dropdown_button">Create new exercise</button>
-            <div class="dropdown_content">
-                <a href="{% url 'create' %}">Create new Gapfiller</a>
-                <a href="{% url 'create_story' %}">Create new Langventure</a>
-                <a href="{% url 'update_menu' %}">Update Langventure</a>
+
+            <div class="dropdown" style="float: right;">
+                <button class="dropdown_button">Create new exercise</button>
+                <div class="dropdown_content">
+                    <a href="{% url 'create' %}">Create new Gapfiller</a>
+                    <a href="{% url 'create_story' %}">Create new Langventure</a>
+                    <a href="{% url 'update_menu' %}">Update Langventure</a>
+                </div>
             </div>
-        </div>
+
+            <form id="language-form" method="post" action="{% url 'change_languages' %}" style="float: right;">
+            {% csrf_token %}
+            <div class="header-dropdown">
+                <label for="dest_language">Target Language:</label>
+                <select name="dest_language" id="dest_language" onchange="this.form.submit();">
+                    {% for language in languages %}
+                    <option value="{{ language.pk }}" {% if user.dest_language == language %}selected{% endif %}>
+                        {{ language.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="header-dropdown">
+                <label for="org_language">Mother Language:</label>
+                <select name="org_language" id="org_language" onchange="this.form.submit();">
+                    {% for language in languages %}
+                    <option value="{{ language.pk }}" {% if user.org_language == language %}selected{% endif %}>
+                        {{ language.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            </form>
+
         {% endif %}
     </div>
 

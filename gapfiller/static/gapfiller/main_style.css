@@ -232,3 +232,31 @@ html {
     color: #d1c89a;
 }
 
+.header-dropdown {
+    margin-top:5px;
+    color: #f5eec2;
+    position: relative;
+    display: inline-block;
+    float: right;
+    margin-left: 10px;
+    font-family: sans-serif, Arial, Helvetica;
+    font-size: 16px;
+}
+
+.header-dropdown label {
+    margin-right: 5px;
+}
+
+.header-dropdown select {
+    background-color: #39395f;
+    color: #f5eec2;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.header-dropdown select:hover {
+    background-color: #171726;
+    color: #d1c89a;
+}
+

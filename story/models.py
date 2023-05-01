@@ -1,5 +1,5 @@
 from django.db import models
-from gapfiller.models import User
+from gapfiller.models import User, Language
 from gtts import gTTS
 import io
 from django.core.files.base import ContentFile
@@ -10,6 +10,8 @@ import os
 class Story(models.Model):
     name = models.TextField()
     description = models.TextField(default="")
+    org_lang = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, default=None, null=True, related_name="org_lang")
+    dest_lang = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, default=None, null=True, related_name="dest_lang")
     created = models.DateTimeField(null=True, blank=True, default=None)
     finished = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storys", default="")

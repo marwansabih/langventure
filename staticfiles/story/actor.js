@@ -416,11 +416,11 @@ document.addEventListener( "DOMContentLoaded", () => {
             id_to_dialog = actor_info;
             console.log("ID TO DIALOG");
             console.log(id_to_dialog);
-            storage_id = `${id}_actor`;
-            restore_actor_data_from_id(storage_id);
+            //storage_id = `${id}_actor`;
+            //restore_actor_data_from_id(storage_id);
             set_knowledge_items_from_page();
             setName();
-            //console.log(id_to_dialog);
+            console.log(id_to_dialog);
             createDialogIds();
             setCurrentDialog();
             setSelection();

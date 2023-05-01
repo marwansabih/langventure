@@ -68,8 +68,14 @@ class Token(models.Model):
     local_choice_selection = models.ForeignKey(LocalChoiceSelection, blank=True, null=True, on_delete=models.CASCADE, related_name="token")
 
 
+class Language(models.Model):
+    name = models.TextField(default="english")
+    lang_code = models.TextField(default="en")
+
+
 class User(AbstractUser):
-    pass
+    org_language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, default=None, null=True, related_name="target_language")
+    dest_language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, default=None, null=True, related_name="mother_language")
 
 
 class UserEntryChoiceSelConfig(models.Model):

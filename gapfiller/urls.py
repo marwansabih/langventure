@@ -10,5 +10,6 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path("delete_gapfiller/<int:id>", views.delete_gapfiller, name="delete_gapfiller")
+    path("delete_gapfiller/<int:id>", views.delete_gapfiller, name="delete_gapfiller"),
+    path('change_languages/', views.change_languages, name='change_languages'),
 ]

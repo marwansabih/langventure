@@ -297,6 +297,7 @@ def collectible(request, scene_id):
 
 @csrf_exempt
 def get_character_info(request, actor_id):
+    print(actor_id)
     if request.method == "GET":
         actor = Actor.objects.get(pk=actor_id)
         id_to_dialog = {}

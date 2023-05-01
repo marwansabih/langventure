@@ -3,13 +3,14 @@ from django.db import IntegrityError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection, User
+from .models import Text, Token, Entry, Choice, ChoiceSelection, Paragraph, Rule, Podcast, UserEntryChoiceSelConfig, UserEntryGapFillerStatus, LocalChoiceSelection, User, Language
 from story.models import Story
 from gtts import gTTS
 from django.core.files import File
 from pathlib import Path
 import spacy
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from .helsinki_translator import hel_translate
 import random
 
@@ -50,6 +51,8 @@ nlp = spacy.load('de_core_news_sm')
 # todo enhance admin panel
 # todo empty gaps in gapfiller (e.g. ein for plural)
 # todo correct mistakes in conjunctions
+# todo let users choose mother language and target language at the start
+
 
 def gen_local_selection(choice_selection, correct_choice, nr_choices):
     local_selection = LocalChoiceSelection(choice_selection=choice_selection)
@@ -134,12 +137,33 @@ def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("login"))
     entries = Entry.objects.all()
-    stories = Story.objects.filter(finished=True)
-    print(stories)
+    org_lang = request.user.org_language
+    dest_lang = request.user.dest_language
+    stories = Story.objects.filter(finished=True, org_lang=org_lang, dest_lang=dest_lang).all()
+    languages = Language.objects.all()
+
     return render(request, "gapfiller/index.html", {
         'entries': entries,
         'stories': stories,
+        'languages': languages
     })
+
+
+@login_required
+def change_languages(request):
+    if request.method == 'POST':
+        org_language = request.POST.get('org_language')
+        dest_language = request.POST.get('dest_language')
+
+        org_language_obj = Language.objects.get(pk=org_language)
+        dest_language_obj = Language.objects.get(pk=dest_language)
+
+        user = request.user
+        user.org_language = org_language_obj
+        user.dest_language = dest_language_obj
+        user.save()
+
+    return redirect(request.META.get('HTTP_REFERER', 'index'))
 
 
 def create(request):
@@ -276,7 +300,11 @@ def register(request):
 
         # Attempt to create new user
         try:
+            english = Language.objects.filter(lang_code="en").first()
+            german = Language.objects.filter(lang_code="de").first()
             user = User.objects.create_user(username, email, password)
+            user.org_language = english
+            user.dest_language = german
             user.save()
         except IntegrityError:
             return render(request, "auctions/register.html", {
